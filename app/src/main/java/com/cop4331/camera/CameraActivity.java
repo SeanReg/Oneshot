@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -16,6 +17,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -131,7 +133,8 @@ public class CameraActivity extends AppCompatActivity {
             //Start the camera preview feed
             try {
                 Surface previewSurface = new Surface(mCameraView.getSurfaceTexture());
-                camHandler.startFeed(previewSurface);
+                Size previewSize = new Size(mCameraView.getWidth(), mCameraView.getHeight());
+                camHandler.startFeed(previewSize, previewSurface);
             }catch (CameraAccessException e) {
                 finish();
             }
@@ -146,7 +149,35 @@ public class CameraActivity extends AppCompatActivity {
         public void onImageCaptured(Image capturedImage) {
             Log.d("CameraActivity", "Got image from ImageReader");
         }
+
+        @Override
+        public void onResolutionPicked(Size resolution) {
+            //adjustAspectRatio(resolution.getWidth(), resolution.getHeight());
+            fixPreviewAspect(resolution);
+        }
     };
+
+    private void fixPreviewAspect(Size resolution) {
+        //Get the aspect ratio of the camera resolution
+        double aspectRatio = resolution.getHeight() / (double)resolution.getWidth();
+
+        int scaledWidth = 0;
+        int scaledHeight = 0;
+        //Find the width or height constraint
+        if (mCameraView.getWidth() > mCameraView.getHeight()) {
+            scaledWidth  = mCameraView.getWidth();
+            //Scale the height proportionately with the width
+            scaledHeight = (int)(mCameraView.getWidth() * aspectRatio);
+        } else {
+            //Scale the width proportionately with the height
+            scaledWidth  = (int)(mCameraView.getHeight() * aspectRatio);
+            scaledHeight = mCameraView.getHeight();
+        }
+
+        //Set the new scales of the TextureView
+        mCameraView.setScaleX((float)scaledWidth / mCameraView.getWidth());
+        mCameraView.setScaleY((float)scaledHeight / mCameraView.getHeight());
+    }
 
     private ImageButton.OnClickListener mCaptureListener = new ImageButton.OnClickListener() {
         @Override

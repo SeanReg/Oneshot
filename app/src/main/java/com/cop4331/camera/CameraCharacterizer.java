@@ -103,29 +103,67 @@ public class CameraCharacterizer {
      * for the specified ImageFormat
      */
     public Size getMaxResolution(int imageFormat) {
-        try {
-            //if (mCurCameraId == null) throw new IllegalStateException("Current camera has not been set!");
+        //if (mCurCameraId == null) throw new IllegalStateException("Current camera has not been set!");
 
+        //Look at output sizes for specified image format
+        Size[] sizes      = getResolutionSizes(imageFormat);
+        Size   largestRes = null;
+        if (sizes.length > 0) {
+            //Find the largest resolution size
+            largestRes = sizes[0];
+            for (Size size : sizes) {
+                //Compare by total area
+                if (size.getHeight() * size.getWidth() > largestRes.getHeight() * largestRes.getWidth()) {
+                    //This one is larger, so set it
+                    largestRes = size;
+                }
+            }
+        }
+
+        return largestRes;
+    }
+
+    /**
+     * Gets the minimum resolution that will fit within a resolution contraint
+     * @param resConstraint the minimum required resolution to fit
+     * @return the minimum resolution that is greater than resContraint and fits within the same aspect ratio
+     */
+    public Size getMinFitResolution(Size resConstraint) {
+        //Get biggest resolution
+        Size resolution = getMaxResolution(ImageFormat.JPEG);
+
+        //List of resolution sizes
+        Size[] sizes = getResolutionSizes(ImageFormat.JPEG);
+
+        //Calculate aspect ratio for largest possible resolution (best aspect)
+        float aspectRatio = resolution.getHeight() / (float)resolution.getWidth();
+
+        //Find the minimum that satisfies the constraint
+        Size bestFit = sizes[0];
+        for (Size size : sizes) {
+            //Check if the aspect ratio matches and if it is greater than the constraint
+            if (size.getWidth() >= resConstraint.getWidth() && size.getHeight() >= resConstraint.getHeight() && size.getHeight() == size.getWidth() * aspectRatio) {
+                //Check if this is smaller than the current bestFit
+                if (size.getHeight() * size.getWidth() < bestFit.getHeight() * bestFit.getWidth())
+                    bestFit = size;
+            }
+        }
+
+        return bestFit;
+    }
+
+    /**
+     * Gets a list of resolutions supported for the specified imageFormat
+     * @param imageFormat the imageFormat to get resolutions for
+     * @return an array of Size[] that contains the resolutions supported
+     */
+    public Size[] getResolutionSizes(int imageFormat) {
+        try {
             //Get the characteristic for resolution size
             CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(mCurCameraId);
             StreamConfigurationMap streamMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
-            //Look at output sizes for specified image format
-            Size[] sizes      = streamMap.getOutputSizes(imageFormat);
-            Size   largestRes = null;
-            if (sizes.length > 0) {
-                //Find the largest resolution size
-                largestRes = sizes[0];
-                for (Size size : sizes) {
-                    //Compare by total area
-                    if (size.getHeight() * size.getWidth() > largestRes.getHeight() * largestRes.getWidth()) {
-                        //This one is larger, so set it
-                        largestRes = size;
-                    }
-                }
-            }
-
-            return largestRes;
+            return streamMap.getOutputSizes(imageFormat);
         } catch (CameraAccessException e) {
 
         }
