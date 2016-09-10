@@ -38,4 +38,21 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp" />
 
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/flashButton"
+        android:layout_alignTop="@+id/switchCamera"
+        android:layout_alignParentStart="true"
+        android:button="@drawable/flash_toggle"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:contextClickable="false"
+        android:textOn=""
+        android:textOff=""
+        android:text=""  />
+
 </RelativeLayout>

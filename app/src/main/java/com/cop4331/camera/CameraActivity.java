@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.oneshot.R;
@@ -35,6 +36,8 @@ public class CameraActivity extends AppCompatActivity {
     private PermissionRequester mPermission    = null;
     private TextureView         mCameraView    = null;
     private int                 mCameraType    = CameraCharacterizer.FRONT_CAMERA;
+
+    private ToggleButton mFlashButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class CameraActivity extends AppCompatActivity {
 
         ImageButton switchCam = (ImageButton)findViewById(R.id.switchCamera);
         switchCam.setOnClickListener(mSwitchCameraListener);
+
+        mFlashButton = (ToggleButton)findViewById(R.id.flashButton);
     }
 
     @Override
@@ -183,7 +188,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             try {
-                CameraHandle.getInstance().captureImage(false);
+                CameraHandle.getInstance().captureImage(mFlashButton.isChecked());
             }catch (CameraAccessException e) {
                 finish();
             }
