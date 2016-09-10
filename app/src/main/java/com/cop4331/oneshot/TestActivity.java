@@ -1,5 +1,7 @@
 package com.cop4331.oneshot;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,8 +11,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cop4331.camera.CameraActivity;
+import com.cop4331.com.cop4331.permissions.PermissionRequester;
+
 public class TestActivity extends AppCompatActivity {
 
+
+    private PermissionRequester mPermission = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +30,18 @@ public class TestActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent camIntent = new Intent(getApplicationContext(), CameraActivity.class);
+                startActivity(camIntent);
             }
         });
+
+        mPermission = new PermissionRequester(this);
+        mPermission.requestPermission(Manifest.permission.CAMERA);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
 
     @Override
