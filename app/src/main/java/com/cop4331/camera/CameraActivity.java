@@ -31,8 +31,7 @@ import com.cop4331.oneshot.R;
 public class CameraActivity extends AppCompatActivity {
 
     private PermissionRequester mPermission    = null;
-    private SurfaceView         mCameraView    = null;
-    private ImageButton         mCaptureButton = null;
+    private TextureView         mCameraView    = null;
     private int                 mCameraType    = CameraCharacterizer.FRONT_CAMERA;
 
     @Override
@@ -40,11 +39,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        mCameraView = (SurfaceView)findViewById(R.id.cameraView);
-        mCameraView.getHolder().addCallback(mCameraSurfaceListener);
+        mCameraView = (TextureView)findViewById(R.id.cameraView);
+        mCameraView.setSurfaceTextureListener(mCameraSurfaceListener);
 
-        mCaptureButton = (ImageButton)findViewById(R.id.captureButton);
-        mCaptureButton.setOnClickListener(mCaptureListener);
+        ImageButton captureButton = (ImageButton)findViewById(R.id.captureButton);
+        captureButton.setOnClickListener(mCaptureListener);
 
         ImageButton switchCam = (ImageButton)findViewById(R.id.switchCamera);
         switchCam.setOnClickListener(mSwitchCameraListener);
@@ -88,19 +87,24 @@ public class CameraActivity extends AppCompatActivity {
         mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
 
-    private SurfaceHolder.Callback mCameraSurfaceListener = new SurfaceHolder.Callback() {
+    private TextureView.SurfaceTextureListener mCameraSurfaceListener = new TextureView.SurfaceTextureListener() {
         @Override
-        public void surfaceCreated(final SurfaceHolder holder) {
+        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             startCamera(mCameraType);
         }
 
         @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
 
         }
 
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            return false;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
         }
     };
@@ -126,7 +130,8 @@ public class CameraActivity extends AppCompatActivity {
 
             //Start the camera preview feed
             try {
-                camHandler.startFeed(mCameraView.getHolder().getSurface());
+                Surface previewSurface = new Surface(mCameraView.getSurfaceTexture());
+                camHandler.startFeed(previewSurface);
             }catch (CameraAccessException e) {
                 finish();
             }

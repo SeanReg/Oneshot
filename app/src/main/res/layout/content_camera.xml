@@ -7,11 +7,15 @@
     tools:context="com.cop4331.camera.CameraActivity"
     tools:showIn="@layout/activity_camera">
 
-    <SurfaceView
+    <TextureView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/cameraView"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -21,15 +25,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@null" />
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/imageView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="false"
-        android:visibility="invisible" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -42,4 +37,5 @@
         android:background="@null"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp" />
+
 </RelativeLayout>
