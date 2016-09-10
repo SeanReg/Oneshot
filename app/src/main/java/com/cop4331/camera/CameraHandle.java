@@ -54,7 +54,7 @@ public class CameraHandle {
         public void onConnected();
         public void onEnded();
         public void onImageCaptured(Image capturedImage);
-        public void onResolutionPicked(Size resolution);
+        public void onPreviewResolution(Size resolution);
     }
 
     //Private - only one instance - Singleton design
@@ -123,7 +123,7 @@ public class CameraHandle {
 
             if (mCameraStatsListener != null) {
                 //Alert of the best resolution fit for the TextureView
-                mCameraStatsListener.onResolutionPicked(mCharacterizer.getMinFitResolution(previewSize));
+                mCameraStatsListener.onPreviewResolution(mCharacterizer.getMinFitResolution(previewSize));
             }
 
             //Add the image reader to the list of draw surfaces
@@ -142,11 +142,12 @@ public class CameraHandle {
 
     /**
      * Begins an  image capture from the current camera feed. The resulting image is returned by the CameraStatusListener
+     * @param useFlash if true then enables flash for the image capture. Otherwise flash is disabled
      * @throws IllegalStateException thrown when the camera feed has not been started. Also thrown if a CameraStatusListener has not
      * been registered for the CameraHandle
      * @throws CameraAccessException thrown if there was an error with opening the camera device
      */
-    public void captureImage() throws IllegalStateException, CameraAccessException {
+    public void captureImage(boolean useFlash) throws IllegalStateException, CameraAccessException {
         if (mCaptureSession == null) throw new IllegalStateException("Camera feed has not been started!");
         if (mCameraStatsListener == null) throw new IllegalStateException("CameraStatusListener has not been registered");
 
@@ -157,6 +158,8 @@ public class CameraHandle {
 
             //Set auto focus mode
             request.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            if (useFlash) request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_SINGLE);
+            else  request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             request.set(CaptureRequest.JPEG_ORIENTATION, 0);
 
             //Stop old preview request and do capture request

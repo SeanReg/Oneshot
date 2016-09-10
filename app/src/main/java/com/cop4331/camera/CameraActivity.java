@@ -151,7 +151,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onResolutionPicked(Size resolution) {
+        public void onPreviewResolution(Size resolution) {
             //adjustAspectRatio(resolution.getWidth(), resolution.getHeight());
             fixPreviewAspect(resolution);
         }
@@ -183,7 +183,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             try {
-                CameraHandle.getInstance().captureImage();
+                CameraHandle.getInstance().captureImage(false);
             }catch (CameraAccessException e) {
                 finish();
             }
