@@ -138,8 +138,10 @@ public class CameraActivity extends AppCompatActivity {
             //Start the camera preview feed
             try {
                 Surface previewSurface = new Surface(mCameraView.getSurfaceTexture());
+                camHandler.startFeed(previewSurface);
+
                 Size previewSize = new Size(mCameraView.getWidth(), mCameraView.getHeight());
-                camHandler.startFeed(previewSize, previewSurface);
+                fixPreviewAspect(camHandler.getSupportedResolution(previewSize));
             }catch (CameraAccessException e) {
                 finish();
             }
@@ -153,12 +155,6 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onImageCaptured(Image capturedImage) {
             Log.d("CameraActivity", "Got image from ImageReader");
-        }
-
-        @Override
-        public void onPreviewResolution(Size resolution) {
-            //adjustAspectRatio(resolution.getWidth(), resolution.getHeight());
-            fixPreviewAspect(resolution);
         }
     };
 

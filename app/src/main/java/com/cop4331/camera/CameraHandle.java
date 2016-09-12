@@ -54,7 +54,6 @@ public class CameraHandle {
         public void onConnected();
         public void onEnded();
         public void onImageCaptured(Image capturedImage);
-        public void onPreviewResolution(Size resolution);
     }
 
     //Private - only one instance - Singleton design
@@ -104,13 +103,12 @@ public class CameraHandle {
 
     /**
      * Begins an active camera feed that draws frames to the specified surfaces
-     * @param previewSize the Size of the preview surface - null if no preview
      * @param recordSurfaces a list of surfaces to draw the camera frames to
      * @throws IllegalStateException if the camera has not yet been opened
      * @throws CameraAccessException if there was an error when attempting to communicate with the camera device
      * @throws IllegalArgumentException if there was an error when accessing the camera device
      */
-    public void startFeed(@Nullable Size previewSize, final Surface... recordSurfaces) throws IllegalStateException, IllegalArgumentException, CameraAccessException {
+    public void startFeed(final Surface... recordSurfaces) throws IllegalStateException, IllegalArgumentException, CameraAccessException {
         if (mCameraDevice == null) throw new IllegalStateException("Camera device not opened!");
 
         if (recordSurfaces.length == 0) throw new IllegalArgumentException("Must have at least one surface!");
@@ -120,11 +118,6 @@ public class CameraHandle {
             Size resolution = mCharacterizer.getMaxResolution(ImageFormat.JPEG);
             mImageReader = ImageReader.newInstance(resolution.getWidth(), resolution.getHeight(), ImageFormat.JPEG, 1);
             mImageReader.setOnImageAvailableListener(mImageReaderListener, null);
-
-            if (mCameraStatsListener != null) {
-                //Alert of the best resolution fit for the TextureView
-                mCameraStatsListener.onPreviewResolution(mCharacterizer.getMinFitResolution(previewSize));
-            }
 
             //Add the image reader to the list of draw surfaces
             mRecordSurfaces = recordSurfaces;
@@ -138,6 +131,19 @@ public class CameraHandle {
             stop();
             throw e;
         }
+    }
+
+    /**
+     * Gets the minmum resolution supported by the camera that is greater
+     * than a specified minimum
+     * @param minimumRes the minimum resolution size to be returned
+     * @return the optimal resolution supported by the camera that is >=
+     * the minimumRes
+     */
+    public Size getSupportedResolution(Size minimumRes) {
+        if (mCharacterizer == null) return null;
+
+        return mCharacterizer.getMinFitResolution(minimumRes);
     }
 
     /**
