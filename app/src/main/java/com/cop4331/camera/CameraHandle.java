@@ -136,7 +136,7 @@ public class CameraHandle {
     /**
      * Gets the minmum resolution supported by the camera that is greater
      * than a specified minimum
-     * @param minimumRes the minimum resolution size to be returned
+     * @param minimumRes the minimum resolution size to be considered
      * @return the optimal resolution supported by the camera that is >=
      * the minimumRes
      */
