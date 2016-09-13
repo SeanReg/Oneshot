@@ -53,7 +53,7 @@ public class CameraHandle {
     public interface CameraStatusCallback {
         public void onConnected();
         public void onEnded();
-        public void onImageCaptured(Image capturedImage);
+        public void onImageCaptured(AmendedBitmap capturedImage);
     }
 
     //Private - only one instance - Singleton design
@@ -116,7 +116,7 @@ public class CameraHandle {
         try {
             //Create an image reader for still capturing
             Size resolution = mCharacterizer.getMaxResolution(ImageFormat.JPEG);
-            mImageReader = ImageReader.newInstance(resolution.getWidth(), resolution.getHeight(), ImageFormat.JPEG, 1);
+            mImageReader = ImageReader.newInstance(resolution.getWidth(), resolution.getHeight(), ImageFormat.JPEG, 2);
             mImageReader.setOnImageAvailableListener(mImageReaderListener, null);
 
             //Add the image reader to the list of draw surfaces
@@ -164,9 +164,12 @@ public class CameraHandle {
 
             //Set auto focus mode
             request.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-            if (useFlash) request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_SINGLE);
-            else  request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-            request.set(CaptureRequest.JPEG_ORIENTATION, 0);
+            if (useFlash) {
+                request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_SINGLE);
+            } else  {
+                request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+            }
+            request.set(CaptureRequest.JPEG_ORIENTATION, 90);
 
             //Stop old preview request and do capture request
             mCaptureSession.stopRepeating();
@@ -279,7 +282,7 @@ public class CameraHandle {
             super.onCaptureCompleted(session, request, result);
 
             //End the camera session since an image has been captured
-            stop();
+            //stop();
         }
     };
 
@@ -291,10 +294,16 @@ public class CameraHandle {
         public void onImageAvailable(ImageReader reader) {
             //Reader has newly captured image
 
+            Image capture     = reader.acquireLatestImage();
             //Alert caller that their image has been captured
             if (mCameraStatsListener != null) {
-                mCameraStatsListener.onImageCaptured(reader.acquireLatestImage());
+                AmendedBitmap bmp = AmendedBitmap.createFromImage(capture);
+                mCameraStatsListener.onImageCaptured(bmp);
             }
+
+            capture.close();
+
+            stop();
         }
     };
 
