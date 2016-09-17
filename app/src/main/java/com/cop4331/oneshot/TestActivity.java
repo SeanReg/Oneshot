@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.cop4331.camera.CameraActivity;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.image_manipulation.ImageManipulateTest;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -32,6 +33,9 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent camIntent = new Intent(getApplicationContext(), CameraActivity.class);
                 startActivity(camIntent);
+
+/*                Intent imageIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);
+                startActivity(imageIntent);*/
             }
         });
 

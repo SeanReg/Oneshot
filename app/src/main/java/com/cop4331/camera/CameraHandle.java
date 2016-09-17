@@ -1,6 +1,5 @@
 package com.cop4331.camera;
 
-import android.graphics.Camera;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -13,14 +12,13 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.Nullable;
 import android.util.Size;
 import android.view.Surface;
-import android.view.TextureView;
+
+import com.cop4331.image_manipulation.AmendedBitmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Sean on 9/9/2016.
@@ -30,6 +28,8 @@ public class CameraHandle {
      * Static reference to the single instance of the CameraHandle class - Singleton
      */
     private static CameraHandle mCameraHandle = null;
+
+    private static final Size MAX_CAPTURE_SIZE = new Size(1920, 1080);
 
     //Device and session references
     private CameraCaptureSession  mCaptureSession     = null;
@@ -76,7 +76,7 @@ public class CameraHandle {
      * @throws CameraAccessException thrown if there was an error with opening the camera device
      * @throws SecurityException user has not granted permissions for the camera
      */
-    public void openCamera(CameraManager manager, int cameraType) throws CameraAccessException, SecurityException {
+    public void openCamera(CameraManager manager, CameraCharacterizer.CameraType cameraType) throws CameraAccessException, SecurityException {
         if (mCameraDevice != null) {
             stop();
         }
@@ -115,7 +115,7 @@ public class CameraHandle {
 
         try {
             //Create an image reader for still capturing
-            Size resolution = mCharacterizer.getMaxResolution(ImageFormat.JPEG);
+            Size resolution = mCharacterizer.getMinFitResolution(MAX_CAPTURE_SIZE); //mCharacterizer.getMaxResolution(ImageFormat.JPEG);
             mImageReader = ImageReader.newInstance(resolution.getWidth(), resolution.getHeight(), ImageFormat.JPEG, 2);
             mImageReader.setOnImageAvailableListener(mImageReaderListener, null);
 

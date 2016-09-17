@@ -1,15 +1,12 @@
-package com.cop4331.camera;
+package com.cop4331.image_manipulation;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.media.Image;
-import android.util.Size;
 import android.view.View;
 
 import java.nio.ByteBuffer;
@@ -20,6 +17,7 @@ import java.nio.ByteBuffer;
 public class AmendedBitmap  {
 
     private Bitmap mBitmap = null;
+    private Canvas mCanvas = null;
 
     public static AmendedBitmap createFromImage(Image image) {
         Bitmap bmp = null;
@@ -45,7 +43,7 @@ public class AmendedBitmap  {
             bmp = Bitmap.createBitmap(image.getWidth() + rowPadding / Math.max(1, pixelStride), image.getHeight(), Bitmap.Config.RGB_565);
             bmp.copyPixelsFromBuffer(buffer);
         }
-        bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
+
 
  /*       Canvas canvas = new Canvas(bmp);
         // new antialised Paint
@@ -70,13 +68,24 @@ public class AmendedBitmap  {
     }
 
     public AmendedBitmap(Bitmap bitmap) {
+        if (!bitmap.isMutable()) {
+            bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        }
+
         mBitmap = bitmap;
+        mCanvas = new Canvas(mBitmap);
     }
 
     public void drawView(View drawText) {
-        Canvas canvas = new Canvas(mBitmap);
         drawText.setDrawingCacheEnabled(true);
-        canvas.drawBitmap(drawText.getDrawingCache(), mBitmap.getWidth() / 2.0f - drawText.getWidth() / 2.0f, mBitmap.getHeight() / 2.0f - drawText.getHeight() / 2.0f, null);
+        mCanvas.drawBitmap(drawText.getDrawingCache(), mBitmap.getWidth() / 2.0f - drawText.getWidth() / 2.0f, mBitmap.getHeight() / 2.0f - drawText.getHeight() / 2.0f, null);
+    }
+
+    public void drawPoint(Point cordinates, int color) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(color);
+
+        mCanvas.drawCircle(cordinates.x, cordinates.y, 20.0f, paint);
     }
 
     public Bitmap getBitmap() {

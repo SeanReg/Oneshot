@@ -8,16 +8,53 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.util.Size;
 
+import java.util.HashMap;
+
 /**
  * Created by Sean on 9/10/2016.
  */
 public class CameraCharacterizer {
-    public static final int FRONT_CAMERA = 1;
-    public static final int  BACK_CAMERA = 2;
+    private static final int  mFRONT_CAMERA = 1;
+    private static final int  mBACK_CAMERA = 2;
 
     private CameraManager mCameraManager = null;
-    private int           mCurCamera     = 0;
+    private CameraType    mCurCamera     = null;
     private String        mCurCameraId   = null;
+
+    private final HashMap<Integer, Size[]> supportedRes = new HashMap<>();
+
+    public enum Format {
+        JPEG        (ImageFormat.JPEG),
+        RGB_565     (ImageFormat.RGB_565),
+        YUV_420_888 (ImageFormat.YUV_420_888),
+        YUV_422_888 (ImageFormat.YUV_422_888),
+        YUV_444_888 (ImageFormat.YUV_444_888);
+
+        private int mFormatInt = 0;
+
+        private Format(int n) {
+            mFormatInt = n;
+        }
+
+        public int getFormat() {
+            return mFormatInt;
+        }
+    }
+
+    public enum CameraType {
+        FRONT_CAMERA(mFRONT_CAMERA),
+        BACK_CAMERA(mBACK_CAMERA);
+
+        private int mCamType = 0;
+
+        CameraType(int type) {
+            mCamType = type;
+        }
+
+        public int getCameraType() {
+            return mCamType;
+        }
+    }
 
     /**
      * Constructs a new CameraCharacterizer object that helps with getting the characteristics
@@ -26,7 +63,7 @@ public class CameraCharacterizer {
      * @param cameraType the desired type of camera - front facing camera or back camera
      * @throws IllegalArgumentException thrown if the provided cameraType is an invalid type
      */
-    public CameraCharacterizer(CameraManager cameraManager, int cameraType) throws IllegalArgumentException {
+    public CameraCharacterizer(CameraManager cameraManager, CameraType cameraType) throws IllegalArgumentException {
         mCameraManager = cameraManager;
         setCurrentCamera(cameraType);
     }
@@ -79,13 +116,13 @@ public class CameraCharacterizer {
      * @param cameraType the desired type of camera - front facing camera or back camera
      * @throws IllegalArgumentException thrown if the provided cameraType is an invalid type
      */
-    private void setCurrentCamera(int cameraType) throws IllegalArgumentException {
+    private void setCurrentCamera(CameraType cameraType) throws IllegalArgumentException {
         String id = null;
-        switch (cameraType) {
-            case FRONT_CAMERA:
+        switch (cameraType.getCameraType()) {
+            case mFRONT_CAMERA:
                 id = getFrontFacingCameraId();
                 break;
-            case BACK_CAMERA:
+            case mBACK_CAMERA:
                 id = getBackFacingCameraId();
                 break;
             default:
@@ -102,13 +139,15 @@ public class CameraCharacterizer {
      * @return a Size containing the width and height of the maximum resolution supported by the camera
      * for the specified ImageFormat
      */
-    public Size getMaxResolution(int imageFormat) {
+    public Size getMaxResolution(Format imageFormat) {
         //if (mCurCameraId == null) throw new IllegalStateException("Current camera has not been set!");
 
         //Look at output sizes for specified image format
         Size[] sizes      = getResolutionSizes(imageFormat);
-        Size   largestRes = null;
-        if (sizes.length > 0) {
+
+        //Largest seems to always be the first index - so no need to waste time searching
+        Size   largestRes = sizes[0];
+/*        if (sizes.length > 0) {
             //Find the largest resolution size
             largestRes = sizes[0];
             for (Size size : sizes) {
@@ -118,7 +157,7 @@ public class CameraCharacterizer {
                     largestRes = size;
                 }
             }
-        }
+        }*/
 
         return largestRes;
     }
@@ -130,10 +169,10 @@ public class CameraCharacterizer {
      */
     public Size getMinFitResolution(Size resConstraint) {
         //Get biggest resolution
-        Size resolution = getMaxResolution(ImageFormat.JPEG);
+        Size resolution = getMaxResolution(Format.JPEG);
 
         //List of resolution sizes
-        Size[] sizes = getResolutionSizes(ImageFormat.JPEG);
+        Size[] sizes = getResolutionSizes(Format.JPEG);
 
         //Calculate aspect ratio for largest possible resolution (best aspect)
         float aspectRatio = resolution.getHeight() / (float)resolution.getWidth();
@@ -142,7 +181,7 @@ public class CameraCharacterizer {
         Size bestFit = sizes[0];
         for (Size size : sizes) {
             //Check if the aspect ratio matches and if it is greater than the constraint
-            if (size.getWidth() >= resConstraint.getWidth() && size.getHeight() >= resConstraint.getHeight() && size.getHeight() == size.getWidth() * aspectRatio) {
+            if (size.getWidth() >= resConstraint.getWidth() && size.getHeight() >= resConstraint.getHeight() && size.getHeight() == Math.floor(size.getWidth() * aspectRatio)) {
                 //Check if this is smaller than the current bestFit
                 if (size.getHeight() * size.getWidth() < bestFit.getHeight() * bestFit.getWidth())
                     bestFit = size;
@@ -157,13 +196,19 @@ public class CameraCharacterizer {
      * @param imageFormat the imageFormat to get resolutions for
      * @return an array of Size[] that contains the resolutions supported
      */
-    public Size[] getResolutionSizes(int imageFormat) {
+    public Size[] getResolutionSizes(Format imageFormat) {
         try {
-            //Get the characteristic for resolution size
-            CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(mCurCameraId);
-            StreamConfigurationMap streamMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+            //Store results in Hashmap so we can reference them quickly
+            if (!supportedRes.containsKey(imageFormat)){
+                //Get the characteristic for resolution size
+                CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(mCurCameraId);
+                StreamConfigurationMap streamMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
-            return streamMap.getOutputSizes(imageFormat);
+                Size[] sizes = streamMap.getOutputSizes(imageFormat.getFormat());
+                supportedRes.put(imageFormat.getFormat(), sizes);
+            }
+
+            return supportedRes.get(imageFormat.getFormat());
         } catch (CameraAccessException e) {
 
         }

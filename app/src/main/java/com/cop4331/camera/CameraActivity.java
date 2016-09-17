@@ -1,41 +1,32 @@
 package com.cop4331.camera;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.Configuration;
 import android.graphics.Camera;
-import android.graphics.ImageFormat;
-import android.graphics.Matrix;
-import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
-import android.media.Image;
-import android.media.ImageReader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.image_manipulation.AmendedBitmap;
 import com.cop4331.oneshot.R;
 
 public class CameraActivity extends AppCompatActivity {
 
     private PermissionRequester mPermission    = null;
     private TextureView         mCameraView    = null;
-    private int                 mCameraType    = CameraCharacterizer.FRONT_CAMERA;
+    private CameraCharacterizer.CameraType mCameraType    = CameraCharacterizer.CameraType.FRONT_CAMERA;
 
     private ToggleButton mFlashButton = null;
 
@@ -68,7 +59,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void startCamera(int cameraType) {
+    private void startCamera(CameraCharacterizer.CameraType cameraType) {
         CameraHandle camHandler = CameraHandle.getInstance();
 
         //if (camHandler.getCameraConnected()) return;
@@ -141,6 +132,10 @@ public class CameraActivity extends AppCompatActivity {
                 camHandler.startFeed(previewSurface);
 
                 Size previewSize = new Size(mCameraView.getWidth(), mCameraView.getHeight());
+                if (!screenIsLandscape()) {
+                    previewSize = new Size(previewSize.getHeight(), previewSize.getWidth());
+                }
+
                 fixViewAspect(mCameraView, camHandler.getSupportedResolution(previewSize));
             }catch (CameraAccessException e) {
                 finish();
@@ -160,10 +155,8 @@ public class CameraActivity extends AppCompatActivity {
             ImageView imgView = (ImageView)findViewById(R.id.imageView);
 
             View textView = findViewById(R.id.textView);
-/*
-            Size viewSize = new Size(textView.getWidth(), textView.getHeight());
-            fixViewAspect(textView, CameraHandle.getInstance().getSupportedResolution(viewSize));
-*/
+/*            Size viewSize = new Size(textView.getWidth(), textView.getHeight());
+            fixViewAspect(textView, CameraHandle.getInstance().getSupportedResolution(viewSize));*/
 
             capturedImage.drawView(textView);
             imgView.setImageBitmap(capturedImage.getBitmap());
@@ -174,11 +167,16 @@ public class CameraActivity extends AppCompatActivity {
         }
     };
 
-    private void fixViewAspect(View fixView, Size resolution) {
-        //Get the aspect ratio of the camera resolution
-        double aspectRatio = resolution.getHeight() / (double)resolution.getWidth();
+    private boolean screenIsLandscape() {
+        return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
 
-        int scaledWidth = 0;
+    private void fixViewAspect(View fixView, Size resolution) {
+        if (!screenIsLandscape()) {
+            resolution = new Size(resolution.getHeight(), resolution.getWidth());
+        }
+
+/*        int scaledWidth = 0;
         int scaledHeight = 0;
         //Find the width or height constraint
         if (fixView.getWidth() > fixView.getHeight()) {
@@ -189,11 +187,31 @@ public class CameraActivity extends AppCompatActivity {
             //Scale the width proportionately with the height
             scaledWidth  = (int)(fixView.getHeight() * aspectRatio);
             scaledHeight = fixView.getHeight();
-        }
+        }*/
+        if (fixView.getWidth() > resolution.getWidth() || fixView.getHeight() > resolution.getHeight()) {
+            //Get the aspect ratio of the camera resolution
+            double aspectRatio = resolution.getHeight() / (double)resolution.getWidth();
 
-        //Set the new scales of the TextureView
-        fixView.setScaleX((float)scaledWidth / fixView.getWidth());
-        fixView.setScaleY((float)scaledHeight / fixView.getHeight());
+            int scaledWidth = 0;
+            int scaledHeight = 0;
+            //Find the width or height constraint
+            if (fixView.getWidth() > fixView.getHeight()) {
+                scaledWidth  = fixView.getWidth();
+                //Scale the height proportionately with the width
+                scaledHeight = (int)(fixView.getWidth() * aspectRatio);
+            } else {
+                //Scale the width proportionately with the height
+                scaledWidth  = (int)(fixView.getHeight() * aspectRatio);
+                scaledHeight = fixView.getHeight();
+            }
+
+            fixView.setScaleX((float)scaledWidth / fixView.getWidth());
+            fixView.setScaleX((float)scaledHeight / fixView.getHeight());
+        } else {
+            //Set the new scales of the TextureView
+            fixView.setScaleX((float)resolution.getWidth() / fixView.getWidth());
+            fixView.setScaleY((float)resolution.getHeight() / fixView.getHeight());
+        }
     }
 
     private ImageButton.OnClickListener mCaptureListener = new ImageButton.OnClickListener() {
@@ -210,10 +228,10 @@ public class CameraActivity extends AppCompatActivity {
     private ImageButton.OnClickListener mSwitchCameraListener = new ImageButton.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (mCameraType == CameraCharacterizer.BACK_CAMERA) {
-                startCamera(CameraCharacterizer.FRONT_CAMERA);
+            if (mCameraType.getCameraType() == CameraCharacterizer.CameraType.BACK_CAMERA.getCameraType()) {
+                startCamera(CameraCharacterizer.CameraType.FRONT_CAMERA);
             } else {
-                startCamera(CameraCharacterizer.BACK_CAMERA);
+                startCamera(CameraCharacterizer.CameraType.BACK_CAMERA);
             }
         }
     };
