@@ -2,7 +2,10 @@ package com.cop4331.camera;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -20,7 +23,12 @@ import android.widget.ToggleButton;
 
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.image_manipulation.AmendedBitmap;
+import com.cop4331.image_manipulation.ImageManipulateTest;
 import com.cop4331.oneshot.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -158,11 +166,26 @@ public class CameraActivity extends AppCompatActivity {
 /*            Size viewSize = new Size(textView.getWidth(), textView.getHeight());
             fixViewAspect(textView, CameraHandle.getInstance().getSupportedResolution(viewSize));*/
 
-            capturedImage.drawView(textView);
-            imgView.setImageBitmap(capturedImage.getBitmap());
-            imgView.setVisibility(View.VISIBLE);
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("bitmap", Context.MODE_PRIVATE);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
 
+            FileOutputStream fStream = null;
+            File filePath = null;
+            try {
+                filePath = File.createTempFile("bitmap", ".png", directory);
+                fStream = new FileOutputStream(filePath);
+                capturedImage.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fStream);
+                fStream.close();
 
+                Intent imgEditIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);
+                imgEditIntent.putExtra("Bitmap", filePath.getAbsoluteFile());
+                startActivity(imgEditIntent);
+            } catch (IOException e) {
+
+            }
 
         }
     };

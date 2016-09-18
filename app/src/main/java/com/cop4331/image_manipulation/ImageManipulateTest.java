@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.File;
+
 public class ImageManipulateTest extends AppCompatActivity {
 
     private AmendedBitmap mAmendedBitmap = null;
@@ -28,9 +30,11 @@ public class ImageManipulateTest extends AppCompatActivity {
 
         final ImageView imageView = (ImageView)findViewById(R.id.birdImageView);
         final BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap imgBitmap = drawable.getBitmap();
 
-        mAmendedBitmap = new AmendedBitmap(imgBitmap);
+        File loadBitmap = (File)getIntent().getExtras().get("Bitmap");
+        mAmendedBitmap = new AmendedBitmap(BitmapFactory.decodeFile(loadBitmap.getAbsolutePath()));
+        loadBitmap.delete();
+        imageView.setImageBitmap(mAmendedBitmap.getBitmap());
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
