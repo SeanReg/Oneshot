@@ -13,6 +13,8 @@ import android.view.MenuItem;
 
 import com.cop4331.camera.CameraActivity;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.networking.Account;
+import com.parse.Parse;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -25,6 +27,16 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
+                .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
+                .server("https://parseapi.back4app.com/").build()
+        );
+
+        Account account = new Account();
+        account.logIn("regan.sean.p2@gmail.com", "test", null);
+        account.requestFriendByEmail("regan.sean.p@gmail.com");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
