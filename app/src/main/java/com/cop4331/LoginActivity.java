@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
-
+            finish();
         }
 
         @Override
