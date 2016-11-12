@@ -31,20 +31,20 @@ public class AccountManager {
         return mManager;
     }
 
-    public void login(String email, String password) {
+    public void login(String username, String password) {
        // if (isSignedIn()) logOut();
 
         try {
-            ParseUser.logInInBackground(email, password, mLoginCallback);
+            ParseUser.logInInBackground(username, password, mLoginCallback);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void register(String email, String password, String phone) {
+    public void register(String username, String password, String phone) {
         ParseUser user = new ParseUser();
-        user.setEmail(email);
-        user.setUsername(email);
+        //user.setEmail(username);
+        user.setUsername(username);
         user.setPassword(password);
         user.put(FIELD_PHONE_NUMBER, phone);
 
@@ -53,6 +53,10 @@ public class AccountManager {
 
     public void setAccountStatusListener(onAccountStatus listener) {
         mAccountStatusListener = listener;
+    }
+
+    public boolean isLoggedIn() {
+        return (ParseUser.getCurrentUser() != null);
     }
 
 	public List<Relationship> getRelationships() {
@@ -68,7 +72,7 @@ public class AccountManager {
         public void done(ParseException e) {
             if (mAccountStatusListener != null) {
                 if (e != null) {
-                    mCurrAcc = new Account();
+                    mCurrAcc = new Account(ParseUser.getCurrentUser());
                     mAccountStatusListener.onRegistered(mCurrAcc);
                 } else {
                     mAccountStatusListener.onRegistrationError();
@@ -82,7 +86,7 @@ public class AccountManager {
             if (mAccountStatusListener != null) {
                 if (user != null) {
                     // Hooray! The user is logged in
-                    mCurrAcc = new Account();
+                    mCurrAcc = new Account(ParseUser.getCurrentUser());
                     mAccountStatusListener.onLogin(mCurrAcc);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
@@ -95,7 +99,9 @@ public class AccountManager {
     public static class Account extends User {
         private static final int REQUEST_EMAIL = 0;
         private static final int REQUEST_PHONE = 1;
-        
+
+        private final ParseUser mUser;
+
 		public interface QueryListener {
 			public void onGotScore(long score);
 			public void onGotRelationships(List<Relationship> relationships);
@@ -104,8 +110,8 @@ public class AccountManager {
 			public void onError();
 		}
 
-        private Account() {
-            
+        private Account(ParseUser user) {
+            mUser = user;
         }
         
         public void getCurrentGames() {
@@ -137,7 +143,9 @@ public class AccountManager {
         }
         
         public void logout() {
-            
+            if (ParseUser.getCurrentUser() == mUser) {
+                ParseUser.logOut();
+            }
         }
     }
 }

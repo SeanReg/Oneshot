@@ -12,8 +12,11 @@ import com.cop4331.networking.AccountManager;
 import com.cop4331.oneshot.R;
 import com.cop4331.oneshot.SignupActivity;
 import com.parse.Parse;
+import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final int SIGNUP_RESULTS = 1;
 
     private EditText mEmailText    = null;
     private EditText mPasswordText = null;
@@ -56,9 +59,22 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
-            startActivity(signup);
+            startActivityForResult(signup, SIGNUP_RESULTS);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SIGNUP_RESULTS:
+                if (ParseUser.getCurrentUser() != null) {
+                    //Successful login
+                    //Allow into the app
+                    finish();
+                }
+                break;
+        }
+    }
 
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
