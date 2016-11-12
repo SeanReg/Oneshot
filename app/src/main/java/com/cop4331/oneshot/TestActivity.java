@@ -11,9 +11,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cop4331.LoginActivity;
 import com.cop4331.camera.CameraActivity;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.image_manipulation.ImageManipulateTest;
+
+import com.cop4331.networking.Account;
+import com.parse.Parse;
+
 
 public class TestActivity extends AppCompatActivity {
 
@@ -31,7 +36,7 @@ public class TestActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent camIntent = new Intent(getApplicationContext(), CameraActivity.class);
+                Intent camIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(camIntent);
 
 /*                Intent imageIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);

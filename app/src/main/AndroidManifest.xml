@@ -3,6 +3,8 @@
     package="com.cop4331.oneshot">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -28,6 +30,8 @@
             android:name="com.cop4331.image_manipulation.ImageManipulateTest"
             android:label="Camera"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.cop4331.LoginActivity" />
+        <activity android:name=".SignupActivity"></activity>
     </application>
 
 </manifest>
