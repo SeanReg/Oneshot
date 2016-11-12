@@ -18,8 +18,8 @@
         android:layout_marginTop="24dp"
         android:id="@+id/passwordText"
         android:hint="Password"
-        android:layout_below="@+id/emailText"
-        android:layout_alignStart="@+id/emailText"
+        android:layout_below="@+id/usernameText"
+        android:layout_alignStart="@+id/usernameText"
         android:fontFamily="sans-serif" />
 
     <Button
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:layout_marginTop="84dp"
-        android:id="@+id/emailText"
-        android:hint="Email"
+        android:id="@+id/usernameText"
+        android:hint="Username"
         android:fontFamily="sans-serif"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
