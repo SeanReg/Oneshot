@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int SIGNUP_RESULTS = 1;
 
-    private EditText mEmailText    = null;
+    private EditText mUsername     = null;
     private EditText mPasswordText = null;
 
     private StatusListener mStatusListener = new StatusListener();
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.loginButton)).setOnClickListener(mLoginListener);
         ((Button)findViewById(R.id.signupButton)).setOnClickListener(mSignupListener);
 
-        mEmailText    = ((EditText)findViewById(R.id.emailText));
+        mUsername    = ((EditText)findViewById(R.id.usernameText));
         mPasswordText = ((EditText)findViewById(R.id.passwordText));
     }
 
@@ -47,11 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             AccountManager manager = AccountManager.getInstance();
 
-            String email    = mEmailText.getText().toString();
+            String username    = mUsername.getText().toString();
             String password = mPasswordText.getText().toString();
 
             manager.setAccountStatusListener(mStatusListener);
-            manager.login(email, password);
+            manager.login(username, password);
         }
     };
 
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
-
+            
         }
 
         @Override
