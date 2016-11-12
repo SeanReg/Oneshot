@@ -7,12 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.cop4331.networking.AccountManager;
 import com.cop4331.oneshot.R;
 import com.cop4331.oneshot.SignupActivity;
-import com.parse.Parse;
-import com.parse.ParseUser;
+import com.parse.*;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mUsername     = null;
     private EditText mPasswordText = null;
+    private TextView mError = null;
 
     private StatusListener mStatusListener = new StatusListener();
 
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mUsername    = ((EditText)findViewById(R.id.usernameText));
         mPasswordText = ((EditText)findViewById(R.id.passwordText));
+        mError = ((TextView) findViewById(R.id.errorText));
     }
 
 
@@ -79,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
-            finish();
+
         }
 
         @Override
@@ -90,10 +92,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onLoginError() {
             Log.d("Login: ", "Error Logining in!");
+            mError.setText("Error logging in.");
         }
 
         @Override
-        public void onRegistrationError() {
+        public void onRegistrationError(ParseException e) {
 
         }
     }

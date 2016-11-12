@@ -24,7 +24,7 @@ public class AccountManager {
         public void onRegistered(Account account);
         
         public void onLoginError();
-        public void onRegistrationError();
+        public void onRegistrationError(ParseException e);
     }
     
     public static AccountManager getInstance() {
@@ -71,11 +71,11 @@ public class AccountManager {
         @Override
         public void done(ParseException e) {
             if (mAccountStatusListener != null) {
-                if (e != null) {
+                if (e == null) {
                     mCurrAcc = new Account(ParseUser.getCurrentUser());
                     mAccountStatusListener.onRegistered(mCurrAcc);
                 } else {
-                    mAccountStatusListener.onRegistrationError();
+                    mAccountStatusListener.onRegistrationError(e);
                 }
             }
         }
@@ -89,7 +89,7 @@ public class AccountManager {
                     mCurrAcc = new Account(ParseUser.getCurrentUser());
                     mAccountStatusListener.onLogin(mCurrAcc);
                 } else {
-                    // Signup failed. Look at the ParseException to see what happened.
+                    // Login failed. Look at the ParseException to see what happened.
                     mAccountStatusListener.onLoginError();
                 }
             }
