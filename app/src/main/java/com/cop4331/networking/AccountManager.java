@@ -35,6 +35,8 @@ public class AccountManager {
     }
     
     public static AccountManager getInstance() {
+        if (mManager.isLoggedIn()) mManager.mCurrAcc = new Account(ParseUser.getCurrentUser());
+
         return mManager;
     }
 

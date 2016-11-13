@@ -1,5 +1,7 @@
 package com.cop4331.oneshot;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -9,16 +11,33 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.cop4331.LoginActivity;
+import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.networking.AccountManager;
+import com.parse.Parse;
+
 public class HomeScreenActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
+    private PermissionRequester mPermission = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
+                .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
+                .server("https://parseapi.back4app.com/").build()
+        );
+
+        mPermission = new PermissionRequester(this);
+        mPermission.requestPermission(Manifest.permission.CAMERA);
+
 
         /**
          *Setup the DrawerLayout and NavigationView
@@ -40,31 +59,33 @@ public class HomeScreenActivity extends AppCompatActivity{
          */
 
              mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-             @Override
-             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                mDrawerLayout.closeDrawers();
+                 @Override
+                 public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    mDrawerLayout.closeDrawers();
 
+                     if (menuItem.getItemId() == R.id.nav_item_settings) {
+                         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                         fragmentTransaction.replace(R.id.containerView,new SettingsActivity()).commit();
 
+                     }
 
-                 if (menuItem.getItemId() == R.id.nav_item_settings) {
-                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                     fragmentTransaction.replace(R.id.containerView,new SettingsActivity()).commit();
+                    if (menuItem.getItemId() == R.id.nav_item_home) {
+                        FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                        xfragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
+                    }
 
-                 }
+                     if (menuItem.getItemId() == R.id.nav_item_friends) {
+                         FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                         xfragmentTransaction.replace(R.id.containerView,new FriendsFragment()).commit();
+                     }
 
-                if (menuItem.getItemId() == R.id.nav_item_home) {
-                    FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                    xfragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
+                     if (menuItem.getItemId() == R.id.nav_item_logout) {
+                         if (AccountManager.getInstance().isLoggedIn()) AccountManager.getInstance().getCurrentAccount().logout();
+                         onStart();
+                     }
+
+                     return false;
                 }
-
-                 if (menuItem.getItemId() == R.id.nav_item_friends) {
-                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                     xfragmentTransaction.replace(R.id.containerView,new FriendsFragment()).commit();
-                 }
-
-                 return false;
-            }
-
         });
 
         /**
@@ -79,5 +100,23 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                 mDrawerToggle.syncState();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+/*        if (AccountManager.getInstance().getCurrentAccount() != null) {
+            AccountManager.getInstance().getCurrentAccount().logout();
+        }*/
+        if (!AccountManager.getInstance().isLoggedIn()) {
+            Intent camIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(camIntent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
 }
