@@ -30,7 +30,7 @@ public class AccountManager {
         public void onLogin(Account account);
         public void onRegistered(Account account);
         
-        public void onLoginError();
+        public void onLoginError(ParseException e);
         public void onRegistrationError(ParseException e);
     }
     
@@ -99,7 +99,7 @@ public class AccountManager {
                     mAccountStatusListener.onLogin(mCurrAcc);
                 } else {
                     // Login failed. Look at the ParseException to see what happened.
-                    mAccountStatusListener.onLoginError();
+                    mAccountStatusListener.onLoginError(e);
                 }
             }
         }

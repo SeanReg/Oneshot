@@ -23,6 +23,8 @@ public class SignupActivity extends AppCompatActivity {
     private EditText mConfirmedPassword = null;
     private TextView mError             = null;
 
+    StringBuilder sb = new StringBuilder();
+
     private StatusListener mStatusListener = new StatusListener();
 
     @Override
@@ -32,12 +34,12 @@ public class SignupActivity extends AppCompatActivity {
 
         ((Button)findViewById(R.id.registerButton)).setOnClickListener(mSignupListener);
 
-        mUsername    = ((EditText)findViewById(R.id.usernameText));
-        mDisplayName = ((EditText)findViewById(R.id.displayNameText));
-        mPhoneNumber    = ((EditText)findViewById(R.id.phoneNumberText));
-        mPassword = ((EditText)findViewById(R.id.passwordText));
-        mConfirmedPassword = ((EditText)findViewById(R.id.confirmPasswordText));
-        mError = ((TextView)findViewById(R.id.errorText));
+        mUsername           = ((EditText)findViewById(R.id.usernameText));
+        mDisplayName        = ((EditText)findViewById(R.id.displayNameText));
+        mPhoneNumber        = ((EditText)findViewById(R.id.phoneNumberText));
+        mPassword           = ((EditText)findViewById(R.id.passwordText));
+        mConfirmedPassword  = ((EditText)findViewById(R.id.confirmPasswordText));
+        mError              = ((TextView)findViewById(R.id.errorText));
     }
 
     private final Button.OnClickListener mSignupListener = new Button.OnClickListener() {
@@ -52,6 +54,27 @@ public class SignupActivity extends AppCompatActivity {
             String confirmedPassword    = mConfirmedPassword.getText().toString();
 
             manager.setAccountStatusListener(mStatusListener);
+
+            // Error checking
+            sb.setLength(0);
+            username =  username.replaceAll(" ", "");
+            phoneNumber = phoneNumber.replaceAll("\\D+","");
+            if(username.length() < 1) {
+                sb.append("Invalid username.\n");
+            }
+            if(displayName.trim().length() < 1) {
+                displayName = username;
+            }
+            if(phoneNumber.length() != 10) {
+                sb.append("Invalid phone number.\n");
+            }
+            if(password.length() < 8) {
+                sb.append("Password must be minimum of 8 characters.\n");
+            }
+            if(!password.equals(confirmedPassword)) {
+                sb.append("Passwords do not match.\n");
+            }
+            mStatusListener.onRegistrationError(sb.toString());
             manager.register(username, password, phoneNumber);
         }
     };
@@ -68,17 +91,22 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onLoginError() {
+        public void onLoginError(ParseException e) {
 
         }
 
         @Override
         public void onRegistrationError(ParseException e) {
             if(e.getCode() == DUPLICATE_ACCOUNT) {
-                mError.setText("Username taken.");
-            } else {
-                Log.d("", "" + e.getCode());
+                onRegistrationError(sb.append(e.getMessage()).toString());
             }
+            if (e.getMessage().contains("java.lang")){
+                return;
+            }
+        }
+
+        public void onRegistrationError(String error) {
+            mError.setText(error);
         }
     }
 }

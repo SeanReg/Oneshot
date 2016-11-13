@@ -19,9 +19,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int SIGNUP_RESULTS = 1;
 
-    private EditText mUsername     = null;
-    private EditText mPasswordText = null;
-    private TextView mError = null;
+    private EditText mUsername      = null;
+    private EditText mPasswordText  = null;
+    private TextView mError         = null;
 
     private StatusListener mStatusListener = new StatusListener();
 
@@ -33,9 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.loginButton)).setOnClickListener(mLoginListener);
         ((Button)findViewById(R.id.signupButton)).setOnClickListener(mSignupListener);
 
-        mUsername    = ((EditText)findViewById(R.id.usernameText));
-        mPasswordText = ((EditText)findViewById(R.id.passwordText));
-        mError = ((TextView) findViewById(R.id.errorText));
+        mUsername       = ((EditText)findViewById(R.id.usernameText));
+        mPasswordText   = ((EditText)findViewById(R.id.passwordText));
+        mError          = ((TextView) findViewById(R.id.errorText));
     }
 
 
@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             AccountManager manager = AccountManager.getInstance();
 
-            String username    = mUsername.getText().toString();
+            String username = mUsername.getText().toString();
             String password = mPasswordText.getText().toString();
 
             manager.setAccountStatusListener(mStatusListener);
@@ -91,9 +91,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onLoginError() {
-            Log.d("Login: ", "Error Logining in!");
-            mError.setText("Error logging in.");
+        public void onLoginError(ParseException e) {
+            mError.setText(e.getMessage());
         }
 
         @Override
