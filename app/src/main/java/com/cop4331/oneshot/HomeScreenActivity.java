@@ -24,16 +24,21 @@ public class HomeScreenActivity extends AppCompatActivity{
 
     private PermissionRequester mPermission = null;
 
+    private static boolean mParseInitialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
-                .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
-                .server("https://parseapi.back4app.com/").build()
-        );
+        if (!mParseInitialized) {
+            Parse.initialize(new Parse.Configuration.Builder(this)
+                    .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
+                    .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
+                    .server("https://parseapi.back4app.com/").build()
+            );
+            mParseInitialized = true;
+        }
 
         mPermission = new PermissionRequester(this);
         mPermission.requestPermission(Manifest.permission.CAMERA);
