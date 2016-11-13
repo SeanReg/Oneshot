@@ -20,7 +20,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignWithParentIfMissing="false"
-        android:background="#fa0000"
         android:adjustViewBounds="false"
         android:scaleType="centerCrop" />
 
@@ -73,17 +72,5 @@
         android:textOn=""
         android:textOff=""
         android:text=""  />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:text="Hello World"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
-        android:layout_below="@+id/flashButton"
-        android:layout_alignEnd="@+id/captureButton"
-        android:layout_marginTop="100dp"
-        android:background="#64474444" />
 
 </RelativeLayout>

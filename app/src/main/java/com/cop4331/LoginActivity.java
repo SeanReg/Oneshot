@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.cop4331.networking.AccountManager;
+import com.cop4331.networking.Game;
 import com.cop4331.oneshot.R;
 import com.cop4331.oneshot.SignupActivity;
 import com.parse.Parse;
@@ -27,12 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
-                .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
-                .server("https://parseapi.back4app.com/").build()
-        );
 
         ((Button)findViewById(R.id.loginButton)).setOnClickListener(mLoginListener);
         ((Button)findViewById(R.id.signupButton)).setOnClickListener(mSignupListener);
@@ -79,6 +74,12 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
+            Game.Builder builder = new Game.Builder();
+            builder.setPrompt("Hello World");
+            builder.setTimelimit(5000);
+
+            account.startGame(builder);
+            account.getCurrentGames();
             finish();
         }
 

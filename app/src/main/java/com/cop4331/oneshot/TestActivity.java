@@ -32,11 +32,17 @@ public class TestActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
+                .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
+                .server("https://parseapi.back4app.com/").build()
+        );
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent camIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent camIntent = new Intent(getApplicationContext(), CameraActivity.class);
                 startActivity(camIntent);
 
 /*                Intent imageIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);

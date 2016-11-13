@@ -160,12 +160,6 @@ public class CameraActivity extends AppCompatActivity {
             Log.d("CameraActivity", "Got image from ImageReader");
             mCameraView.setVisibility(View.INVISIBLE);
 
-            ImageView imgView = (ImageView)findViewById(R.id.imageView);
-
-            View textView = findViewById(R.id.textView);
-/*            Size viewSize = new Size(textView.getWidth(), textView.getHeight());
-            fixViewAspect(textView, CameraHandle.getInstance().getSupportedResolution(viewSize));*/
-
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("bitmap", Context.MODE_PRIVATE);
             if (!directory.exists()) {

@@ -13,17 +13,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
-        android:layout_marginTop="11dp"
-        android:id="@+id/displayNameText"
-        android:layout_below="@+id/usernameText"
-        android:layout_alignStart="@+id/usernameText"
-        android:hint="Display Name" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:ems="10"
         android:layout_marginTop="43dp"
         android:id="@+id/usernameText"
@@ -31,6 +20,17 @@
         android:inputType="text"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/phoneNumberText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:layout_marginTop="11dp"
+        android:id="@+id/displayNameText"
+        android:layout_below="@+id/usernameText"
+        android:layout_alignStart="@+id/usernameText"
+        android:hint="Display Name" />
 
     <EditText
         android:layout_width="wrap_content"

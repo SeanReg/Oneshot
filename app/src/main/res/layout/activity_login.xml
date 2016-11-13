@@ -13,6 +13,18 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="84dp"
+        android:id="@+id/usernameText"
+        android:hint="Username"
+        android:fontFamily="sans-serif"
+        android:inputType="textEmailAddress"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:layout_marginTop="24dp"
@@ -40,15 +52,4 @@
         android:layout_below="@+id/passwordText"
         android:layout_alignStart="@+id/loginButton" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="84dp"
-        android:id="@+id/usernameText"
-        android:hint="Username"
-        android:fontFamily="sans-serif"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:inputType="textEmailAddress" />
 </RelativeLayout>
