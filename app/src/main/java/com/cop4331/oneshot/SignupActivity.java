@@ -12,7 +12,6 @@ import com.parse.Parse;
 
 public class SignupActivity extends AppCompatActivity {
 
-
     private EditText mUsername    = null;
     private EditText mDisplayName = null;
     private EditText mPhoneNumber = null;
