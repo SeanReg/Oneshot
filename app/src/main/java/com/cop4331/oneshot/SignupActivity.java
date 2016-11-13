@@ -6,17 +6,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.cop4331.networking.AccountManager;
 import com.parse.Parse;
+import com.parse.ParseException;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText mUsername    = null;
-    private EditText mDisplayName = null;
-    private EditText mPhoneNumber = null;
-    private EditText mPassword = null;
+
+    private static final int DUPLICATE_ACCOUNT = 202;
+    private EditText mUsername          = null;
+    private EditText mDisplayName       = null;
+    private EditText mPhoneNumber       = null;
+    private EditText mPassword          = null;
     private EditText mConfirmedPassword = null;
+    private TextView mError             = null;
 
     private StatusListener mStatusListener = new StatusListener();
 
@@ -32,6 +37,7 @@ public class SignupActivity extends AppCompatActivity {
         mPhoneNumber    = ((EditText)findViewById(R.id.phoneNumberText));
         mPassword = ((EditText)findViewById(R.id.passwordText));
         mConfirmedPassword = ((EditText)findViewById(R.id.confirmPasswordText));
+        mError = ((TextView)findViewById(R.id.errorText));
     }
 
     private final Button.OnClickListener mSignupListener = new Button.OnClickListener() {
@@ -67,8 +73,12 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onRegistrationError() {
-
+        public void onRegistrationError(ParseException e) {
+            if(e.getCode() == DUPLICATE_ACCOUNT) {
+                mError.setText("Username taken.");
+            } else {
+                Log.d("", "" + e.getCode());
+            }
         }
     }
 }
