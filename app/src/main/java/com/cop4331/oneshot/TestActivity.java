@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.parse.Parse;
 
 
 public class TestActivity extends AppCompatActivity {
@@ -33,11 +34,7 @@ public class TestActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
-                Intent camIntent = new Intent(getApplicationContext(), CameraActivity.class);
-=======
                 Intent camIntent = new Intent(getApplicationContext(), HomeScreenActivity.class);
->>>>>>> fc3b87ec5d04c1d4593195f029d3cab0cb9a773e
                 startActivity(camIntent);
 
 /*                Intent imageIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);

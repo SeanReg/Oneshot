@@ -13,19 +13,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
-=======
-        android:inputType="text"
-        android:ems="10"
-        android:id="@+id/displayNameText"
-        android:hint="Display Name"
-        android:layout_below="@+id/usernameText"
-        android:layout_alignStart="@+id/phoneNumberText" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
->>>>>>> fc3b87ec5d04c1d4593195f029d3cab0cb9a773e
         android:ems="10"
         android:layout_marginTop="56dp"
         android:id="@+id/usernameText"

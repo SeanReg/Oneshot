@@ -76,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
-<<<<<<< HEAD
             Game.Builder builder = new Game.Builder();
             builder.setPrompt("Hello World");
             builder.setTimelimit(5000);
@@ -84,9 +83,6 @@ public class LoginActivity extends AppCompatActivity {
             account.startGame(builder);
             account.getCurrentGames();
             finish();
-=======
-
->>>>>>> fc3b87ec5d04c1d4593195f029d3cab0cb9a773e
         }
 
         @Override
