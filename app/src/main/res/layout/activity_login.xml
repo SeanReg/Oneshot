@@ -39,17 +39,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/loginButton"
-        android:layout_below="@+id/signupButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Sign Up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:id="@+id/signupButton"
-        android:layout_below="@+id/passwordText"
-        android:layout_alignStart="@+id/loginButton" />
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true" />
 
+<<<<<<< HEAD
+=======
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="84dp"
+        android:id="@+id/usernameText"
+        android:hint="Username"
+        android:fontFamily="sans-serif"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:inputType="textEmailAddress" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorText"
+        android:layout_alignStart="@+id/passwordText"
+        android:layout_below="@+id/passwordText"
+        android:layout_alignEnd="@+id/passwordText"
+        android:textStyle="bold"
+        android:textColor="#de0d0d" />
+
+>>>>>>> fc3b87ec5d04c1d4593195f029d3cab0cb9a773e
 </RelativeLayout>

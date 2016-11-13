@@ -13,8 +13,21 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+        android:inputType="text"
         android:ems="10"
-        android:layout_marginTop="43dp"
+        android:id="@+id/displayNameText"
+        android:hint="Display Name"
+        android:layout_below="@+id/usernameText"
+        android:layout_alignStart="@+id/phoneNumberText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+>>>>>>> fc3b87ec5d04c1d4593195f029d3cab0cb9a773e
+        android:ems="10"
+        android:layout_marginTop="56dp"
         android:id="@+id/usernameText"
         android:hint="Username"
         android:inputType="text"
@@ -36,36 +49,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:layout_marginTop="9dp"
         android:id="@+id/phoneNumberText"
-        android:layout_below="@+id/displayNameText"
-        android:layout_centerHorizontal="true"
         android:hint="Phone Number"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:layout_below="@+id/displayNameText"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_marginTop="11dp"
         android:id="@+id/passwordText"
-        android:layout_below="@+id/phoneNumberText"
-        android:layout_alignStart="@+id/phoneNumberText"
         android:hint="Password"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="sans-serif"
+        android:layout_below="@+id/phoneNumberText"
+        android:layout_alignStart="@+id/phoneNumberText" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_below="@+id/passwordText"
-        android:layout_alignStart="@+id/passwordText"
-        android:layout_marginTop="11dp"
         android:id="@+id/confirmPasswordText"
         android:hint="Confirm Password"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="sans-serif"
+        android:layout_below="@+id/passwordText"
+        android:layout_alignStart="@+id/passwordText" />
 
     <Button
         android:text="Register"
@@ -75,4 +85,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
         android:id="@+id/registerButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorText"
+        android:layout_below="@+id/confirmPasswordText"
+        android:layout_alignStart="@+id/confirmPasswordText"
+        android:layout_alignEnd="@+id/confirmPasswordText"
+        android:textColor="#de0d0d"
+        android:textStyle="bold" />
 </RelativeLayout>
