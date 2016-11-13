@@ -42,14 +42,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Sign Up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/signupButton"
-        android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,4 +51,14 @@
         android:layout_alignEnd="@+id/passwordText"
         android:textStyle="bold"
         android:textColor="#de0d0d" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don&apos;t have an account?"
+        android:id="@+id/signupButton"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:textColor="#1f1fc6" />
 </RelativeLayout>

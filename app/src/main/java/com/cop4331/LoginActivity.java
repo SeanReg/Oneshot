@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         ((Button)findViewById(R.id.loginButton)).setOnClickListener(mLoginListener);
-        ((Button)findViewById(R.id.signupButton)).setOnClickListener(mSignupListener);
+        ((TextView)findViewById(R.id.signupButton)).setOnClickListener(mSignupListener);
 
         mUsername       = ((EditText)findViewById(R.id.usernameText));
         mPasswordText   = ((EditText)findViewById(R.id.passwordText));
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private final Button.OnClickListener mSignupListener = new Button.OnClickListener() {
+    private final TextView.OnClickListener mSignupListener = new TextView.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
