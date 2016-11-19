@@ -49,7 +49,7 @@ public class HomeScreenActivity extends AppCompatActivity{
          */
 
              mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-             mNavigationView = (NavigationView) findViewById(R.id.shitstuff) ;
+             mNavigationView = (NavigationView) findViewById(R.id.navigationview) ;
 
         /**
          * Lets inflate the very first fragment
@@ -58,7 +58,9 @@ public class HomeScreenActivity extends AppCompatActivity{
 
              mFragmentManager = getSupportFragmentManager();
              mFragmentTransaction = mFragmentManager.beginTransaction();
-             mFragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
+            TabFragment tabFragment = new TabFragment();
+            tabFragment.setHomeScreenActivity(this);
+             mFragmentTransaction.replace(R.id.containerView, tabFragment).commit();
         /**
          * Setup click events on the Navigation View Items.
          */
@@ -76,7 +78,9 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                     if (menuItem.getItemId() == R.id.nav_item_home) {
                         FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                        xfragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
+                        TabFragment tabFragment = new TabFragment();
+                        tabFragment.setHomeScreenActivity(HomeScreenActivity.this);
+                        xfragmentTransaction.replace(R.id.containerView, tabFragment).commit();
                     }
 
                      if (menuItem.getItemId() == R.id.nav_item_friends) {
@@ -104,6 +108,10 @@ public class HomeScreenActivity extends AppCompatActivity{
                 mDrawerLayout.setDrawerListener(mDrawerToggle);
 
                 mDrawerToggle.syncState();
+
+    }
+
+    public void inflateGameCreation() {
 
     }
 
