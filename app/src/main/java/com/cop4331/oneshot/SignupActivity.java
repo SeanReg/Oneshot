@@ -2,14 +2,12 @@ package com.cop4331.oneshot;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cop4331.networking.AccountManager;
-import com.parse.Parse;
 import com.parse.ParseException;
 
 public class SignupActivity extends AppCompatActivity {
@@ -75,7 +73,7 @@ public class SignupActivity extends AppCompatActivity {
                 sb.append("Passwords do not match.\n");
             }
             mStatusListener.onRegistrationError(sb.toString());
-            manager.register(username, password, phoneNumber);
+            manager.register(username, password, displayName, phoneNumber);
         }
     };
 

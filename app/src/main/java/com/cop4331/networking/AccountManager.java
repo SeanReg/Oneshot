@@ -19,8 +19,8 @@ import java.util.List;
 public class AccountManager {
     private Account        mCurrAcc = null;
 
-    private static final String FIELD_EMAIL        = "email";
-    private static final String FIELD_PHONE_NUMBER = "phone";
+    private static final String FIELD_DISPLAY_NAME  = "displayName";
+    private static final String FIELD_PHONE_NUMBER  = "phone";
 
     private onAccountStatus mAccountStatusListener = null;
 
@@ -50,11 +50,12 @@ public class AccountManager {
         }
     }
 
-    public void register(String username, String password, String phone) {
+    public void register(String username, String password, String displayName, String phone) {
         ParseUser user = new ParseUser();
         //user.setEmail(username);
         user.setUsername(username);
         user.setPassword(password);
+        user.put(FIELD_DISPLAY_NAME, displayName);
         user.put(FIELD_PHONE_NUMBER, phone);
 
         user.signUpInBackground(mRegisterCallback);
@@ -202,6 +203,29 @@ public class AccountManager {
         
         private void requestFriend(int requestType, String reqString) { 
             
+        }
+
+        public void setDisplayName(String displayName) {
+            ParseUser.getCurrentUser().put("displayName", displayName);
+        }
+
+        public void setUsername(String username) {
+            ParseUser.getCurrentUser().put("username", username);
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            ParseUser.getCurrentUser().put("phone", phoneNumber);
+        }
+
+        public String getUsername() {
+            return ParseUser.getCurrentUser().getUsername();
+        }
+        public String getDisplayName() {
+            return ParseUser.getCurrentUser().get("displayName").toString();
+        }
+
+        public String getPhoneNumber() {
+            return ParseUser.getCurrentUser().get("phone").toString();
         }
         
         public void logout() {

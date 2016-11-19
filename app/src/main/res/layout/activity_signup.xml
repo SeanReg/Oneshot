@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_signup"
     android:layout_width="match_parent"
@@ -8,10 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cop4331.oneshot.SignupActivity">
+    tools:context="com.cop4331.oneshot.SignupActivity"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:id="@+id/usernameText"
@@ -21,7 +24,7 @@
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:ems="10"
@@ -31,7 +34,7 @@
         android:layout_alignStart="@+id/phoneNumberText" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:id="@+id/phoneNumberText"
@@ -41,7 +44,7 @@
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
@@ -52,7 +55,7 @@
         android:layout_alignStart="@+id/phoneNumberText" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
@@ -61,14 +64,6 @@
         android:fontFamily="sans-serif"
         android:layout_below="@+id/passwordText"
         android:layout_alignStart="@+id/passwordText" />
-
-    <Button
-        android:text="Register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/registerButton"
-        android:layout_below="@+id/confirmPasswordText"
-        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -79,4 +74,13 @@
         android:layout_below="@+id/registerButton"
         android:layout_alignStart="@+id/confirmPasswordText"
         android:layout_alignEnd="@+id/confirmPasswordText" />
-</RelativeLayout>
+
+    <Button
+        android:text="Register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerButton"
+        android:layout_below="@+id/confirmPasswordText"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

@@ -1,17 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:id="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black"
-        android:text="Friends\nFragment"/>
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchText"
+            android:layout_weight="0.98"
+            android:hint="Search for..."
+            android:layout_marginLeft="10dp"
+            android:singleLine="true" />
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:id="@+id/searchButton" />
+    </LinearLayout>
 
-</RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                card_view:cardCornerRadius="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@android:color/holo_red_light">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Nadeen Saleh"
+                            android:id="@+id/nameText"
+                            android:textSize="18dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.9" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="nadeenrocks"
+                            android:id="@+id/usernameDisplay"
+                            android:textStyle="bold|italic"
+                            android:textSize="18dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.9" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignParentRight="true">
+                        <Button
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/deleteButton"
+                            android:background="@drawable/background_delete_button"
+                            style="?android:attr/borderlessButtonStyle"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>
