@@ -37,6 +37,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.cop4331.LoginActivity" />
         <activity android:name=".SignupActivity" />
+        <activity android:name=".NewGameActivity" />
 
         <!-- Parse setup -->
         <meta-data

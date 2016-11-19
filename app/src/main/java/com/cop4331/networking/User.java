@@ -9,7 +9,8 @@ public class User {
     }
 
     public User(String username, String displayName) {
-
+        mDisplayName = displayName;
+        mUsername    = username;
     }
     
     public String getUsername() {

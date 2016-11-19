@@ -17,6 +17,8 @@ public class TabFragment extends Fragment {
     public static ViewPager viewPager;
     public static int int_items = 3 ;
 
+    private HomeScreenActivity mHomeScreenActivity = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,11 +37,15 @@ public class TabFragment extends Fragment {
             @Override
             public void run() {
                     tabLayout.setupWithViewPager(viewPager);
-                   }
+            }
         });
 
         return x;
 
+    }
+
+    public void setHomeScreenActivity(HomeScreenActivity homeScreenActivity) {
+        mHomeScreenActivity = homeScreenActivity;
     }
 
     class MyAdapter extends FragmentPagerAdapter{
@@ -55,12 +61,20 @@ public class TabFragment extends Fragment {
         @Override
         public Fragment getItem(int position)
         {
+            Fragment fragment = null;
           switch (position){
-              case 0 : return new CreatedFragment();
-              case 1 : return new ParticipatingFragment();
-              case 2 : return new HistoryFragment();
+              case 0:
+                  fragment = new CreatedFragment();
+                  ((CreatedFragment)fragment).setHomeScreenActivity(mHomeScreenActivity);
+              break;
+              case 1:
+                  fragment = new ParticipatingFragment();
+              break;
+              case 2:
+                  fragment = new HistoryFragment();
+              break;
           }
-        return null;
+            return fragment;
         }
 
         @Override
