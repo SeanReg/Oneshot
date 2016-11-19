@@ -3,11 +3,11 @@ package com.cop4331.networking;
 import com.cop4331.networking.User;
 
 public class Relationship {
-	private static final int STATUS_PENDING  = 0;
-	private static final int STATUS_ACCEPTED = 1;
-	private static final int STATUS_DENIED   = 2;
+	public static final int STATUS_PENDING  = 0;
+	public static final int STATUS_ACCEPTED = 1;
+	public static final int STATUS_DENIED   = 2;
 
-	private final User mUser;
+	private final User 	   mUser;
 	private final boolean  mSentByMe;
 	private final int	   mStatus;
 	
@@ -19,10 +19,14 @@ public class Relationship {
 	}
 
 	public User getUser() {
-		return null;
+		return mUser;
 	}
 
 	public boolean isSentByMe() {
-		return false;
+		return mSentByMe;
+	}
+
+	public int getStatus() {
+		return mStatus;
 	}
 }

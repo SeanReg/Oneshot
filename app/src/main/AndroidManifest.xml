@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:protectionLevel="signature"
+        android:name="com.cop4331.oneshot.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.cop4331.oneshot.permission.C2D_MESSAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,6 +37,37 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.cop4331.LoginActivity" />
         <activity android:name=".SignupActivity" />
+
+        <!-- Parse setup -->
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo" />
+        <!-- GCM setup -->
+        <meta-data
+            android:name="com.parse.push.gcm_sender_id"
+            android:value="id:462137946446" />
+        <!-- The following service and broadcast receiver definitions must come immediately
+             before the closing </application> tag -->
+        <service android:name="com.parse.PushService" />
+        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.cop4331.oneshot" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

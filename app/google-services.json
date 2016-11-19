@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "462137946446",
+    "firebase_url": "https://oneshot-6c093.firebaseio.com",
+    "project_id": "oneshot-6c093",
+    "storage_bucket": "oneshot-6c093.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462137946446:android:7bd01059f462d878",
+        "android_client_info": {
+          "package_name": "com.cop4331.oneshot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462137946446-dg3d7dfoh765be0k2b6khol2e1mnnnhe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATy9S9QK1PWOE-8bqfmz4jTyJhnN5VTgY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

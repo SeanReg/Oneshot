@@ -105,6 +105,8 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                 mDrawerToggle.syncState();
 
+        AccountManager.getInstance().getCurrentAccount().getRelationships(null);
+
     }
 
     @Override
