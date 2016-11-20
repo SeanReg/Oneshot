@@ -224,14 +224,16 @@ public class AccountManager {
                         ArrayList<Relationship> relationships = new ArrayList<Relationship>();
 
                         for (ParseObject o : objects) {
-                            ParseUser userRel = null;
+                            ParseUser userRel   = null;
                             boolean   fromMe  = true;
-                            if (o.get("from") != ParseUser.getCurrentUser()) {
+                            if (!((ParseUser)o.get("from")).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                                 userRel = (ParseUser)o.get("from");
                                 fromMe  = false;
                             } else {
                                 userRel = (ParseUser)o.get("to");
                             }
+
+                            Log.d("Relationship: ", userRel.getUsername());
 
                             String displayName = userRel.get("displayName").toString();
                             if (displayName == null) displayName = "";
