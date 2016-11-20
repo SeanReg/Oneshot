@@ -8,7 +8,9 @@ import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -127,6 +129,12 @@ public class AccountManager {
 		}
 
         private Account(ParseUser user) {
+            //New user logged in - Associate with device
+            //For notification purposes
+            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+            installation.put("user", user);
+            installation.saveInBackground();
+
             mUser = user;
         }
         
@@ -208,7 +216,7 @@ public class AccountManager {
             compoundQuery.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
-                    if (mQuerylistener != null || true) {
+                    if (mQuerylistener != null) {
                         ArrayList<Relationship> relationships = new ArrayList<Relationship>();
 
                         for (ParseObject o : objects) {
@@ -266,10 +274,19 @@ public class AccountManager {
                                 if (e != null) {
 
                                 } else {
+                                    ParseQuery pushQuery = ParseInstallation.getQuery();
+                                    pushQuery.whereEqualTo("user", foundUsers.get(0));
+
+                                    ParsePush push = new ParsePush();
+                                    push.setQuery(pushQuery);
+
                                     if (objects.size() > 0) {
-                                        if ((int)objects.get(0).get("status") == Relationship.STATUS_PENDING)
+                                        if ((int)objects.get(0).get("status") == Relationship.STATUS_PENDING) {
                                             objects.get(0).put("status", Relationship.STATUS_ACCEPTED);
-                                        objects.get(0).saveInBackground();
+                                            objects.get(0).saveInBackground();
+
+                                            push.setMessage(ParseUser.getCurrentUser().getUsername() + " has accepted your friend request!");
+                                        }
                                     } else {
                                         //Found user - so add him
                                         ParseObject pRelationship = new ParseObject("Relationships");
@@ -278,7 +295,11 @@ public class AccountManager {
                                         pRelationship.put("status", Relationship.STATUS_PENDING);
 
                                         pRelationship.saveInBackground();
+
+                                        push.setMessage(ParseUser.getCurrentUser().getUsername() + " has sent you a friend request!");
                                     }
+
+                                    push.sendInBackground();
                                 }
                             }
                         });
