@@ -5,8 +5,10 @@ import android.util.Log;
 import com.cop4331.networking.Relationship;
 import com.cop4331.networking.User;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -17,7 +19,9 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountManager {
     private Account        mCurrAcc = null;
@@ -274,18 +278,15 @@ public class AccountManager {
                                 if (e != null) {
 
                                 } else {
-                                    ParseQuery pushQuery = ParseInstallation.getQuery();
-                                    pushQuery.whereEqualTo("user", foundUsers.get(0).getObjectId());
-
-                                    ParsePush push = new ParsePush();
-                                    push.setQuery(pushQuery);
+                                    HashMap<String, String> push = new HashMap<String, String>();
+                                    push.put("userId", foundUsers.get(0).getObjectId());
 
                                     if (objects.size() > 0) {
                                         if ((int)objects.get(0).get("status") == Relationship.STATUS_PENDING) {
                                             objects.get(0).put("status", Relationship.STATUS_ACCEPTED);
                                             objects.get(0).saveInBackground();
 
-                                            push.setMessage(ParseUser.getCurrentUser().getUsername() + " has accepted your friend request!");
+                                            push.put("message", ParseUser.getCurrentUser().getUsername() + " has accepted your friend request!");
                                         }
                                     } else {
                                         //Found user - so add him
@@ -296,10 +297,10 @@ public class AccountManager {
 
                                         pRelationship.saveInBackground();
 
-                                        push.setMessage(ParseUser.getCurrentUser().getUsername() + " has sent you a friend request!");
+                                        push.put("message", ParseUser.getCurrentUser().getUsername() + " has sent you a friend request!");
                                     }
 
-                                    push.sendInBackground();
+                                    ParseCloud.callFunctionInBackground("PushUser", push);
                                 }
                             }
                         });
