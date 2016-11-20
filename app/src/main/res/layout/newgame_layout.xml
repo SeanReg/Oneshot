@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/promptValue"
+            android:id="@+id/promptText"
             android:hint="Game Prompt"
             android:layout_below="@+id/textView"
             android:layout_alignParentEnd="true"
@@ -195,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:id="@+id/createGame" />
+                android:id="@+id/createGameButton" />
         </LinearLayout>
     </LinearLayout>
 
