@@ -132,7 +132,7 @@ public class AccountManager {
             //New user logged in - Associate with device
             //For notification purposes
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-            installation.put("user", user);
+            installation.put("user", user.getObjectId());
             installation.saveInBackground();
 
             mUser = user;
@@ -275,7 +275,7 @@ public class AccountManager {
 
                                 } else {
                                     ParseQuery pushQuery = ParseInstallation.getQuery();
-                                    pushQuery.whereEqualTo("user", foundUsers.get(0));
+                                    pushQuery.whereEqualTo("user", foundUsers.get(0).getObjectId());
 
                                     ParsePush push = new ParsePush();
                                     push.setQuery(pushQuery);
