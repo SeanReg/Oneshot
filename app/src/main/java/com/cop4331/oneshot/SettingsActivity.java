@@ -57,6 +57,7 @@ public class SettingsActivity extends Fragment implements View.OnClickListener {
         }
         manager.getCurrentAccount().setDisplayName(displayName);
         manager.getCurrentAccount().setPhoneNumber(phoneNumber);
+        manager.getCurrentAccount().updateAccount();
         mResult.setText("Update successful!")  ;
     }
 

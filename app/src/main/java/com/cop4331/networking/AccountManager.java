@@ -322,6 +322,10 @@ public class AccountManager {
             ParseUser.getCurrentUser().put("phone", phoneNumber);
         }
 
+        public void updateAccount() {
+            ParseUser.getCurrentUser().saveInBackground();
+        }
+
         public String getUsername() {
             return ParseUser.getCurrentUser().getUsername();
         }
