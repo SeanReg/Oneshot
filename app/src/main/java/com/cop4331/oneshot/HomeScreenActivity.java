@@ -82,8 +82,8 @@ public class HomeScreenActivity extends AppCompatActivity{
                     }
 
                      if (menuItem.getItemId() == R.id.nav_item_friends) {
-                         FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                         xfragmentTransaction.replace(R.id.containerView,new FriendsFragment()).commit();
+                         Intent settingsIntent = new Intent(getApplicationContext(), FriendsActivity.class);
+                         startActivity(settingsIntent);
                      }
 
                      if (menuItem.getItemId() == R.id.nav_item_logout) {
