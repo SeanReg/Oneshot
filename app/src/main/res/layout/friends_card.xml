@@ -56,7 +56,13 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/deleteButton"
                 android:background="@drawable/background_delete_button"
-                style="?android:attr/borderlessButtonStyle"/>
+                style="?android:attr/borderlessButtonStyle"
+                android:visibility="gone"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/selectButton"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

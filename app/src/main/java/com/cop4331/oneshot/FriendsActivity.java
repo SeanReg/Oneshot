@@ -58,6 +58,7 @@ public class FriendsActivity extends Activity {
                     CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
                     ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
                     ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
+                    ((Button)card.findViewById(R.id.deleteButton)).setVisibility(View.VISIBLE);
                     parentLayout.addView(card);
 
                     return;
