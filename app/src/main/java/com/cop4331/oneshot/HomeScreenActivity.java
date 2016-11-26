@@ -94,7 +94,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                      return false;
                 }
         });
-        
+
         /**
          * Setup Drawer Toggle of the Toolbar
          */
