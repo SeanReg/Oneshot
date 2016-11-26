@@ -42,7 +42,7 @@ public class RelationshipManager {
                         ArrayList<User> users = new ArrayList<User>();
                         for (ParseObject o : objects) {
                             if (o.getObjectId() != ParseUser.getCurrentUser().getObjectId()) {
-                                users.add(new User(o.getString(AccountManager.FIELD_USERNAME_CASE), o.getString(AccountManager.FIELD_DISPLAY_NAME), o.getString(AccountManager.FIELD_PHONE_NUMBER)));
+                                users.add(new User(o.getString(AccountManager.FIELD_USERNAME_CASE), o.getString(AccountManager.FIELD_DISPLAY_NAME), o.getString(AccountManager.FIELD_PHONE_NUMBER), (ParseUser)o));
                             }
                         }
 
@@ -90,7 +90,9 @@ public class RelationshipManager {
 
                         String displayName = userRel.get("displayName").toString();
                         if (displayName == null) displayName = "";
-                        Relationship rel = new Relationship(new User(userRel.get(AccountManager.FIELD_USERNAME_CASE).toString(), displayName, userRel.get(AccountManager.FIELD_PHONE_NUMBER).toString()), fromMe, userRel.getInt("status"));
+
+                        Relationship rel = new Relationship(new User(userRel.get(AccountManager.FIELD_USERNAME_CASE).toString(), displayName, userRel.get(AccountManager.FIELD_PHONE_NUMBER).toString(), userRel), fromMe, o.getInt("status"));
+
                         relationships.add(rel);
                     }
 
@@ -110,6 +112,9 @@ public class RelationshipManager {
                 if (e != null) {
 
                 } else {
+                    //Ensure the current user is different
+                    if (foundUsers.get(0).equals(ParseUser.getCurrentUser())) return;
+
                     //Lets first see if a request for us already exists
                     ParseQuery rQuery = ParseQuery.getQuery("Relationships");
                     rQuery.whereEqualTo("to", ParseUser.getCurrentUser());
@@ -125,7 +130,7 @@ public class RelationshipManager {
                                 push.put("userId", foundUsers.get(0).getObjectId());
 
                                 if (objects.size() > 0) {
-                                    if ((int)objects.get(0).get("status") == Relationship.STATUS_PENDING) {
+                                    if ((int)objects.get(0).getInt("status") == Relationship.STATUS_PENDING) {
                                         objects.get(0).put("status", Relationship.STATUS_ACCEPTED);
                                         objects.get(0).saveInBackground();
 
@@ -151,4 +156,29 @@ public class RelationshipManager {
             }
         });
     }
+
+    public void removeFriend(Relationship relationship) {
+        ParseQuery rQuery = ParseQuery.getQuery("Relationships");
+        rQuery.whereEqualTo("to", ParseUser.getCurrentUser());
+        rQuery.whereEqualTo("from", relationship.getUser().getParseUser());
+
+        ParseQuery sQuery = ParseQuery.getQuery("Relationships");
+        sQuery.whereEqualTo("to", relationship.getUser().getParseUser());
+        sQuery.whereEqualTo("from", ParseUser.getCurrentUser());
+
+        ArrayList<ParseQuery<ParseObject>> queries = new ArrayList<>();
+        queries.add(rQuery);
+        queries.add(sQuery);
+
+        ParseQuery compoundQuery = ParseQuery.or(queries);
+        compoundQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() > 0) {
+                    objects.get(0).deleteInBackground();
+                }
+            }
+        });
+    }
+
 }

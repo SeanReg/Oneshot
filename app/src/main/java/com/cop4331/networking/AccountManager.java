@@ -140,7 +140,7 @@ public class AccountManager {
             //New user logged in - Associate with device
             //For notification purposes
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-            installation.put("user", user.getObjectId());
+            installation.put("user", user);
             installation.saveInBackground();
 
             mUser = user;
@@ -200,8 +200,16 @@ public class AccountManager {
             pGame.put("owner", ParseUser.getCurrentUser());
             pGame.put("prompt", newGame.getPrompt());
             pGame.put("timelimit", newGame.getTimeLimit());
-            ParseRelation relation = pGame.getRelation("players");
 
+            ParseRelation relation = pGame.getRelation("players");
+            for (User user : newGame.getPlayers()) {
+                relation.add(user.getParseUser());
+
+                HashMap<String, String> push = new HashMap<String, String>();
+                push.put("userId", user.getParseUser().getObjectId());
+                push.put("message", getDisplayName() + " has sent you a game invite!");
+                ParseCloud.callFunctionInBackground("PushUser", push);
+            }
             pGame.saveInBackground();
         }
         
