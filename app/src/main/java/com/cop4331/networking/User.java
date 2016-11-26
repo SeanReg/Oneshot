@@ -22,4 +22,6 @@ public class User {
     public String getDisplayName() {
         return mDisplayName;
     }
+
+    public String getPhoneNumber() { return mPhoneNumber; }
 }

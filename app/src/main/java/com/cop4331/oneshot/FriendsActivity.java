@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,43 +25,89 @@ import java.util.List;
 
 public class FriendsActivity extends Activity {
 
+    private EditText mSearchText = null;
+    private AccountManager.Account curAcc = null;
+    private List<Relationship> mRelationships = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_layout);
 
-        AccountManager.Account curAcc = AccountManager.getInstance().getCurrentAccount();
-        curAcc.setQuerylistener(new AccountManager.Account.QueryListener() {
-            @Override
-            public void onGotScore(long score) {
+        curAcc = AccountManager.getInstance().getCurrentAccount();
+        curAcc.setQuerylistener(mQueryListener);
+        curAcc.getRelationships(null);
 
-            }
+        (findViewById(R.id.searchButton)).setOnClickListener(mSearchListener);
+        mSearchText = ((EditText)findViewById(R.id.searchText));
 
-            @Override
-            public void onGotRelationships(List<Relationship> relationships) {
-                LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
-                for (Relationship rel : relationships) {
+    }
+
+    private final Button.OnClickListener mSearchListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
+            parentLayout.removeAllViews();
+            String search = mSearchText.getText().toString();
+            for (Relationship rel : mRelationships) {
+                User currUser = rel.getUser();
+                if (currUser.getDisplayName().equalsIgnoreCase(search)
+                        || currUser.getUsername().equalsIgnoreCase(search)
+                        || currUser.getPhoneNumber().equalsIgnoreCase(search)) {
+
                     CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
                     ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
                     ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
                     parentLayout.addView(card);
+
+                    return;
                 }
             }
-            @Override
-            public void onGotGames(List<Game> games) {
 
+            curAcc.searchUser(search);
+
+        }
+    };
+
+    private final AccountManager.Account.QueryListener mQueryListener = new AccountManager.Account.QueryListener() {
+        @Override
+        public void onGotScore(long score) {
+
+        }
+
+        @Override
+        public void onGotRelationships(List<Relationship> relationships) {
+            LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
+            for (Relationship rel : relationships) {
+                CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
+                ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
+                ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
+                parentLayout.addView(card);
             }
+            mRelationships = relationships;
+        }
+        @Override
+        public void onGotGames(List<Game> games) {
 
-            @Override
-            public void onSearchUser(List<User> users) {
-                Log.d("Users found: ", users.get(0).getUsername());
+        }
+
+        @Override
+        public void onSearchUser(List<User> users) {
+            if (users.size() == 0) return;
+            for(User user : users) {
+                LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
+                CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
+                ((TextView)card.findViewById(R.id.nameText)).setText(user.getDisplayName());
+                ((TextView)card.findViewById(R.id.usernameDisplay)).setText(user.getUsername());
+                parentLayout.addView(card);
             }
+        }
 
-            @Override
-            public void onError() {
+        @Override
+        public void onError() {
 
-            }
-        });
-        curAcc.getRelationships(null);
-    }
+        }
+    };
+
+
 }
