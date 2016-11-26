@@ -112,6 +112,9 @@ public class RelationshipManager {
                 if (e != null) {
 
                 } else {
+                    //Ensure the current user is different
+                    if (foundUsers.get(0).equals(ParseUser.getCurrentUser())) return;
+
                     //Lets first see if a request for us already exists
                     ParseQuery rQuery = ParseQuery.getQuery("Relationships");
                     rQuery.whereEqualTo("to", ParseUser.getCurrentUser());
