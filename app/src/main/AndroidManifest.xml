@@ -40,6 +40,7 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".NewGameActivity" />
         <activity android:name=".FriendsActivity" />
+        <activity android:name=".InGameActivity" />
 
         <!-- Parse setup -->
         <meta-data
