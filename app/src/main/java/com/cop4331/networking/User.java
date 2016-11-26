@@ -36,4 +36,6 @@ public class User {
     public ParseUser getParseUser() {
         return mParseUser;
     }
+
+    public String getPhoneNumber() { return mPhoneNumber; }
 }
