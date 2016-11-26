@@ -1,5 +1,6 @@
 package com.cop4331.oneshot;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,9 +14,8 @@ import android.widget.TextView;
 
 import com.cop4331.networking.AccountManager;
 
-public class SettingsActivity extends Fragment implements View.OnClickListener {
-
-    private View mView                  = null;
+public class SettingsActivity extends Activity implements View.OnClickListener {
+    
     private Button mSaveButton          = null;
     private TextView mResult            = null;
     private EditText mUsername          = null;
@@ -23,22 +23,21 @@ public class SettingsActivity extends Fragment implements View.OnClickListener {
     private EditText mPhoneNumber       = null;
     AccountManager manager = AccountManager.getInstance();
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings_layout);
 
-        mView               = inflater.inflate(R.layout.settings_layout,null);
-        mSaveButton         = (Button)mView.findViewById(R.id.saveButton);
-        mResult             = (TextView)mView.findViewById(R.id.resultText);
-        mUsername           = (EditText)mView.findViewById(R.id.usernameDisplay);
-        mDisplayName        = (EditText)mView.findViewById(R.id.displayNameText);
-        mPhoneNumber        = (EditText)mView.findViewById(R.id.phoneNumberText);
+        mSaveButton         = (Button)findViewById(R.id.saveButton);
+        mResult             = (TextView)findViewById(R.id.resultText);
+        mUsername           = (EditText)findViewById(R.id.usernameDisplay);
+        mDisplayName        = (EditText)findViewById(R.id.displayNameText);
+        mPhoneNumber        = (EditText)findViewById(R.id.phoneNumberText);
 
         mUsername.setText(manager.getCurrentAccount().getUsername());
         mDisplayName.setText(manager.getCurrentAccount().getDisplayName());
         mPhoneNumber.setText(manager.getCurrentAccount().getPhoneNumber());
         mSaveButton.setOnClickListener(this);
-        return mView;
     }
 
     @Override

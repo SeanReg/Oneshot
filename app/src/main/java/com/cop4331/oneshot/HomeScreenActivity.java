@@ -43,7 +43,6 @@ public class HomeScreenActivity extends AppCompatActivity{
         mPermission = new PermissionRequester(this);
         mPermission.requestPermission(Manifest.permission.CAMERA);
 
-
         /**
          *Setup the DrawerLayout and NavigationView
          */
@@ -71,9 +70,8 @@ public class HomeScreenActivity extends AppCompatActivity{
                     mDrawerLayout.closeDrawers();
 
                      if (menuItem.getItemId() == R.id.nav_item_settings) {
-                         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                         fragmentTransaction.replace(R.id.containerView,new SettingsActivity()).commit();
-
+                         Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                         startActivity(settingsIntent);
                      }
 
                     if (menuItem.getItemId() == R.id.nav_item_home) {
