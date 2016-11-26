@@ -94,9 +94,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                      return false;
                 }
         });
-
-        AccountManager.getInstance().getCurrentAccount().requestFriendByUsername("nadeenrocks");
-
+        
         /**
          * Setup Drawer Toggle of the Toolbar
          */
