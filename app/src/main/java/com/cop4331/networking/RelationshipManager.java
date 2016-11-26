@@ -90,7 +90,7 @@ public class RelationshipManager {
 
                         String displayName = userRel.get("displayName").toString();
                         if (displayName == null) displayName = "";
-                        Relationship rel = new Relationship(new User(userRel.get(AccountManager.FIELD_USERNAME_CASE).toString(), displayName, userRel.get(AccountManager.FIELD_PHONE_NUMBER).toString()), fromMe, userRel.getInt("status"));
+                        Relationship rel = new Relationship(new User(userRel.get(AccountManager.FIELD_USERNAME_CASE).toString(), displayName, userRel.get(AccountManager.FIELD_PHONE_NUMBER).toString()), fromMe, o.getInt("status"));
                         relationships.add(rel);
                     }
 
