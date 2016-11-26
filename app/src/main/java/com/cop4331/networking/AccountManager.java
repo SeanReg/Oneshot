@@ -237,6 +237,10 @@ public class AccountManager {
             mRelationshipManager.searchUser(search, mQuerylistener);
         }
 
+        public void removeFriend(Relationship relationship) {
+            mRelationshipManager.removeFriend(relationship);
+        }
+
         public void setDisplayName(String displayName) {
             ParseUser.getCurrentUser().put("displayName", displayName);
         }

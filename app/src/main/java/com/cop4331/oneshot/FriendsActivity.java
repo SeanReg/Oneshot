@@ -67,10 +67,14 @@ public class FriendsActivity extends Activity {
 
     public CardView buildCard(Relationship rel) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
+        card.setTag(rel);
         ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
         ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
         if(rel.getStatus() == Relationship.STATUS_ACCEPTED) {
-            ((Button)card.findViewById(R.id.deleteButton)).setVisibility(View.VISIBLE);
+            Button delete = ((Button)card.findViewById(R.id.deleteButton));
+            delete.setVisibility(View.VISIBLE);
+            delete.setTag(card);
+            delete.setOnClickListener(mDeleteListener);
         } else if (rel.getStatus() == Relationship.STATUS_PENDING) {
             if (rel.isSentByMe()) {
                 ((ImageView) card.findViewById(R.id.pendingView)).setVisibility(View.VISIBLE);
@@ -103,6 +107,16 @@ public class FriendsActivity extends Activity {
             card.findViewById(R.id.pendingView).setVisibility(View.VISIBLE);
             view.setVisibility(View.GONE);
             curAcc.requestFriendByUsername(user.getUsername());
+        }
+    };
+
+    private final Button.OnClickListener mDeleteListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            CardView card = (CardView)view.getTag();
+            ((ViewGroup)card.getParent()).removeView(card);
+            mRelationships.remove(card.getTag());
+            curAcc.removeFriend((Relationship)card.getTag());
         }
     };
 
