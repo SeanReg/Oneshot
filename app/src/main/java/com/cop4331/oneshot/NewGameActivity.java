@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -20,13 +21,18 @@ import com.cop4331.networking.AccountManager;
 import com.cop4331.networking.Game;
 import com.cop4331.networking.Relationship;
 import com.cop4331.networking.User;
+import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewGameActivity extends Activity {
-
     private EditText mPrompt    = null;
-    private Spinner mSpinner = null;
+    private Spinner mSpinner    = null;
+
+    private static final long[] mSpinnerTimes = new long[] {600000, 1800000, 3600000, 18000000};
+
+    private ArrayList<User> mSelectedUsers = new ArrayList<>();
 
     @Nullable
     @Override
@@ -64,7 +70,10 @@ public class NewGameActivity extends Activity {
                     CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
                     ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
                     ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
-                    ((Button)card.findViewById(R.id.selectButton)).setVisibility(View.VISIBLE);
+                    CheckBox selBox = ((CheckBox)card.findViewById(R.id.selectButton));
+                    selBox.setVisibility(View.VISIBLE);
+                    selBox.setTag(rel);
+                    selBox.setOnClickListener(mSelectionListener);
                     parentLayout.addView(card);
                 }
             }
@@ -86,15 +95,32 @@ public class NewGameActivity extends Activity {
         curAcc.getRelationships(null);
     }
 
+    private final CheckBox.OnClickListener mSelectionListener = new CheckBox.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (((CheckBox)view).isChecked()) {
+                mSelectedUsers.add(((Relationship)view.getTag()).getUser());
+            } else {
+                mSelectedUsers.remove(((Relationship)view.getTag()).getUser());
+            }
+        }
+    };
+
     private final Button.OnClickListener mCreateGameListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //AccountManager manager = AccountManager.getInstance();
+            AccountManager manager = AccountManager.getInstance();
             String prompt   = mPrompt.getText().toString();
-            String duration = mSpinner.getSelectedItem().toString();
-            Log.d("NEW GAME", prompt);
-            Log.d("NEW GAME", duration);
+            long duration   = mSpinnerTimes[mSpinner.getSelectedItemPosition()];
 
+            Game.Builder builder = new Game.Builder();
+            builder.setCompletionStatus(false);
+            builder.addPlayers(mSelectedUsers);
+            builder.setPrompt(prompt);
+            builder.setTimelimit(duration);
+            AccountManager.getInstance().getCurrentAccount().startGame(builder);
+
+            finish();
         }
     };
 
