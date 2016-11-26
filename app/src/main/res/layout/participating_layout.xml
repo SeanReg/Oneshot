@@ -13,7 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -27,7 +28,67 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:background="@android:color/holo_red_light">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="This is a Mock Prompt..."
+                            android:id="@+id/promptText"
+                            android:textStyle="bold"
+                            android:textSize="28dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.9" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Time Remaining: 1 hour 32 minutes"
+                            android:id="@+id/timeRemainingText"
+                            android:textSize="18dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.9" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Invited by Jason"
+                            android:id="@+id/createdByText"
+                            android:textSize="18dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.9" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignParentRight="true">
+                        <Button
+                            android:text="View"
+                            android:layout_width="60dp"
+                            android:layout_height="75dp"
+                            android:id="@+id/viewButton"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
             </android.support.v7.widget.CardView>
+
         </LinearLayout>
 
 
