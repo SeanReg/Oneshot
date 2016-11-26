@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.networking.Game;
 import com.cop4331.networking.Relationship;
+import com.cop4331.networking.User;
 
 import java.util.List;
 
@@ -48,12 +50,16 @@ public class FriendsFragment extends Fragment {
             }
 
             @Override
+            public void onSearchUser(List<User> users) {
+                Log.d("Users found: ", users.get(0).getUsername());
+            }
+
+            @Override
             public void onError() {
 
             }
         });
         curAcc.getRelationships(null);
-
 
 
         return fragmentView;

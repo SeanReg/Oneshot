@@ -26,10 +26,10 @@ import java.util.Objects;
 public class AccountManager {
     private Account        mCurrAcc = null;
 
-    private static final String FIELD_USERNAME_CASE  = "usernameCase";
-    private static final String FIELD_USERNAME       = "username";
-    private static final String FIELD_PHONE_NUMBER   = "phone";
-    private static final String FIELD_DISPLAY_NAME  = "displayName";
+    public static final String FIELD_USERNAME_CASE  = "usernameCase";
+    public static final String FIELD_USERNAME       = "username";
+    public static final String FIELD_PHONE_NUMBER   = "phone";
+    public static final String FIELD_DISPLAY_NAME  = "displayName";
 
     private onAccountStatus mAccountStatusListener = null;
 
@@ -124,10 +124,14 @@ public class AccountManager {
 
         private QueryListener mQuerylistener;
 
+        private RelationshipManager mRelationshipManager = new RelationshipManager();
+
 		public interface QueryListener {
 			public void onGotScore(long score);
 			public void onGotRelationships(List<Relationship> relationships);
 			public void onGotGames(List<Game> games);
+
+            public void onSearchUser(List<User> users);
 
 			public void onError();
 		}
@@ -202,49 +206,7 @@ public class AccountManager {
         }
         
         public void getRelationships(QueryListener listener) {
-
-            ParseQuery fromQuery = ParseQuery.getQuery("Relationships");
-            fromQuery.whereEqualTo("from", ParseUser.getCurrentUser());
-
-            ParseQuery toQuery = ParseQuery.getQuery("Relationships");
-            toQuery.whereEqualTo("to", ParseUser.getCurrentUser());
-
-            ArrayList<ParseQuery<ParseObject>> queries = new ArrayList<>();
-            queries.add(fromQuery);
-            queries.add(toQuery);
-
-            ParseQuery compoundQuery = ParseQuery.or(queries);
-            compoundQuery.include("from");
-            compoundQuery.include("to");
-
-            compoundQuery.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> objects, ParseException e) {
-                    if (mQuerylistener != null) {
-                        ArrayList<Relationship> relationships = new ArrayList<Relationship>();
-
-                        for (ParseObject o : objects) {
-                            ParseUser userRel   = null;
-                            boolean   fromMe  = true;
-                            if (!((ParseUser)o.get("from")).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                                userRel = (ParseUser)o.get("from");
-                                fromMe  = false;
-                            } else {
-                                userRel = (ParseUser)o.get("to");
-                            }
-
-                            Log.d("Relationship: ", userRel.getUsername());
-
-                            String displayName = userRel.get("displayName").toString();
-                            if (displayName == null) displayName = "";
-                            Relationship rel = new Relationship(new User(userRel.getUsername(), displayName), fromMe, userRel.getInt("status"));
-                            relationships.add(rel);
-                        }
-
-                        mQuerylistener.onGotRelationships(relationships);
-                    }
-                }
-            });
+            mRelationshipManager.getRelationships(mQuerylistener);
         }
         
 		public void getScore(QueryListener listener) {
@@ -258,59 +220,13 @@ public class AccountManager {
         public void requestFriendByUsername(String username) {
             requestFriend(FIELD_USERNAME, username.toLowerCase());
         }
-        
+
         private void requestFriend(String requestType, String reqString) {
-            ParseQuery query = ParseUser.getQuery();
-            query.whereEqualTo(requestType, reqString);
-            query.setLimit(1);
-            query.findInBackground(new FindCallback<ParseUser>() {
-                @Override
-                public void done(final List<ParseUser> foundUsers, ParseException e) {
-                    if (e != null) {
+            mRelationshipManager.requestFriend(requestType, reqString);
+        }
 
-                    } else {
-                        //Lets first see if a request for us already exists
-                        ParseQuery rQuery = ParseQuery.getQuery("Relationships");
-                        rQuery.whereEqualTo("to", ParseUser.getCurrentUser());
-                        rQuery.whereEqualTo("from", foundUsers.get(0));
-                        rQuery.setLimit(1);
-                        rQuery.findInBackground(new FindCallback<ParseObject>() {
-                            @Override
-                            public void done(List<ParseObject> objects, ParseException e) {
-                                if (e != null) {
-
-                                } else {
-                                    HashMap<String, String> push = new HashMap<String, String>();
-                                    push.put("userId", foundUsers.get(0).getObjectId());
-
-                                    if (objects.size() > 0) {
-                                        if ((int)objects.get(0).get("status") == Relationship.STATUS_PENDING) {
-                                            objects.get(0).put("status", Relationship.STATUS_ACCEPTED);
-                                            objects.get(0).saveInBackground();
-
-                                            push.put("message", ParseUser.getCurrentUser().getUsername() + " has accepted your friend request!");
-                                        }
-                                    } else {
-                                        //Found user - so add him
-                                        ParseObject pRelationship = new ParseObject("Relationships");
-                                        pRelationship.put("from", ParseUser.getCurrentUser());
-                                        pRelationship.put("to", foundUsers.get(0));
-                                        pRelationship.put("status", Relationship.STATUS_PENDING);
-
-                                        pRelationship.saveInBackground();
-
-                                        push.put("message", ParseUser.getCurrentUser().getUsername() + " has sent you a friend request!");
-                                    }
-
-                                    ParseCloud.callFunctionInBackground("PushUser", push);
-                                }
-                            }
-                        });
-
-
-                    }
-                }
-            });
+        public void searchUser(String search) {
+            mRelationshipManager.searchUser(search, mQuerylistener);
         }
 
         public void setDisplayName(String displayName) {

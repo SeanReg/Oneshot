@@ -6,8 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.cop4331.LoginActivity"
     android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal"
+    android:gravity="center_horizontal"
     android:weightSum="1">
+
+    <include layout="@layout/toolbar_widget"/>
 
     <EditText
         android:layout_width="match_parent"
