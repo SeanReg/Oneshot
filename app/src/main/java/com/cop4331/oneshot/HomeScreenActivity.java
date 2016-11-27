@@ -9,12 +9,25 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cop4331.LoginActivity;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.networking.AccountManager;
+import com.cop4331.networking.Game;
+import com.cop4331.networking.Relationship;
+import com.cop4331.networking.User;
 import com.parse.Parse;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class HomeScreenActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
@@ -25,6 +38,8 @@ public class HomeScreenActivity extends AppCompatActivity{
     private PermissionRequester mPermission = null;
 
     private static boolean mParseInitialized = false;
+
+    private List<Game> mCurrentGames = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +109,53 @@ public class HomeScreenActivity extends AppCompatActivity{
                      return false;
                 }
         });
+
+        AccountManager.getInstance().getCurrentAccount().setQuerylistener(new AccountManager.Account.QueryListener() {
+            @Override
+            public void onGotScore(long score) {
+
+            }
+
+            @Override
+            public void onGotRelationships(List<Relationship> relationships) {
+
+            }
+
+            @Override
+            public void onGotGames(List<Game> games) {
+                mCurrentGames = games;
+                LinearLayout parentView = ((LinearLayout)findViewById(R.id.createdLinearLayout));
+                for (Game g : games) {
+                    CardView card = null;
+
+                    if (g.isGameCreator(AccountManager.getInstance())) {
+                        card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
+                        ((TextView)card.findViewById(R.id.promptText)).setText(g.getPrompt());
+
+                        long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
+                        String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
+                        String remainingTimeM = Long.toString(diff / (60 * 1000) % 60 ) + " minutes";
+                        ((TextView)card.findViewById(R.id.timeRemainingText)).setText(remainingTimeH + " " + remainingTimeM);
+
+                    } else {
+
+                    }
+
+                    parentView.addView(card);
+                }
+            }
+
+            @Override
+            public void onSearchUser(List<User> users) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+        AccountManager.getInstance().getCurrentAccount().getCurrentGames();
 
         /**
          * Setup Drawer Toggle of the Toolbar

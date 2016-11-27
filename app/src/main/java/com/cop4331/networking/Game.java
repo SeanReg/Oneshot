@@ -1,8 +1,10 @@
 package com.cop4331.networking;
 
 import com.cop4331.networking.User;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Game {
@@ -11,7 +13,9 @@ public class Game {
     private String mPrompt = "";   
     private String mDatabaseId = "";
 	private boolean mIsCompleted = false;
-    
+
+    private Date mCreatedAt = null;
+
     private User mCreator = null;
     
     public Game() {
@@ -28,7 +32,7 @@ public class Game {
 
 
     public boolean isGameCreator(AccountManager manager) {
-        return (manager.getCurrentAccount() == mCreator);
+        return (manager.getCurrentAccount().getParseUser().getUsername().equalsIgnoreCase(mCreator.getParseUser().getUsername()));
     }
     
     public GameController getGameController(AccountManager manager) {
@@ -53,6 +57,10 @@ public class Game {
 
     public long getTimeLimit() {
         return mTimeLimit;
+    }
+
+    public Date getExpirationDate() {
+        return new Date(mCreatedAt.getTime() + mTimeLimit);
     }
 
     public static class Builder {
@@ -99,8 +107,9 @@ public class Game {
 		    mGame.mIsCompleted = complete;
 		}
 
-        public Game build(User creator) {
+        public Game build(User creator, Date createdAt) {
             mGame.mCreator = creator;
+            mGame.mCreatedAt = new Date(createdAt.getTime());
 
             return mGame;
         }
