@@ -3,10 +3,10 @@ package com.cop4331.networking;
 import com.parse.ParseUser;
 
 public class User {
-    private String    mUsername     = "";
-    private String    mDisplayName  = "";
-    private String    mPhoneNumber  = "";
-    private ParseUser mParseUser    = null;
+    private   String    mUsername     = "";
+    private   String    mDisplayName  = "";
+    private   String    mPhoneNumber  = "";
+    protected ParseUser mParseUser    = null;
 
     public User() {
         

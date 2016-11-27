@@ -19,6 +19,7 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class AccountManager {
     }
     
     public static AccountManager getInstance() {
-        if (mManager.isLoggedIn()) mManager.mCurrAcc = new Account(ParseUser.getCurrentUser());
+        if (mManager.isLoggedIn() && mManager.mCurrAcc == null) mManager.mCurrAcc = new Account(ParseUser.getCurrentUser());
 
         return mManager;
     }
@@ -143,30 +144,44 @@ public class AccountManager {
             installation.put("user", user);
             installation.saveInBackground();
 
+            mParseUser = user;
             mUser = user;
         }
         
         public void getCurrentGames() {
             final ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
             query.whereEqualTo("owner", mUser);
+            query.include("owner");
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(final List<ParseObject> objects, ParseException e) {
                     if (e == null) {
                         final ArrayList<Game> games = new ArrayList<Game>();
-                        for (ParseObject pO : objects) {
-                            games.add(parseToGame(pO));
+                        for (final ParseObject pO : objects) {
+                            try {
+                                List<ParseObject> plrs = pO.getRelation("players").getQuery().find();
+                                games.add(parseToGame(pO, plrs));
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
                         }
 
                         ParseQuery<ParseObject> qParticipant = ParseQuery.getQuery("Games");
                         qParticipant.whereEqualTo("players", mUser);
+                        qParticipant.include("owner");
                         qParticipant.findInBackground(new FindCallback<ParseObject>() {
                             @Override
                             public void done(List<ParseObject> participating, ParseException e) {
                                 if (e == null) {
-                                    for (ParseObject pO : participating) {
-                                        games.add(parseToGame(pO));
+                                    for (final ParseObject pO : objects) {
+                                        try {
+                                            List<ParseObject> plrs = pO.getRelation("players").getQuery().find();
+                                            games.add(parseToGame(pO, plrs));
+                                        } catch (ParseException e1) {
+                                            e1.printStackTrace();
+                                        }
                                     }
+
 
                                     if (mQuerylistener != null) {
                                         mQuerylistener.onGotGames(games);
@@ -183,17 +198,27 @@ public class AccountManager {
             mQuerylistener = listener;
         }
 
-        private Game parseToGame(ParseObject obj) {
+        private Game parseToGame(ParseObject obj, List<ParseObject> playerObjs) {
             Game.Builder builder = new Game.Builder();
             builder.setTimelimit((int)obj.get("timelimit"));
             builder.setPrompt((String)obj.get("prompt"));
             builder.setDatabaseId(obj.getObjectId());
 
-            return builder.build(new User());
+            for (ParseObject player : playerObjs) {
+                ParseUser plr = (ParseUser)player;
+                builder.addPlayer(new User(plr.get(AccountManager.FIELD_USERNAME_CASE).toString(), plr.get(AccountManager.FIELD_DISPLAY_NAME).toString(),
+                        plr.get(AccountManager.FIELD_PHONE_NUMBER).toString(), plr));
+            }
+
+            Date expTime = new Date(obj.getCreatedAt().getTime() + (int)obj.get("timelimit"));
+
+            ParseUser owner = (ParseUser)obj.get("owner");
+            return builder.build(new User(owner.get(AccountManager.FIELD_USERNAME_CASE).toString(), owner.get(AccountManager.FIELD_DISPLAY_NAME).toString(),
+                    owner.get(AccountManager.FIELD_PHONE_NUMBER).toString(), owner), obj.getCreatedAt());
         }
 
         public void startGame(Game.Builder builder) {
-            Game newGame = builder.build(this);
+            Game newGame = builder.build(this, new Date());
 
             //Need to push this game to the databse now
             ParseObject pGame = new ParseObject("Games");
