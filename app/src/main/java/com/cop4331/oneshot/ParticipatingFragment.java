@@ -16,7 +16,7 @@ public class ParticipatingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.participating_layout,null);
 
-        ((Button)v.findViewById(R.id.viewButton)).setOnClickListener(mCreateButton);
+        //((Button)v.findViewById(R.id.viewButton)).setOnClickListener(mCreateButton);
 
         return v;
     }
@@ -25,8 +25,7 @@ public class ParticipatingFragment extends Fragment {
     private final Button.OnClickListener mCreateButton = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getContext(), InGameActivity.class);
-            startActivity(intent);
+
         }
     };
 

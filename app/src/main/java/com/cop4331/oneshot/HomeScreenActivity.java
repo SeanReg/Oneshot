@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +37,8 @@ public class HomeScreenActivity extends AppCompatActivity{
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+
+    private TabFragment mTabFragment = null;
 
     private PermissionRequester mPermission = null;
 
@@ -70,16 +75,16 @@ public class HomeScreenActivity extends AppCompatActivity{
          * Here , we are inflating the TabFragment as the first Fragment
          */
 
-             mFragmentManager = getSupportFragmentManager();
-             mFragmentTransaction = mFragmentManager.beginTransaction();
-            TabFragment tabFragment = new TabFragment();
-            tabFragment.setHomeScreenActivity(this);
-             mFragmentTransaction.replace(R.id.containerView, tabFragment).commit();
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mTabFragment = new TabFragment();
+        mTabFragment.setTabChangedListener(mTabChangeListener);
+        mFragmentTransaction.replace(R.id.containerView, mTabFragment).commit();
         /**
          * Setup click events on the Navigation View Items.
          */
 
-             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                  @Override
                  public boolean onNavigationItemSelected(MenuItem menuItem) {
                     mDrawerLayout.closeDrawers();
@@ -91,9 +96,9 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                     if (menuItem.getItemId() == R.id.nav_item_home) {
                         FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                        TabFragment tabFragment = new TabFragment();
-                        tabFragment.setHomeScreenActivity(HomeScreenActivity.this);
-                        xfragmentTransaction.replace(R.id.containerView, tabFragment).commit();
+                        mTabFragment = new TabFragment();
+                        mTabFragment.setTabChangedListener(mTabChangeListener);
+                        xfragmentTransaction.replace(R.id.containerView, mTabFragment).commit();
                     }
 
                      if (menuItem.getItemId() == R.id.nav_item_friends) {
@@ -124,25 +129,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             @Override
             public void onGotGames(List<Game> games) {
                 mCurrentGames = games;
-                LinearLayout parentView = ((LinearLayout)findViewById(R.id.createdLinearLayout));
-                for (Game g : games) {
-                    CardView card = null;
-
-                    if (g.isGameCreator(AccountManager.getInstance())) {
-                        card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
-                        ((TextView)card.findViewById(R.id.promptText)).setText(g.getPrompt());
-
-                        long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
-                        String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
-                        String remainingTimeM = Long.toString(diff / (60 * 1000) % 60 ) + " minutes";
-                        ((TextView)card.findViewById(R.id.timeRemainingText)).setText(remainingTimeH + " " + remainingTimeM);
-
-                    } else {
-
-                    }
-
-                    parentView.addView(card);
-                }
+                refreshGameList();
             }
 
             @Override
@@ -161,18 +148,50 @@ public class HomeScreenActivity extends AppCompatActivity{
          * Setup Drawer Toggle of the Toolbar
          */
 
-                android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-                ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
-                R.string.app_name);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
+        R.string.app_name);
 
-                mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-                mDrawerToggle.syncState();
+        mDrawerToggle.syncState();
 
 /*
         AccountManager.getInstance().getCurrentAccount().requestFriendByUsername("jason");
 */
 
+    }
+
+    public void refreshGameList() {
+        if (mCurrentGames == null) return;
+
+        LinearLayout cLayout = ((LinearLayout)findViewById(R.id.createdLinearLayout));
+        LinearLayout pLayout = ((LinearLayout)findViewById(R.id.participatingLinearLayout));
+        LinearLayout hLayout = ((LinearLayout)findViewById(R.id.historyLinearLayout));
+
+        if (cLayout != null) cLayout.removeAllViews();
+        if (pLayout != null) pLayout.removeAllViews();
+        if (hLayout != null) hLayout.removeAllViews();
+
+        for (Game g : mCurrentGames) {
+            switch (mTabFragment.getCurrentTab()) {
+                case TabFragment.TAB_CREATED_GAMES:
+                    if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
+                        inflateGameCard(g, cLayout);
+                    }
+                    break;
+                case TabFragment.TAB_PARTICIPATING_GAMES:
+                    if (!g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
+                        inflateGameCard(g, pLayout);
+                    }
+                    break;
+                case TabFragment.TAB_HISTORY_GAMES:
+                    if (g.getGameCompleted()) {
+                        inflateGameCard(g, hLayout);
+                    }
+                    break;
+            }
+        }
     }
 
     public void inflateGameCreation() {
@@ -196,4 +215,40 @@ public class HomeScreenActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
+
+    private CardView inflateGameCard(Game g, ViewGroup parentView) {
+        CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
+        ((TextView) card.findViewById(R.id.promptText)).setText(g.getPrompt());
+
+        long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
+        String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
+        String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
+        ((TextView) card.findViewById(R.id.timeRemainingText)).setText(remainingTimeH + " " + remainingTimeM);
+
+        if (!g.isGameCreator(AccountManager.getInstance()) || true) {
+            TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
+            invitedText.setText("Invited by " + g.getGameCreator().getDisplayName());
+            invitedText.setVisibility(View.VISIBLE);
+        }
+
+        ((Button)card.findViewById(R.id.viewButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), InGameActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        parentView.addView(card);
+
+        return card;
+    }
+
+    private TabFragment.TabChangeListener mTabChangeListener = new TabFragment.TabChangeListener() {
+        @Override
+        public void onTabChanged(int curTab) {
+            Log.d("Tab", "Changed to " + curTab);
+            refreshGameList();
+        }
+    };
 }

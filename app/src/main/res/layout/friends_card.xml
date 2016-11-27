@@ -74,7 +74,8 @@
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/pending"
-                android:id="@+id/pendingView"/>
+                android:id="@+id/pendingView"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

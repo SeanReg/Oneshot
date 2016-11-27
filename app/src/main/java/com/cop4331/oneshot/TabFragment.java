@@ -17,7 +17,17 @@ public class TabFragment extends Fragment {
     public static ViewPager viewPager;
     public static int int_items = 3 ;
 
+    public static final int TAB_CREATED_GAMES       = 0;
+    public static final int TAB_PARTICIPATING_GAMES = 1;
+    public static final int TAB_HISTORY_GAMES       = 2;
+
     private HomeScreenActivity mHomeScreenActivity = null;
+
+    private TabChangeListener mTabChangeListener = null;
+
+    public interface TabChangeListener {
+        public void onTabChanged(int curTab);
+    }
 
     @Nullable
     @Override
@@ -29,10 +39,30 @@ public class TabFragment extends Fragment {
             tabLayout = (TabLayout) x.findViewById(R.id.tabs);
             viewPager = (ViewPager) x.findViewById(R.id.viewpager);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (mTabChangeListener != null) {
+                    mTabChangeListener.onTabChanged(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         /**
          *Set an Apater for the View Pager
          */
-        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new TabAdapter(getChildFragmentManager()));
+
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -44,13 +74,17 @@ public class TabFragment extends Fragment {
 
     }
 
-    public void setHomeScreenActivity(HomeScreenActivity homeScreenActivity) {
-        mHomeScreenActivity = homeScreenActivity;
+    public int getCurrentTab() {
+        return viewPager.getCurrentItem();
     }
 
-    class MyAdapter extends FragmentPagerAdapter{
+    public void setTabChangedListener(TabChangeListener listener) {
+        mTabChangeListener = listener;
+    }
 
-        public MyAdapter(FragmentManager fm) {
+    class TabAdapter extends FragmentPagerAdapter{
+
+        public TabAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -62,18 +96,18 @@ public class TabFragment extends Fragment {
         public Fragment getItem(int position)
         {
             Fragment fragment = null;
-          switch (position){
-              case 0:
-                  fragment = new CreatedFragment();
-                  ((CreatedFragment)fragment).setHomeScreenActivity(mHomeScreenActivity);
-              break;
-              case 1:
-                  fragment = new ParticipatingFragment();
-              break;
-              case 2:
-                  fragment = new HistoryFragment();
-              break;
-          }
+            switch (position){
+                case TAB_CREATED_GAMES:
+                    fragment = new CreatedFragment();
+                    ((CreatedFragment)fragment).setHomeScreenActivity(mHomeScreenActivity);
+                    break;
+                case TAB_PARTICIPATING_GAMES:
+                    fragment = new ParticipatingFragment();
+                    break;
+                case TAB_HISTORY_GAMES:
+                    fragment = new HistoryFragment();
+                    break;
+            }
             return fragment;
         }
 

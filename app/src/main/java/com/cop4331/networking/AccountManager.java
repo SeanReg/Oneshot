@@ -173,7 +173,7 @@ public class AccountManager {
                             @Override
                             public void done(List<ParseObject> participating, ParseException e) {
                                 if (e == null) {
-                                    for (final ParseObject pO : objects) {
+                                    for (final ParseObject pO : participating) {
                                         try {
                                             List<ParseObject> plrs = pO.getRelation("players").getQuery().find();
                                             games.add(parseToGame(pO, plrs));
@@ -203,6 +203,7 @@ public class AccountManager {
             builder.setTimelimit((int)obj.get("timelimit"));
             builder.setPrompt((String)obj.get("prompt"));
             builder.setDatabaseId(obj.getObjectId());
+            builder.setCompletionStatus(obj.getBoolean("completed"));
 
             for (ParseObject player : playerObjs) {
                 ParseUser plr = (ParseUser)player;
