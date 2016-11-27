@@ -5,8 +5,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.media.Image;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -80,6 +82,7 @@ public class AmendedBitmap  {
 
         mBitmap = bitmap;
         mCanvas = new Canvas(mBitmap);
+        recordChanges();
     }
 
     public void drawView(View drawText) {
@@ -92,6 +95,15 @@ public class AmendedBitmap  {
         paint.setColor(color);
 
         mCanvas.drawCircle(cordinates.x, cordinates.y, 20.0f, paint);
+    }
+
+    public void recordChanges() {
+        mCanvas.save();
+    }
+
+    public void undoChanges() {
+        Log.d("Saves", "" + mCanvas.getSaveCount());
+        if (mCanvas.getSaveCount() > 1) mCanvas.restore();
     }
 
     public Bitmap getBitmap() {

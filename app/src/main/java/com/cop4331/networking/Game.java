@@ -1,8 +1,14 @@
 package com.cop4331.networking;
 
 import com.cop4331.networking.User;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +23,11 @@ public class Game {
     private Date mCreatedAt = null;
 
     private User mCreator = null;
-    
+
+    public interface ShotListener {
+        public void onGotShots(List<Shot> shots);
+    }
+
     public Game() {
         
     }
@@ -34,7 +44,7 @@ public class Game {
     public boolean isGameCreator(AccountManager manager) {
         return (manager.getCurrentAccount().getParseUser().getUsername().equalsIgnoreCase(mCreator.getParseUser().getUsername()));
     }
-    
+
     public GameController getGameController(AccountManager manager) {
         return null;
     }
@@ -47,8 +57,32 @@ public class Game {
         return mCreator;
     }
     
-	public List<Shot> getShots() {
-	    return null;
+	public void getShots(final ShotListener listener) {
+        ParseObject tempGame = new ParseObject("Games");
+        tempGame.setObjectId(mDatabaseId);
+
+        final ArrayList<Shot> shots = new ArrayList<>();
+
+        final ParseQuery query = new ParseQuery("Shots");
+        query.whereEqualTo("game", tempGame);
+        query.include("owner");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (objects != null && objects.size() > 0) {
+                    for (ParseObject pO : objects) {
+                        ParseUser owner = (ParseUser)(pO.get("owner"));
+                        shots.add(new Shot(new User(owner.getString(AccountManager.FIELD_USERNAME_CASE), owner.getString(AccountManager.FIELD_DISPLAY_NAME),
+                                owner.getString(AccountManager.FIELD_PHONE_NUMBER), owner), pO.getParseFile("image")));
+                    }
+
+                    if (listener != null) {
+                        listener.onGotShots(shots);
+                    }
+                }
+            }
+        });
+
 	}
 
     public String getPrompt() {

@@ -27,6 +27,8 @@ import com.android.colorpicker.ColorPickerPalette;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.image_manipulation.AmendedBitmap;
 import com.cop4331.image_manipulation.ImageManipulateTest;
+import com.cop4331.networking.Game;
+import com.cop4331.oneshot.InGameActivity;
 import com.cop4331.oneshot.R;
 
 import java.io.File;
@@ -41,6 +43,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private ToggleButton mFlashButton = null;
 
+    private String mSubmitTo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class CameraActivity extends AppCompatActivity {
         switchCam.setOnClickListener(mSwitchCameraListener);
 
         mFlashButton = (ToggleButton)findViewById(R.id.flashButton);
+
+        mSubmitTo = getIntent().getStringExtra("gameId");
     }
 
     @Override
@@ -180,6 +185,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 Intent imgEditIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);
                 imgEditIntent.putExtra("Bitmap", filePath.getAbsoluteFile());
+                imgEditIntent.putExtra("gameId", mSubmitTo);
                 startActivity(imgEditIntent);
             } catch (IOException e) {
 

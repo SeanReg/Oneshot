@@ -222,18 +222,27 @@ public class AccountManager {
                     owner.get(AccountManager.FIELD_PHONE_NUMBER).toString(), owner), obj.getCreatedAt());
         }
 
-        public void submitShot(final Game game, File shot) {
-            if (game != null) {
+        public void submitShot(final String gameDatabaseId, File shot) {
+            if (gameDatabaseId != null) {
                 final ParseFile img = new ParseFile(shot);
                 img.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
                             ParseObject shotSubmit = new ParseObject("Shots");
-                            shotSubmit.put("game", game.getDatabaseId());
-                            shotSubmit.put("owner", mUser.getObjectId());
+
+                            ParseObject tempGame = new ParseObject("Games");
+                            tempGame.setObjectId(gameDatabaseId);
+
+                            shotSubmit.put("game", tempGame);
+                            shotSubmit.put("owner", mUser);
                             shotSubmit.put("image", img);
-                            shotSubmit.saveInBackground();
+                            shotSubmit.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            });
                         }
                     }
                 });

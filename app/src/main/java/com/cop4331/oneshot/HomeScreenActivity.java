@@ -23,6 +23,7 @@ import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.networking.Game;
 import com.cop4331.networking.Relationship;
+import com.cop4331.networking.Shot;
 import com.cop4331.networking.User;
 import com.parse.Parse;
 
@@ -174,6 +175,26 @@ public class HomeScreenActivity extends AppCompatActivity{
         if (hLayout != null) hLayout.removeAllViews();
 
         for (Game g : mCurrentGames) {
+            g.getShots(new Game.ShotListener() {
+                @Override
+                public void onGotShots(List<Shot> shots) {
+                    if (shots.size() == 0) return;
+
+                    shots.get(0).downloadImage(new Shot.DownloadListener() {
+                        @Override
+                        public void onDownloadCompleted(Shot shot) {
+                            Log.d("Got shots", shot.getImage().getAbsolutePath());
+                        }
+
+                        @Override
+                        public void onDownloadError(Shot shot) {
+
+                        }
+                    });
+
+                }
+            });
+
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
                     if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
@@ -216,7 +237,7 @@ public class HomeScreenActivity extends AppCompatActivity{
         mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
 
-    private CardView inflateGameCard(Game g, ViewGroup parentView) {
+    private CardView inflateGameCard(final Game g, ViewGroup parentView) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
         ((TextView) card.findViewById(R.id.promptText)).setText(g.getPrompt());
 
@@ -235,6 +256,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), InGameActivity.class);
+                intent.putExtra("gameId", g.getDatabaseId());
                 startActivity(intent);
             }
         });

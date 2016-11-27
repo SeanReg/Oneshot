@@ -1,13 +1,16 @@
 package com.cop4331.networking;
 
 import com.cop4331.networking.User;
+import com.parse.GetFileCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 
 import java.io.File;
 
 public class Shot {
 	private final User mUser;
 	private File mImage = null;
-	private final String mShotId;
+	private final ParseFile mShotFile;
 
 	private DownloadListener mDLListener = null;
 
@@ -16,24 +19,35 @@ public class Shot {
 		public void onDownloadError(Shot shot);
 	}
 
-	public Shot(User user, String shotId) {
+	public Shot(User user, ParseFile shotFile) {
 		mUser   = user;
-		mShotId = shotId;
+		mShotFile = shotFile;
 	}
 
 	public User getUser() {
-		return null;
+		return mUser;
 	}
 
 	public String getShotId() {
 		return null;
 	}
 
-	public void downloadImage(DownloadListener listener) {
-	
+	public void downloadImage(final DownloadListener listener) {
+		mShotFile.getFileInBackground(new GetFileCallback() {
+			@Override
+			public void done(File file, ParseException e) {
+				if (e == null) {
+                    mImage = file;
+
+                    if (listener != null) {
+                        listener.onDownloadCompleted(Shot.this);
+                    }
+				}
+			}
+		});
 	}
 
 	public File getImage() {
-		return null;
+		return mImage;
 	}
 }

@@ -2,6 +2,9 @@ package com.cop4331.image_manipulation;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.cop4331.networking.AccountManager;
+import com.cop4331.networking.Game;
+import com.cop4331.oneshot.InGameActivity;
 import com.cop4331.oneshot.R;
 
 import android.content.Context;
@@ -37,6 +40,8 @@ public class ImageManipulateTest extends AppCompatActivity {
     private Button mColorPaletteButton = null;
     private Button mSaveButton = null;
 
+    private String mSubmitTo = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class ImageManipulateTest extends AppCompatActivity {
         mSaveButton = (Button)findViewById(R.id.saveButton);
         mSaveButton.setOnClickListener(mSaveButtonListener);
 
+        mSubmitTo = getIntent().getStringExtra("gameId");
 
         mColorPickerDialog.initialize(R.string.picker_title, mPickerColors, mDrawColor, 4, mPickerColors.length);
         mColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
@@ -150,6 +156,7 @@ public class ImageManipulateTest extends AppCompatActivity {
             try {
                 filePath = File.createTempFile("bitmap", ".png", directory);
                 mAmendedBitmap.saveToFile(filePath);
+                AccountManager.getInstance().getCurrentAccount().submitShot(mSubmitTo, filePath);
                 Log.d("SAVE", "Image saved to " + filePath.toString());
             } catch (IOException e) {
 

@@ -9,10 +9,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.cop4331.camera.CameraActivity;
+import com.cop4331.networking.Game;
 import com.cop4331.networking.User;
 
 
 public class InGameActivity extends Activity {
+
+    private String mThisGame = null;
+    private static InGameActivity mInstance = null;
+
 
     @Nullable
     @Override
@@ -21,13 +26,15 @@ public class InGameActivity extends Activity {
         setContentView(R.layout.ingame_layout);
         (findViewById(R.id.cameraButton)).setOnClickListener(mCameraListener);
 
+        mThisGame = getIntent().getStringExtra("gameId");
     }
 
     private final Button.OnClickListener mCameraListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent myIntent = new Intent(InGameActivity.this, CameraActivity.class);
-            InGameActivity.this.startActivity(myIntent);
+            myIntent.putExtra("gameId", mThisGame);
+            startActivity(myIntent);
         }
     };
 
