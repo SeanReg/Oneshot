@@ -11,4 +11,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_temp">TempActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="picker_title"></string>
 </resources>
