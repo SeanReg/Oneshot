@@ -7,117 +7,121 @@
 
     <include layout="@layout/toolbar_widget"/>
 
-    <TextView
-        android:text="This is the mock prompt title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/inGamePromptText"
-        android:gravity="center_horizontal" />
-
-    <TextView
-        android:text="Time Remaining: 1:32:00"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/timeRemainingView"
-        android:gravity="center_horizontal" />
-
-        <ScrollView
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
+        android:gravity="center_horizontal">
+        <TextView
+            android:text="This is the mock prompt title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:id="@+id/inGamePromptText"
+            android:gravity="center_horizontal" />
 
-            <LinearLayout
+        <TextView
+            android:text="Time Remaining: 1:32:00"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeRemainingView"
+            android:gravity="center_horizontal" />
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:id="@+id/scrollView">
 
-                <android.support.v7.widget.CardView
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/card_view"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_gravity="center"
-                    card_view:cardCornerRadius="1dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@android:color/holo_red_light">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <RelativeLayout
+                    <android.support.v7.widget.CardView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="250dp"
+                        android:layout_gravity="center"
+                        card_view:cardCornerRadius="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@android:color/holo_red_light">
 
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Nadeen Saleh"
-                                android:id="@+id/nameText"
-                                android:textSize="18dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.9" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="nadeenrocks"
-                                android:id="@+id/usernameDisplay"
-                                android:textStyle="bold|italic"
-                                android:textSize="18dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.9" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_alignParentRight="true">
-                            <CheckBox
+                            <LinearLayout
+                                android:orientation="vertical"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Winner" />
-                        </LinearLayout>
-                    </RelativeLayout>
+                                android:layout_marginTop="5dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="Nadeen Saleh"
+                                    android:id="@+id/nameText"
+                                    android:textSize="18dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="0.9" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="nadeenrocks"
+                                    android:id="@+id/usernameDisplay"
+                                    android:textStyle="bold|italic"
+                                    android:textSize="18dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="0.9" />
 
-                    <Button
-                        android:id="@+id/questionMarkButton"
-                        android:layout_marginTop="20dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        tools:background="@drawable/question_mark"
-                        android:layout_height="150dp"
-                        android:layout_width="150dp"
-                        android:layout_weight="9.99"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:background="@drawable/questionmark" />
+                            </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_alignParentRight="true">
+                                <CheckBox
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Winner" />
+                            </LinearLayout>
+                        </RelativeLayout>
 
-                
-            </LinearLayout>
+                        <Button
+                            android:id="@+id/questionMarkButton"
+                            android:layout_marginTop="20dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            tools:background="@drawable/question_mark"
+                            android:layout_height="150dp"
+                            android:layout_width="150dp"
+                            android:layout_weight="9.99"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:background="@drawable/questionmark" />
 
-        </ScrollView>
+                    </android.support.v7.widget.CardView>
 
-    <Button
-        android:id="@+id/cameraButton"
-        android:layout_marginBottom="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        tools:background="@drawable/camera_button"
 
-        android:layout_height="60dp"
-        android:layout_width="60dp"
-        android:background="@drawable/camerabutton" />/>
+                </LinearLayout>
+
+            </ScrollView>
+
+        <Button
+            android:id="@+id/cameraButton"
+            tools:background="@drawable/camera_button"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:background="@drawable/camerabutton"/>
+    </LinearLayout>
 
 </LinearLayout>

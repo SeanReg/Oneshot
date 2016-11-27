@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-bg/values-bg.xml",
+        "outputFile": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-bg\\values-bg.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 202
                 },
                 "from": {
-                    "file": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/bundles/debug/res/values-bg/values-bg.xml",
+                    "file": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\values-bg\\values-bg.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 327
                 },
                 "from": {
-                    "file": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/bundles/debug/res/values-bg/values-bg.xml",
+                    "file": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\values-bg\\values-bg.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +49,7 @@
                     "endOffset": 470
                 },
                 "from": {
-                    "file": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/bundles/debug/res/values-bg/values-bg.xml",
+                    "file": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\values-bg\\values-bg.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
