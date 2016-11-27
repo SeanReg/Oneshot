@@ -8,13 +8,10 @@
     <include layout="@layout/content_image_manipulation_test" />
 
     <Button
-        android:text="Colors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="169dp"
-        android:id="@+id/colorPaletteButton" />
-
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/colorPaletteButton"
+        android:background="@drawable/paint"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
