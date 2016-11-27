@@ -13,6 +13,7 @@ import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Size;
+import android.util.SparseIntArray;
 import android.view.Surface;
 
 import com.cop4331.image_manipulation.AmendedBitmap;
@@ -46,6 +47,14 @@ public class CameraHandle {
 
     //Callback listners
     private CameraStatusCallback  mCameraStatsListener = null;
+
+    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    static {
+        ORIENTATIONS.append(Surface.ROTATION_0, 0);
+        ORIENTATIONS.append(Surface.ROTATION_90, 90);
+        ORIENTATIONS.append(Surface.ROTATION_180, 180);
+        ORIENTATIONS.append(Surface.ROTATION_270, 270);
+    }
 
     /**
      * Interface to get the status of the camera
@@ -169,7 +178,7 @@ public class CameraHandle {
             } else  {
                 request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             }
-            request.set(CaptureRequest.JPEG_ORIENTATION, 90);
+            request.set(CaptureRequest.JPEG_ORIENTATION, mCharacterizer.getCameraOrientation());
 
             //Stop old preview request and do capture request
             mCaptureSession.stopRepeating();

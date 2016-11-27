@@ -224,4 +224,14 @@ public class CameraCharacterizer {
     public String getCameraId() {
         return mCurCameraId;
     }
+
+    public int getCameraOrientation() {
+        CameraCharacteristics characteristics = null;
+        try {
+            characteristics = mCameraManager.getCameraCharacteristics(mCurCameraId);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        return characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+    }
 }

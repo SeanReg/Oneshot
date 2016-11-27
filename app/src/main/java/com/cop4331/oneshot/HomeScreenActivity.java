@@ -225,7 +225,7 @@ public class HomeScreenActivity extends AppCompatActivity{
         String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
         ((TextView) card.findViewById(R.id.timeRemainingText)).setText(remainingTimeH + " " + remainingTimeM);
 
-        if (!g.isGameCreator(AccountManager.getInstance()) || true) {
+        if (!g.isGameCreator(AccountManager.getInstance())) {
             TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
             invitedText.setText("Invited by " + g.getGameCreator().getDisplayName());
             invitedText.setVisibility(View.VISIBLE);
