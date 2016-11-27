@@ -4,6 +4,9 @@ import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.cop4331.oneshot.R;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -20,6 +23,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class ImageManipulateTest extends AppCompatActivity {
 
@@ -30,6 +35,7 @@ public class ImageManipulateTest extends AppCompatActivity {
 
     private final ColorPickerDialog mColorPickerDialog = new ColorPickerDialog();
     private Button mColorPaletteButton = null;
+    private Button mSaveButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,10 @@ public class ImageManipulateTest extends AppCompatActivity {
 
         mColorPaletteButton = (Button)findViewById(R.id.colorPaletteButton);
         mColorPaletteButton.setOnClickListener(mColorPaletteButtonListener);
+
+        mSaveButton = (Button)findViewById(R.id.saveButton);
+        mSaveButton.setOnClickListener(mSaveButtonListener);
+
 
         mColorPickerDialog.initialize(R.string.picker_title, mPickerColors, mDrawColor, 4, mPickerColors.length);
         mColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
@@ -123,6 +133,27 @@ public class ImageManipulateTest extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             mColorPickerDialog.show(getFragmentManager(), "Color");
+        }
+    };
+
+    private final Button.OnClickListener mSaveButtonListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("bitmap", Context.MODE_PRIVATE);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
+            FileOutputStream fStream = null;
+            File filePath = null;
+            try {
+                filePath = File.createTempFile("bitmap", ".png", directory);
+                mAmendedBitmap.saveToFile(filePath);
+                Log.d("SAVE", "Image saved to " + filePath.toString());
+            } catch (IOException e) {
+
+            }
         }
     };
 
