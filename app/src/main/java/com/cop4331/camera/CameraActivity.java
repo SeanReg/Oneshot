@@ -17,10 +17,13 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerPalette;
 import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.cop4331.image_manipulation.AmendedBitmap;
 import com.cop4331.image_manipulation.ImageManipulateTest;
@@ -37,6 +40,7 @@ public class CameraActivity extends AppCompatActivity {
     private CameraCharacterizer.CameraType mCameraType    = CameraCharacterizer.CameraType.FRONT_CAMERA;
 
     private ToggleButton mFlashButton = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +256,5 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
     };
-
 
 }

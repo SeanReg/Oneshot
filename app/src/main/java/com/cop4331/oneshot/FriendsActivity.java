@@ -22,6 +22,8 @@ import com.cop4331.networking.Game;
 import com.cop4331.networking.Relationship;
 import com.cop4331.networking.User;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FriendsActivity extends Activity {
@@ -132,6 +134,12 @@ public class FriendsActivity extends Activity {
             for (Relationship rel : relationships) {
                buildCard(rel);
             }
+            Collections.sort(relationships, new Comparator<Relationship>() {
+                @Override
+                public int compare(Relationship one, Relationship two) {
+                    return one.getStatus() > two.getStatus() ? -1 : (one.getStatus() < two.getStatus() ) ? 1 : 0;
+                }
+            });
             mRelationships = relationships;
         }
         @Override
