@@ -1,5 +1,6 @@
 package com.cop4331.networking;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.cop4331.networking.Relationship;
@@ -10,14 +11,17 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -218,11 +222,29 @@ public class AccountManager {
                     owner.get(AccountManager.FIELD_PHONE_NUMBER).toString(), owner), obj.getCreatedAt());
         }
 
-        public void startGame(Game.Builder builder) {
+        public void submitShot(final Game game, File shot) {
+            if (game != null) {
+                final ParseFile img = new ParseFile(shot);
+                img.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            ParseObject shotSubmit = new ParseObject("Shots");
+                            shotSubmit.put("game", game.getDatabaseId());
+                            shotSubmit.put("owner", mUser.getObjectId());
+                            shotSubmit.put("image", img);
+                            shotSubmit.saveInBackground();
+                        }
+                    }
+                });
+            }
+        }
+
+        public void startGame(final Game.Builder builder) {
             Game newGame = builder.build(this, new Date());
 
             //Need to push this game to the databse now
-            ParseObject pGame = new ParseObject("Games");
+            final ParseObject pGame = new ParseObject("Games");
             pGame.put("owner", ParseUser.getCurrentUser());
             pGame.put("prompt", newGame.getPrompt());
             pGame.put("timelimit", newGame.getTimeLimit());
@@ -236,7 +258,14 @@ public class AccountManager {
                 push.put("message", getDisplayName() + " has sent you a game invite!");
                 ParseCloud.callFunctionInBackground("PushUser", push);
             }
-            pGame.saveInBackground();
+            pGame.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        builder.setDatabaseId(pGame.getObjectId());
+                    }
+                }
+            });
         }
         
         public void getRelationships(QueryListener listener) {

@@ -9,6 +9,12 @@ import android.graphics.Point;
 import android.media.Image;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 
 /**
@@ -90,5 +96,19 @@ public class AmendedBitmap  {
 
     public Bitmap getBitmap() {
         return mBitmap;
+    }
+
+    public void saveToFile(File saveFile) {
+        try {
+            FileOutputStream out = new FileOutputStream(saveFile);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

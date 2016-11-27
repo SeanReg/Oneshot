@@ -59,6 +59,10 @@ public class Game {
         return mTimeLimit;
     }
 
+    public String getDatabaseId() {
+        return mDatabaseId;
+    }
+
     public Date getExpirationDate() {
         return new Date(mCreatedAt.getTime() + mTimeLimit);
     }
