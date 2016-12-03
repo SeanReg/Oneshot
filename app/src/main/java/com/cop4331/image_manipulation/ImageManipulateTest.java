@@ -158,6 +158,7 @@ public class ImageManipulateTest extends AppCompatActivity {
                 mAmendedBitmap.saveToFile(filePath);
                 AccountManager.getInstance().getCurrentAccount().submitShot(mSubmitTo, filePath);
                 Log.d("SAVE", "Image saved to " + filePath.toString());
+                finish();
             } catch (IOException e) {
 
             }

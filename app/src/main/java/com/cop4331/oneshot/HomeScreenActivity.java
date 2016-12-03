@@ -175,7 +175,7 @@ public class HomeScreenActivity extends AppCompatActivity{
         if (hLayout != null) hLayout.removeAllViews();
 
         for (Game g : mCurrentGames) {
-            g.getShots(new Game.ShotListener() {
+/*            g.getShots(new Game.ShotListener() {
                 @Override
                 public void onGotShots(List<Shot> shots) {
                     if (shots.size() == 0) return;
@@ -184,7 +184,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                         @Override
                         public void onDownloadCompleted(Shot shot) {
                             Log.d("Got shots", shot.getImage().getAbsolutePath());
-                        }
+                        c}
 
                         @Override
                         public void onDownloadError(Shot shot) {
@@ -193,7 +193,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                     });
 
                 }
-            });
+            });*/
 
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
@@ -255,8 +255,13 @@ public class HomeScreenActivity extends AppCompatActivity{
         ((Button)card.findViewById(R.id.viewButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InGameActivity.setInGameOpenedListener(new InGameActivity.InGameOpenedListener() {
+                    @Override
+                    public Game onInGameOpened(InGameActivity act) {
+                        return g;
+                    }
+                });
                 Intent intent = new Intent(getApplicationContext(), InGameActivity.class);
-                intent.putExtra("gameId", g.getDatabaseId());
                 startActivity(intent);
             }
         });

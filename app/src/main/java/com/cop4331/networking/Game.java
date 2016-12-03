@@ -72,8 +72,10 @@ public class Game {
                 if (objects != null && objects.size() > 0) {
                     for (ParseObject pO : objects) {
                         ParseUser owner = (ParseUser)(pO.get("owner"));
-                        shots.add(new Shot(new User(owner.getString(AccountManager.FIELD_USERNAME_CASE), owner.getString(AccountManager.FIELD_DISPLAY_NAME),
-                                owner.getString(AccountManager.FIELD_PHONE_NUMBER), owner), pO.getParseFile("image")));
+                        User shotOwner = new User(owner.getString(AccountManager.FIELD_USERNAME_CASE),
+                                owner.getString(AccountManager.FIELD_DISPLAY_NAME),
+                                owner.getString(AccountManager.FIELD_PHONE_NUMBER), owner);
+                        shots.add(new Shot(shotOwner, pO.getParseFile("image")));
                     }
 
                     if (listener != null) {

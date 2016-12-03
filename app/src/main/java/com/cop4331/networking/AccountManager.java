@@ -240,7 +240,7 @@ public class AccountManager {
                             shotSubmit.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    e.printStackTrace();
+                                    //e.printStackTrace();
                                 }
                             });
                         }

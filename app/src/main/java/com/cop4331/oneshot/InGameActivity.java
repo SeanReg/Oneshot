@@ -15,9 +15,12 @@ import com.cop4331.networking.User;
 
 public class InGameActivity extends Activity {
 
-    private String mThisGame = null;
-    private static InGameActivity mInstance = null;
+    private Game mThisGame = null;
+    private static InGameOpenedListener mInGameActivityListener = null;
 
+    public interface InGameOpenedListener {
+        public Game onInGameOpened(InGameActivity act);
+    }
 
     @Nullable
     @Override
@@ -26,14 +29,22 @@ public class InGameActivity extends Activity {
         setContentView(R.layout.ingame_layout);
         (findViewById(R.id.cameraButton)).setOnClickListener(mCameraListener);
 
-        mThisGame = getIntent().getStringExtra("gameId");
+        if (mInGameActivityListener != null) {
+            mThisGame = mInGameActivityListener.onInGameOpened(this);
+        } else {
+            new RuntimeException("Listener not set! Cannot get game object!");
+        }
+    }
+
+    public static void setInGameOpenedListener(InGameOpenedListener listener) {
+        mInGameActivityListener = listener;
     }
 
     private final Button.OnClickListener mCameraListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent myIntent = new Intent(InGameActivity.this, CameraActivity.class);
-            myIntent.putExtra("gameId", mThisGame);
+            myIntent.putExtra("gameId", mThisGame.getDatabaseId());
             startActivity(myIntent);
         }
     };
