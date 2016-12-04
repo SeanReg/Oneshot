@@ -12,5 +12,5 @@
     <string name="title_activity_temp">TempActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <string name="picker_title"></string>
+    <string name="picker_title">Choose a color:</string>
 </resources>

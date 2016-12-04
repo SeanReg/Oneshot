@@ -39,3 +39,27 @@ Parse.Cloud.define("PushUser", function(request, response) {
 
    });
   });
+
+Parse.Cloud.job("GameExpireCheck", function(request, response) {
+
+  var games = new Parse.Query("Games");
+  games.equalTo("completed", false);
+  games.find({
+        success: function(results) {
+            var nowDate = new Date();
+            for (var i = 0; i < results.length; ++i) {
+              var dateCreated = results[i].createdAt;
+              var limit = Number(results[i].get("timelimit"));
+              if (nowDate.getTime() >= dateCreated.getTime() + limit) {//results[i].createdAt.getTime() + results[i].get("timelimit") >= (new Date()).getTime()) {
+                results[i].set("completed", true);
+                results[i].save();
+                console.log("Game completed: " + results[i].id);
+              }
+            }
+            response.success("Games completed");
+        },
+        error: function() {
+            response.error("Job Failed");
+        }
+    });
+});
