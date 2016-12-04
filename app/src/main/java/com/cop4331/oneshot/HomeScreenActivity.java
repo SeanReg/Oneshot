@@ -1,7 +1,9 @@
 package com.cop4331.oneshot;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -218,7 +220,6 @@ public class HomeScreenActivity extends AppCompatActivity{
 
     private CardView inflateGameCard(final Game g, ViewGroup parentView) {
         final CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
-        card.setCardBackgroundColor(Color.rgb(152,189,249));
         ((TextView) card.findViewById(R.id.promptText)).setText(g.getPrompt());
 
         long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
@@ -226,6 +227,12 @@ public class HomeScreenActivity extends AppCompatActivity{
         String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
         TextView remainingText = ((TextView) card.findViewById(R.id.timeRemainingText));
         if (!g.getGameCompleted()) {
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("CachedShot", Context.MODE_PRIVATE);
+            boolean hasSubmitted = sharedPref.getBoolean(AccountManager.getInstance().getCurrentAccount().getUsername() + g.getDatabaseId(), false);
+            if (hasSubmitted) {
+                card.setCardBackgroundColor(Color.rgb(152,189,249));
+            }
+
 //            g.getShots(new Game.ShotListener() {
 //                @Override
 //                public void onGotShots(List<Shot> shots) {

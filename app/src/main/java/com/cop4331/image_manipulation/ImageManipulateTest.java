@@ -2,6 +2,7 @@ package com.cop4331.image_manipulation;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.cop4331.networking.Account;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.oneshot.GameAssociativeActivity;
 import com.cop4331.oneshot.HomeScreenActivity;
@@ -10,6 +11,7 @@ import com.cop4331.oneshot.R;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -150,7 +152,14 @@ public class ImageManipulateTest extends GameAssociativeActivity {
             try {
                 filePath = File.createTempFile("bitmap", ".png", directory);
                 mAmendedBitmap.saveToFile(filePath);
-                AccountManager.getInstance().getCurrentAccount().submitShot(mThisGame, filePath);
+                AccountManager.Account curAcc = AccountManager.getInstance().getCurrentAccount();
+                curAcc.submitShot(mThisGame, filePath);
+
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("CachedShot", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(curAcc.getUsername() + mThisGame.getDatabaseId(), true);
+                editor.commit();
+
                 Log.d("SAVE", "Image saved to " + filePath.toString());
                 setResult(RESULT_OK);
                 finish();
