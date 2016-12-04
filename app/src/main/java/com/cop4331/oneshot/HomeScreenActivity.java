@@ -26,10 +26,12 @@ import com.cop4331.networking.Relationship;
 import com.cop4331.networking.Shot;
 import com.cop4331.networking.User;
 import com.parse.Parse;
+import com.parse.ParseCloud;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -116,35 +118,6 @@ public class HomeScreenActivity extends AppCompatActivity{
                 }
         });
 
-        AccountManager.getInstance().getCurrentAccount().setQuerylistener(new AccountManager.Account.QueryListener() {
-            @Override
-            public void onGotScore(long score) {
-
-            }
-
-            @Override
-            public void onGotRelationships(List<Relationship> relationships) {
-
-            }
-
-            @Override
-            public void onGotGames(List<Game> games) {
-                mCurrentGames = games;
-                refreshGameList();
-            }
-
-            @Override
-            public void onSearchUser(List<User> users) {
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-        AccountManager.getInstance().getCurrentAccount().getCurrentGames();
-
         /**
          * Setup Drawer Toggle of the Toolbar
          */
@@ -230,6 +203,10 @@ public class HomeScreenActivity extends AppCompatActivity{
         if (!AccountManager.getInstance().isLoggedIn()) {
             Intent camIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(camIntent);
+        } else {
+            AccountManager.Account acc = AccountManager.getInstance().getCurrentAccount();
+            acc.setQuerylistener(mAccountQueryListener);
+            acc.getCurrentGames();
         }
     }
 
@@ -263,12 +240,13 @@ public class HomeScreenActivity extends AppCompatActivity{
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InGameActivity.setInGameOpenedListener(new InGameActivity.InGameOpenedListener() {
+                InGameActivity.setGameActivityOpenedListener(new GameAssociativeActivity.GameActivityOpenedListener() {
                     @Override
-                    public Game onInGameOpened(InGameActivity act) {
+                    public Game onGameActivityOpened(GameAssociativeActivity act) {
                         return g;
                     }
                 });
+
                 Intent intent = new Intent(getApplicationContext(), InGameActivity.class);
                 startActivity(intent);
             }
@@ -284,6 +262,34 @@ public class HomeScreenActivity extends AppCompatActivity{
         public void onTabChanged(int curTab) {
             Log.d("Tab", "Changed to " + curTab);
             refreshGameList();
+        }
+    };
+
+    private AccountManager.Account.QueryListener mAccountQueryListener = new AccountManager.Account.QueryListener() {
+        @Override
+        public void onGotScore(long score) {
+
+        }
+
+        @Override
+        public void onGotRelationships(List<Relationship> relationships) {
+
+        }
+
+        @Override
+        public void onGotGames(List<Game> games) {
+            mCurrentGames = games;
+            refreshGameList();
+        }
+
+        @Override
+        public void onSearchUser(List<User> users) {
+
+        }
+
+        @Override
+        public void onError() {
+
         }
     };
 }

@@ -41,6 +41,8 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView         mCameraView    = null;
     private CameraCharacterizer.CameraType mCameraType    = CameraCharacterizer.CameraType.FRONT_CAMERA;
 
+    private final static int SHOT_SENT = 1;
+
     private ToggleButton mFlashButton = null;
 
     private String mSubmitTo = null;
@@ -167,7 +169,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onImageCaptured(AmendedBitmap capturedImage) {
             Log.d("CameraActivity", "Got image from ImageReader");
-            mCameraView.setVisibility(View.INVISIBLE);
+            //mCameraView.setVisibility(View.INVISIBLE);
 
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("bitmap", Context.MODE_PRIVATE);
@@ -186,7 +188,7 @@ public class CameraActivity extends AppCompatActivity {
                 Intent imgEditIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);
                 imgEditIntent.putExtra("Bitmap", filePath.getAbsoluteFile());
                 imgEditIntent.putExtra("gameId", mSubmitTo);
-                startActivity(imgEditIntent);
+                startActivityForResult(imgEditIntent, SHOT_SENT);
             } catch (IOException e) {
 
             }
@@ -262,5 +264,16 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == SHOT_SENT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
+    }
 
 }

@@ -3,20 +3,16 @@ package com.cop4331.image_manipulation;
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.cop4331.networking.AccountManager;
-import com.cop4331.networking.Game;
-import com.cop4331.oneshot.InGameActivity;
+import com.cop4331.oneshot.GameAssociativeActivity;
 import com.cop4331.oneshot.R;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
@@ -29,7 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ImageManipulateTest extends AppCompatActivity {
+public class ImageManipulateTest extends GameAssociativeActivity {
 
     private AmendedBitmap mAmendedBitmap = null;
     private Point lastDraw = new Point(0, 0);
@@ -39,8 +35,6 @@ public class ImageManipulateTest extends AppCompatActivity {
     private final ColorPickerDialog mColorPickerDialog = new ColorPickerDialog();
     private Button mColorPaletteButton = null;
     private Button mSaveButton = null;
-
-    private String mSubmitTo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +46,6 @@ public class ImageManipulateTest extends AppCompatActivity {
 
         mSaveButton = (Button)findViewById(R.id.saveButton);
         mSaveButton.setOnClickListener(mSaveButtonListener);
-
-        mSubmitTo = getIntent().getStringExtra("gameId");
 
         mColorPickerDialog.initialize(R.string.picker_title, mPickerColors, mDrawColor, 4, mPickerColors.length);
         mColorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
@@ -156,14 +148,18 @@ public class ImageManipulateTest extends AppCompatActivity {
             try {
                 filePath = File.createTempFile("bitmap", ".png", directory);
                 mAmendedBitmap.saveToFile(filePath);
-                AccountManager.getInstance().getCurrentAccount().submitShot(mSubmitTo, filePath);
+                AccountManager.getInstance().getCurrentAccount().submitShot(mThisGame, filePath);
                 Log.d("SAVE", "Image saved to " + filePath.toString());
+                setResult(RESULT_OK);
                 finish();
             } catch (IOException e) {
 
             }
         }
     };
+
+
+
 
     private final static int[] mPickerColors = new int[] {
         Color.argb(255, 246, 64, 44),

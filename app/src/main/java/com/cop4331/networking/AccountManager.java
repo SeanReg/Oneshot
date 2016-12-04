@@ -34,7 +34,7 @@ public class AccountManager {
     public static final String FIELD_USERNAME_CASE  = "usernameCase";
     public static final String FIELD_USERNAME       = "username";
     public static final String FIELD_PHONE_NUMBER   = "phone";
-    public static final String FIELD_DISPLAY_NAME  = "displayName";
+    public static final String FIELD_DISPLAY_NAME   = "displayName";
 
     private onAccountStatus mAccountStatusListener = null;
 
@@ -222,8 +222,8 @@ public class AccountManager {
                     owner.get(AccountManager.FIELD_PHONE_NUMBER).toString(), owner), obj.getCreatedAt());
         }
 
-        public void submitShot(final String gameDatabaseId, File shot) {
-            if (gameDatabaseId != null) {
+        public void submitShot(final Game submitTo, File shot) {
+            if (submitTo != null) {
                 final ParseFile img = new ParseFile(shot);
                 img.saveInBackground(new SaveCallback() {
                     @Override
@@ -232,7 +232,7 @@ public class AccountManager {
                             ParseObject shotSubmit = new ParseObject("Shots");
 
                             ParseObject tempGame = new ParseObject("Games");
-                            tempGame.setObjectId(gameDatabaseId);
+                            tempGame.setObjectId(submitTo.getDatabaseId());
 
                             shotSubmit.put("game", tempGame);
                             shotSubmit.put("owner", mUser);
@@ -240,7 +240,12 @@ public class AccountManager {
                             shotSubmit.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    //e.printStackTrace();
+                                    for (User player : submitTo.getPlayers()) {
+                                        HashMap<String, String> push = new HashMap<String, String>();
+                                        push.put("userId", player.getParseUser().getObjectId());
+                                        push.put("message", getDisplayName() + " has submitted a shot!");
+                                        ParseCloud.callFunctionInBackground("PushUser", push);
+                                    }
                                 }
                             });
                         }
@@ -257,6 +262,7 @@ public class AccountManager {
             pGame.put("owner", ParseUser.getCurrentUser());
             pGame.put("prompt", newGame.getPrompt());
             pGame.put("timelimit", newGame.getTimeLimit());
+            pGame.put("complete", newGame.getGameCompleted());
 
             ParseRelation relation = pGame.getRelation("players");
             for (User user : newGame.getPlayers()) {
