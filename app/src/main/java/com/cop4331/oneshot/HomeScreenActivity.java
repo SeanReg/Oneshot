@@ -232,6 +232,8 @@ public class HomeScreenActivity extends AppCompatActivity{
                 if(g.isGameCreator(AccountManager.getInstance())) {
                     remainingText.setText("PICK A WINNER");
                     card.setCardBackgroundColor(Color.rgb(246,153,138));
+                } else {
+                    card.setCardBackgroundColor(Color.rgb(215,211,210));
                 }
             } else {
                 remainingText.setText("Won by: " + winner.getUsername());

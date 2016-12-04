@@ -4,10 +4,12 @@ import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.oneshot.GameAssociativeActivity;
+import com.cop4331.oneshot.HomeScreenActivity;
 import com.cop4331.oneshot.R;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -152,6 +154,7 @@ public class ImageManipulateTest extends GameAssociativeActivity {
                 Log.d("SAVE", "Image saved to " + filePath.toString());
                 setResult(RESULT_OK);
                 finish();
+
             } catch (IOException e) {
 
             }

@@ -271,6 +271,7 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == SHOT_SENT) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
                 finish();
             }
         }

@@ -31,6 +31,8 @@ public class InGameActivity extends GameAssociativeActivity {
 
     private final HashMap<String, CardView> mPlayerCards = new HashMap<>();
 
+    private static final int SHOT_SENT = 1;
+
     @Nullable
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -52,9 +54,9 @@ public class InGameActivity extends GameAssociativeActivity {
             String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
 
             remainingText.setText("Time remaining: " + remainingTimeH + " " + remainingTimeM);
-            TextView promptText = ((TextView) findViewById(R.id.inGamePromptText));
-            promptText.setText(mThisGame.getPrompt());
         }
+        TextView promptText = ((TextView) findViewById(R.id.inGamePromptText));
+        promptText.setText(mThisGame.getPrompt());
 
         Button camButton = (Button)findViewById(R.id.cameraButton);
         if (mThisGame.isGameCreator(AccountManager.getInstance()) || mThisGame.getGameCompleted()) {
@@ -82,7 +84,7 @@ public class InGameActivity extends GameAssociativeActivity {
                     return mThisGame;
                 }
             });
-            startActivity(myIntent);
+            startActivityForResult(myIntent, SHOT_SENT);
         }
     };
 
@@ -90,7 +92,7 @@ public class InGameActivity extends GameAssociativeActivity {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.shot_card, parentLayout, false);
         CheckBox winner = (CheckBox)card.findViewById(R.id.winnerStatus);
         winner.setVisibility(View.GONE);
-        declareWinner(mThisGame.getWinner(), card);
+        declareWinner(user, card);
         ((TextView)card.findViewById(R.id.nameText)).setText(user.getDisplayName());
         ((TextView)card.findViewById(R.id.usernameDisplay)).setText(user.getUsername());
         parentLayout.addView(card);
@@ -104,6 +106,18 @@ public class InGameActivity extends GameAssociativeActivity {
                 winnerBox.setChecked(true);
             }
             winnerBox.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == SHOT_SENT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
+                finish();
+            }
         }
     }
 
@@ -130,6 +144,12 @@ public class InGameActivity extends GameAssociativeActivity {
                                         startActivity(enlargeShotIntent);
                                     }
                                 });
+
+                                if (mThisGame.isGameCreator(AccountManager.getInstance()) && mThisGame.getGameCompleted()){
+                                    CheckBox winnerCheck = (CheckBox)plrCard.findViewById(R.id.winnerStatus);
+                                    winnerCheck.setVisibility(View.VISIBLE);
+                                    winnerCheck.setOnClickListener(mWinnerClicked);
+                                }
                             }
                         }
 
@@ -144,12 +164,6 @@ public class InGameActivity extends GameAssociativeActivity {
                 Button camButton = (Button)findViewById(R.id.cameraButton);
                 camButton.setEnabled(true);
                 camButton.setAlpha(1.0f);
-            }
-
-            if (mThisGame.isGameCreator(AccountManager.getInstance()) && mThisGame.getGameCompleted()){
-                CheckBox winnerCheck = (CheckBox)findViewById(R.id.winnerStatus);
-                winnerCheck.setVisibility(View.VISIBLE);
-                winnerCheck.setOnClickListener(mWinnerClicked);
             }
         }
 
@@ -175,15 +189,14 @@ public class InGameActivity extends GameAssociativeActivity {
                                 //Pick this player as the winner
                                 try {
                                     mThisGame.pickWinner(plr);
-                                    declareWinner(mThisGame.getWinner(), plrCard);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 break;
                             }
                         }
-                        break;
                     }
+                    plrCard.findViewById(R.id.winnerStatus).setEnabled(false);
                 }
 
             }
