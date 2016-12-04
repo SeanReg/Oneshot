@@ -19,6 +19,7 @@ public class Game {
     private String mPrompt = "";   
     private String mDatabaseId = "";
 	private boolean mIsCompleted = false;
+    private User    mWinner = null;
 
     private Date mCreatedAt = null;
 
@@ -84,8 +85,28 @@ public class Game {
                 }
             }
         });
-
 	}
+
+    public void pickWinner(User winner) throws IllegalAccessException {
+        //Can only be used by the creator of the game
+        if (!isGameCreator(AccountManager.getInstance()))
+            throw new IllegalAccessException("Winner can only be picked by the Game's creator!");
+
+        if (mWinner != null) return;
+
+        ParseObject game = new ParseObject("Games");
+        game.setObjectId(mDatabaseId);
+        game.put("completed", true);
+        game.put("winner", winner.getParseUser());
+
+        game.saveInBackground();
+
+        mWinner = winner;
+    }
+
+    public User getWinner() {
+        return mWinner;
+    }
 
     public String getPrompt() {
         return mPrompt;
@@ -142,6 +163,10 @@ public class Game {
 		public void setDatabaseId(String id) {
 		    mGame.mDatabaseId = id;
 		}
+
+        public void setWinner(User winner) {
+            mGame.mWinner = winner;
+        }
 
 		public void setCompletionStatus(boolean complete) {
 		    mGame.mIsCompleted = complete;
