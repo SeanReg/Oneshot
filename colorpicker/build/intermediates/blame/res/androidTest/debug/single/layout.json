@@ -1,10 +1,10 @@
 [
     {
-        "merged": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\color_picker_swatch.xml",
-        "source": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_swatch.xml"
+        "merged": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/res/merged/androidTest/debug/layout/color_picker_dialog.xml",
+        "source": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/bundles/debug/res/layout/color_picker_dialog.xml"
     },
     {
-        "merged": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\color_picker_dialog.xml",
-        "source": "C:\\Users\\Sean\\Documents\\Oneshot\\colorpicker\\build\\intermediates\\bundles\\debug\\res\\layout\\color_picker_dialog.xml"
+        "merged": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/res/merged/androidTest/debug/layout/color_picker_swatch.xml",
+        "source": "/Users/Nadeensterx3/Desktop/Oneshot/Oneshot/colorpicker/build/intermediates/bundles/debug/res/layout/color_picker_swatch.xml"
     }
 ]

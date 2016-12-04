@@ -41,6 +41,7 @@
         <activity android:name=".NewGameActivity" />
         <activity android:name=".FriendsActivity" />
         <activity android:name=".InGameActivity" />
+        <activity android:name=".ShotEnlargedActivity" />
 
         <!-- Parse setup -->
         <meta-data
