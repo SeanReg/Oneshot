@@ -231,7 +231,7 @@ public class AccountManager {
                         if (e == null) {
                             ParseObject shotSubmit = new ParseObject("Shots");
 
-                            ParseObject tempGame = new ParseObject("Games");
+                            final ParseObject tempGame = new ParseObject("Games");
                             tempGame.setObjectId(submitTo.getDatabaseId());
 
                             shotSubmit.put("game", tempGame);
@@ -240,12 +240,19 @@ public class AccountManager {
                             shotSubmit.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    for (User player : submitTo.getPlayers()) {
+                                    List<User> players = submitTo.getPlayers();
+                                    //Add the prompter too
+                                    players.add(submitTo.getGameCreator());
+                                    for (User player : players) {
+                                        if (player.getParseUser().getObjectId().equals(getParseUser().getObjectId()))
+                                            continue;
+
                                         HashMap<String, String> push = new HashMap<String, String>();
                                         push.put("userId", player.getParseUser().getObjectId());
                                         push.put("message", getDisplayName() + " has submitted a shot!");
                                         ParseCloud.callFunctionInBackground("PushUser", push);
                                     }
+
                                 }
                             });
                         }
