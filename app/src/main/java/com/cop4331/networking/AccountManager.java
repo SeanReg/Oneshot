@@ -156,6 +156,7 @@ public class AccountManager {
             final ParseQuery<ParseObject> query = ParseQuery.getQuery("Games");
             query.whereEqualTo("owner", mUser);
             query.include("owner");
+            query.include("winner");
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(final List<ParseObject> objects, ParseException e) {
@@ -211,7 +212,7 @@ public class AccountManager {
             builder.setCompletionStatus(obj.getBoolean("completed"));
             if (obj.getBoolean("completed")) {
                 ParseUser winner = (ParseUser)obj.get("winner");
-                if (winner.getObjectId() != null) {
+                if (winner != null) {
                     builder.setWinner(parseuserToUser(winner));
                 }
             }

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.cop4331.networking.Game;
 import com.cop4331.networking.Shot;
 import com.cop4331.networking.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +42,19 @@ public class InGameActivity extends GameAssociativeActivity {
         parentLayout = ((LinearLayout) findViewById(R.id.ingame_linearlayout));
         mPlayerCards.clear();
         mPlayers = mThisGame.getPlayers();
+
+        TextView remainingText = ((TextView) findViewById(R.id.timeRemainingView));
+        if(mThisGame.getGameCompleted()) {
+            remainingText.setText("Completed on: " + mThisGame.getExpirationDate().toString());
+        } else {
+            long diff = (mThisGame.getExpirationDate().getTime() - (new Date()).getTime());
+            String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
+            String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
+
+            remainingText.setText("Time remaining: " + remainingTimeH + " " + remainingTimeM);
+            TextView promptText = ((TextView) findViewById(R.id.inGamePromptText));
+            promptText.setText(mThisGame.getPrompt());
+        }
 
         Button camButton = (Button)findViewById(R.id.cameraButton);
         if (mThisGame.isGameCreator(AccountManager.getInstance()) || mThisGame.getGameCompleted()) {
@@ -72,11 +88,23 @@ public class InGameActivity extends GameAssociativeActivity {
 
     public CardView buildCard(User user) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.shot_card, parentLayout, false);
-        card.findViewById(R.id.winnerStatus).setVisibility(View.GONE);
+        CheckBox winner = (CheckBox)card.findViewById(R.id.winnerStatus);
+        winner.setVisibility(View.GONE);
+        declareWinner(mThisGame.getWinner(), card);
         ((TextView)card.findViewById(R.id.nameText)).setText(user.getDisplayName());
         ((TextView)card.findViewById(R.id.usernameDisplay)).setText(user.getUsername());
         parentLayout.addView(card);
         return card;
+    }
+
+    private void declareWinner(User winner, CardView card) {
+        CheckBox winnerBox = (CheckBox)card.findViewById(R.id.winnerStatus);
+        if(mThisGame.getWinner() != null) {
+            if(mThisGame.getWinner().getUsername().equalsIgnoreCase(winner.getUsername())) {
+                winnerBox.setChecked(true);
+            }
+            winnerBox.setEnabled(false);
+        }
     }
 
     private final Game.ShotListener mShotListener = new Game.ShotListener() {
@@ -116,10 +144,51 @@ public class InGameActivity extends GameAssociativeActivity {
                 Button camButton = (Button)findViewById(R.id.cameraButton);
                 camButton.setEnabled(true);
                 camButton.setAlpha(1.0f);
-            } else if (mThisGame.isGameCreator(AccountManager.getInstance())){
-                findViewById(R.id.winnerStatus).setVisibility(View.VISIBLE);
+            }
+
+            if (mThisGame.isGameCreator(AccountManager.getInstance()) && mThisGame.getGameCompleted()){
+                CheckBox winnerCheck = (CheckBox)findViewById(R.id.winnerStatus);
+                winnerCheck.setVisibility(View.VISIBLE);
+                winnerCheck.setOnClickListener(mWinnerClicked);
             }
         }
+
+        private final View.OnClickListener mWinnerClicked = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Get the card object
+                ViewParent findCard = view.getParent();
+                while (!(findCard instanceof CardView)) {
+                    findCard = findCard.getParent();
+                }
+
+                //Find a match for the card
+                for (String cardKey : mPlayerCards.keySet()) {
+                    CardView plrCard = mPlayerCards.get(cardKey);
+                    if (plrCard == findCard) {
+
+                        //Found a match - now we have the winner's username
+                        for (User plr : mPlayers) {
+
+                            //Find the User object for this username
+                            if (plr.getUsername().equals(cardKey)) {
+                                //Pick this player as the winner
+                                try {
+                                    mThisGame.pickWinner(plr);
+                                    declareWinner(mThisGame.getWinner(), plrCard);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+        };
+
     };
 
 }

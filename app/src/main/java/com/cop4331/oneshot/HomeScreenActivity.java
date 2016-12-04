@@ -2,6 +2,7 @@ package com.cop4331.oneshot;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -226,7 +227,15 @@ public class HomeScreenActivity extends AppCompatActivity{
         if (!g.getGameCompleted()) {
             remainingText.setText(remainingTimeH + " " + remainingTimeM);
         } else {
-            remainingText.setText("Winner ");
+            User winner = g.getWinner();
+            if(winner == null) {
+                if(g.isGameCreator(AccountManager.getInstance())) {
+                    remainingText.setText("PICK A WINNER");
+                    card.setCardBackgroundColor(Color.rgb(246,153,138));
+                }
+            } else {
+                remainingText.setText("Won by: " + winner.getUsername());
+            }
         }
 
         TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
