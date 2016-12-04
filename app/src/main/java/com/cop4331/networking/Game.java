@@ -70,7 +70,7 @@ public class Game {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if (objects != null && objects.size() > 0) {
+                if (objects != null) {
                     for (ParseObject pO : objects) {
                         ParseUser owner = (ParseUser)(pO.get("owner"));
                         User shotOwner = new User(owner.getString(AccountManager.FIELD_USERNAME_CASE),

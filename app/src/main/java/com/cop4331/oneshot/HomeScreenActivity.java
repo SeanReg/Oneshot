@@ -171,7 +171,8 @@ public class HomeScreenActivity extends AppCompatActivity{
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
                     if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
-                        inflateGameCard(g, cLayout);
+                        CardView c = inflateGameCard(g, cLayout);
+                        c.findViewById(R.id.invitedByText).setVisibility(View.INVISIBLE);
                     }
                     break;
                 case TabFragment.TAB_PARTICIPATING_GAMES:
@@ -221,15 +222,22 @@ public class HomeScreenActivity extends AppCompatActivity{
         long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
         String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
         String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
-        ((TextView) card.findViewById(R.id.timeRemainingText)).setText(remainingTimeH + " " + remainingTimeM);
-
-        if (!g.isGameCreator(AccountManager.getInstance())) {
-            TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
-            invitedText.setText("Invited by " + g.getGameCreator().getDisplayName());
-            invitedText.setVisibility(View.VISIBLE);
+        TextView remainingText = ((TextView) card.findViewById(R.id.timeRemainingText));
+        if (!g.getGameCompleted()) {
+            remainingText.setText(remainingTimeH + " " + remainingTimeM);
+        } else {
+            remainingText.setText("Winner ");
         }
 
-        ((Button)card.findViewById(R.id.viewButton)).setOnClickListener(new View.OnClickListener() {
+        TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
+        invitedText.setVisibility(View.VISIBLE);
+        if (!g.isGameCreator(AccountManager.getInstance())) {
+            invitedText.setText("Created by " + g.getGameCreator().getDisplayName());
+        } else {
+            invitedText.setText("Created by me");
+        }
+
+        card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InGameActivity.setGameActivityOpenedListener(new GameAssociativeActivity.GameActivityOpenedListener() {

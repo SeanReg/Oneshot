@@ -75,12 +75,6 @@ public class LoginActivity extends AppCompatActivity {
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
-            Game.Builder builder = new Game.Builder();
-            builder.setPrompt("Hello World");
-            builder.setTimelimit(5000);
-
-            account.startGame(builder);
-            account.getCurrentGames();
             finish();
         }
 
