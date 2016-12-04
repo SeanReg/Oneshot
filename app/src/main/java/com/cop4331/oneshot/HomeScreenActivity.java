@@ -217,7 +217,8 @@ public class HomeScreenActivity extends AppCompatActivity{
     }
 
     private CardView inflateGameCard(final Game g, ViewGroup parentView) {
-        CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
+        final CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
+        card.setCardBackgroundColor(Color.rgb(152,189,249));
         ((TextView) card.findViewById(R.id.promptText)).setText(g.getPrompt());
 
         long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
@@ -225,6 +226,17 @@ public class HomeScreenActivity extends AppCompatActivity{
         String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
         TextView remainingText = ((TextView) card.findViewById(R.id.timeRemainingText));
         if (!g.getGameCompleted()) {
+//            g.getShots(new Game.ShotListener() {
+//                @Override
+//                public void onGotShots(List<Shot> shots) {
+//                    for(Shot shot : shots) {
+//                        if(shot.getUser().getUsername().equalsIgnoreCase(AccountManager.getInstance().getCurrentAccount().getUsername())) {
+//                            card.setCardBackgroundColor(Color.rgb(255,255,255));
+//                            return;
+//                        }
+//                    }
+//                }
+//            });
             remainingText.setText(remainingTimeH + " " + remainingTimeM);
         } else {
             User winner = g.getWinner();
