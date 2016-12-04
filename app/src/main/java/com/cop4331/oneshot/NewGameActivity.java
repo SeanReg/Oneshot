@@ -65,7 +65,7 @@ public class NewGameActivity extends Activity {
             public void onGotRelationships(List<Relationship> relationships) {
                 LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friend_selection_list));
                 for (Relationship rel : relationships) {
-                    //if (rel.getStatus() != Relationship.STATUS_ACCEPTED) continue;
+                    if (rel.getStatus() != Relationship.STATUS_ACCEPTED) continue;
 
                     CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
                     ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
