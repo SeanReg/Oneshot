@@ -3,6 +3,7 @@ package com.cop4331.networking;
 import com.cop4331.networking.User;
 import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -11,6 +12,7 @@ import com.parse.ParseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Game {
@@ -100,6 +102,13 @@ public class Game {
         game.put("winner", winner.getParseUser());
 
         game.saveInBackground();
+
+        for (User plr : mPlayers) {
+            HashMap<String, String> push = new HashMap<String, String>();
+            push.put("userId", plr.getParseUser().getObjectId());
+            push.put("message", getGameCreator().getDisplayName() + " has chosen a winner!");
+            ParseCloud.callFunctionInBackground("PushUser", push);
+        }
 
         mWinner = winner;
     }

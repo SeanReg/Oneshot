@@ -44,6 +44,7 @@ Parse.Cloud.job("GameExpireCheck", function(request, response) {
 
   var games = new Parse.Query("Games");
   games.equalTo("completed", false);
+  games.include("owner");
   games.find({
         success: function(results) {
             var nowDate = new Date();
@@ -53,6 +54,25 @@ Parse.Cloud.job("GameExpireCheck", function(request, response) {
               if (nowDate.getTime() >= dateCreated.getTime() + limit) {//results[i].createdAt.getTime() + results[i].get("timelimit") >= (new Date()).getTime()) {
                 results[i].set("completed", true);
                 results[i].save();
+
+                var query = new Parse.Query(Parse.Installation);
+                query.equalTo("user", results[i].get("owner"));
+
+                var payload = {
+                  alert: "Your game has ended! Choose a winner"
+                };
+
+
+                Parse.Push.send({
+                    data: payload,
+                    where: query
+                  }, {
+                    useMasterKey: true
+                  })
+                  .then(function() {
+                  }, function(error) {
+                });
+
                 console.log("Game completed: " + results[i].id);
               }
             }
