@@ -251,6 +251,9 @@ public class AccountManager {
                             shotSubmit.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
+                                    tempGame.increment("shotCount");
+                                    tempGame.saveInBackground();
+                                    
                                     List<User> players = submitTo.getPlayers();
                                     //Add the prompter too
                                     players.add(submitTo.getGameCreator());
@@ -281,6 +284,8 @@ public class AccountManager {
             pGame.put("prompt", newGame.getPrompt());
             pGame.put("timelimit", newGame.getTimeLimit());
             pGame.put("completed", newGame.getGameCompleted());
+            pGame.put("playerCount", newGame.getPlayers().size());
+            pGame.put("shotCount", 0);
 
             ParseRelation relation = pGame.getRelation("players");
             for (User user : newGame.getPlayers()) {

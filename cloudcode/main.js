@@ -51,7 +51,7 @@ Parse.Cloud.job("GameExpireCheck", function(request, response) {
             for (var i = 0; i < results.length; ++i) {
               var dateCreated = results[i].createdAt;
               var limit = Number(results[i].get("timelimit"));
-              if (nowDate.getTime() >= dateCreated.getTime() + limit) {//results[i].createdAt.getTime() + results[i].get("timelimit") >= (new Date()).getTime()) {
+              if (Number(results[i].get("shotCount")) == Number(results[i].get("playerCount")) || nowDate.getTime() >= dateCreated.getTime() + limit) {//results[i].createdAt.getTime() + results[i].get("timelimit") >= (new Date()).getTime()) {
                 results[i].set("completed", true);
                 results[i].save();
 
