@@ -173,6 +173,7 @@ public class AccountManager {
                         ParseQuery<ParseObject> qParticipant = ParseQuery.getQuery("Games");
                         qParticipant.whereEqualTo("players", mUser);
                         qParticipant.include("owner");
+                        qParticipant.include("winner");
                         qParticipant.findInBackground(new FindCallback<ParseObject>() {
                             @Override
                             public void done(List<ParseObject> participating, ParseException e) {
@@ -208,20 +209,29 @@ public class AccountManager {
             builder.setPrompt((String)obj.get("prompt"));
             builder.setDatabaseId(obj.getObjectId());
             builder.setCompletionStatus(obj.getBoolean("completed"));
+            if (obj.getBoolean("completed")) {
+                ParseUser winner = (ParseUser)obj.get("winner");
+                if (winner.getObjectId() != null) {
+                    builder.setWinner(parseuserToUser(winner));
+                }
+            }
 
             for (ParseObject player : playerObjs) {
                 ParseUser plr = (ParseUser)player;
-                builder.addPlayer(new User(plr.get(AccountManager.FIELD_USERNAME_CASE).toString(), plr.get(AccountManager.FIELD_DISPLAY_NAME).toString(),
-                        plr.get(AccountManager.FIELD_PHONE_NUMBER).toString(), plr));
+                builder.addPlayer(parseuserToUser(plr));
             }
 
             Date expTime = new Date(obj.getCreatedAt().getTime() + (int)obj.get("timelimit"));
 
             ParseUser owner = (ParseUser)obj.get("owner");
-            return builder.build(new User(owner.get(AccountManager.FIELD_USERNAME_CASE).toString(), owner.get(AccountManager.FIELD_DISPLAY_NAME).toString(),
-                    owner.get(AccountManager.FIELD_PHONE_NUMBER).toString(), owner), obj.getCreatedAt());
+            return builder.build(parseuserToUser(owner), obj.getCreatedAt());
         }
 
+        private User parseuserToUser(ParseUser pUser) {
+            return new User(pUser.get(AccountManager.FIELD_USERNAME_CASE).toString(), pUser.get(AccountManager.FIELD_DISPLAY_NAME).toString(),
+                    pUser.get(AccountManager.FIELD_PHONE_NUMBER).toString(), pUser);
+        }
+        
         public void submitShot(final Game submitTo, File shot) {
             if (submitTo != null) {
                 final ParseFile img = new ParseFile(shot);
@@ -269,7 +279,7 @@ public class AccountManager {
             pGame.put("owner", ParseUser.getCurrentUser());
             pGame.put("prompt", newGame.getPrompt());
             pGame.put("timelimit", newGame.getTimeLimit());
-            pGame.put("complete", newGame.getGameCompleted());
+            pGame.put("completed", newGame.getGameCompleted());
 
             ParseRelation relation = pGame.getRelation("players");
             for (User user : newGame.getPlayers()) {
