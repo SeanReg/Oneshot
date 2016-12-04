@@ -40,6 +40,25 @@ Parse.Cloud.define("PushUser", function(request, response) {
    });
   });
 
+Parse.Cloud.define("CompleteGame", function(request, response) {
+  var query = new Parse.Query("Games");
+  query.equalTo("objectId", request.params.gameId);
+  query.include("owner");
+
+  query.first({
+   success: function(game){
+        completeGameIfDone(game)
+        response.success("Game checked for experiation successfully");
+       },
+
+       error: function(error) {
+           console.error(error);
+           response.error("An error occured while lookup the users objectid");
+       }
+
+   });
+});
+
 Parse.Cloud.job("GameExpireCheck", function(request, response) {
 
   var games = new Parse.Query("Games");
@@ -47,34 +66,8 @@ Parse.Cloud.job("GameExpireCheck", function(request, response) {
   games.include("owner");
   games.find({
         success: function(results) {
-            var nowDate = new Date();
             for (var i = 0; i < results.length; ++i) {
-              var dateCreated = results[i].createdAt;
-              var limit = Number(results[i].get("timelimit"));
-              if (Number(results[i].get("shotCount")) == Number(results[i].get("playerCount")) || nowDate.getTime() >= dateCreated.getTime() + limit) {//results[i].createdAt.getTime() + results[i].get("timelimit") >= (new Date()).getTime()) {
-                results[i].set("completed", true);
-                results[i].save();
-
-                var query = new Parse.Query(Parse.Installation);
-                query.equalTo("user", results[i].get("owner"));
-
-                var payload = {
-                  alert: "Your game has ended! Choose a winner"
-                };
-
-
-                Parse.Push.send({
-                    data: payload,
-                    where: query
-                  }, {
-                    useMasterKey: true
-                  })
-                  .then(function() {
-                  }, function(error) {
-                });
-
-                console.log("Game completed: " + results[i].id);
-              }
+              completeGameIfDone(results[i])
             }
             response.success("Games completed");
         },
@@ -83,3 +76,33 @@ Parse.Cloud.job("GameExpireCheck", function(request, response) {
         }
     });
 });
+
+function completeGameIfDone(game) {
+  var nowDate = new Date();
+  var dateCreated = game.createdAt;
+  var limit = Number(game.get("timelimit"));
+  if (Number(game.get("shotCount")) == Number(game.get("playerCount")) || nowDate.getTime() >= dateCreated.getTime() + limit) {//game.createdAt.getTime() + game.get("timelimit") >= (new Date()).getTime()) {
+    game.set("completed", true);
+    game.save();
+
+    var query = new Parse.Query(Parse.Installation);
+    query.equalTo("user", game.get("owner"));
+
+    var payload = {
+      alert: "Your game has ended! Choose a winner"
+    };
+
+
+    Parse.Push.send({
+        data: payload,
+        where: query
+      }, {
+        useMasterKey: true
+      })
+      .then(function() {
+      }, function(error) {
+    });
+
+    console.log("Game completed: " + game.id);
+  }
+}

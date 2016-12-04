@@ -252,8 +252,17 @@ public class AccountManager {
                                 @Override
                                 public void done(ParseException e) {
                                     tempGame.increment("shotCount");
-                                    tempGame.saveInBackground();
-                                    
+                                    tempGame.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e != null) return;
+
+                                            HashMap<String, String> comp = new HashMap<String, String>();
+                                            comp.put("gameId", tempGame.getObjectId());
+                                            ParseCloud.callFunctionInBackground("CompleteGame", comp);
+                                        }
+                                    });
+
                                     List<User> players = submitTo.getPlayers();
                                     //Add the prompter too
                                     players.add(submitTo.getGameCreator());
