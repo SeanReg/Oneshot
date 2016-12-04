@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InGameActivity extends GameAssociativeActivity {
-
-    private Game mThisGame = null;
     private LinearLayout parentLayout = null;
     private List<User> mPlayers = null;
     private AccountManager.Account curAcc = null;
@@ -88,6 +86,9 @@ public class InGameActivity extends GameAssociativeActivity {
             for (Shot shot : shots) {
                 if(shot.getUser().getUsername().equalsIgnoreCase(curAcc.getUsername())) {
                     shotSubmitted = true;
+                }
+                if(mThisGame.getGameCompleted()) {
+
                 }
                 shot.downloadImage(new Shot.DownloadListener() {
                     @Override
