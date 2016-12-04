@@ -87,31 +87,30 @@ public class InGameActivity extends GameAssociativeActivity {
                 if(shot.getUser().getUsername().equalsIgnoreCase(curAcc.getUsername())) {
                     shotSubmitted = true;
                 }
-                if(mThisGame.getGameCompleted()) {
-
-                }
-                shot.downloadImage(new Shot.DownloadListener() {
-                    @Override
-                    public void onDownloadCompleted(final Shot shot) {
-                        CardView plrCard = mPlayerCards.get(shot.getUser().getUsername());
-                        if (plrCard != null) {
-                            ImageView imgView = (ImageView)(plrCard.findViewById(R.id.shotImageView));
-                            imgView.setImageBitmap(BitmapFactory.decodeFile(shot.getImage().getAbsolutePath()));
-                            imgView.setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    Intent enlargeShotIntent = new Intent(getApplicationContext(), ShotEnlargedActivity.class);
-                                    enlargeShotIntent.putExtra("Shot", shot.getImage().getAbsolutePath());
-                                    startActivity(enlargeShotIntent);
-                                }
-                            });
+                if(mThisGame.getGameCompleted() || mThisGame.isGameCreator(AccountManager.getInstance())) {
+                    shot.downloadImage(new Shot.DownloadListener() {
+                        @Override
+                        public void onDownloadCompleted(final Shot shot) {
+                            CardView plrCard = mPlayerCards.get(shot.getUser().getUsername());
+                            if (plrCard != null) {
+                                ImageView imgView = (ImageView)(plrCard.findViewById(R.id.shotImageView));
+                                imgView.setImageBitmap(BitmapFactory.decodeFile(shot.getImage().getAbsolutePath()));
+                                imgView.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent enlargeShotIntent = new Intent(getApplicationContext(), ShotEnlargedActivity.class);
+                                        enlargeShotIntent.putExtra("Shot", shot.getImage().getAbsolutePath());
+                                        startActivity(enlargeShotIntent);
+                                    }
+                                });
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onDownloadError(Shot shot) {
+                        @Override
+                        public void onDownloadError(Shot shot) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
             if (!shotSubmitted && !mThisGame.isGameCreator(AccountManager.getInstance())) {
                 Button camButton = (Button)findViewById(R.id.cameraButton);
