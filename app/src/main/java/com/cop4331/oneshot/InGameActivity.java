@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewParent;
@@ -126,9 +127,15 @@ public class InGameActivity extends GameAssociativeActivity {
         public void onGotShots(List<Shot> shots) {
             boolean shotSubmitted = false;
             for (Shot shot : shots) {
+
+                CardView card = mPlayerCards.get(shot.getUser().getUsername());
+
                 if(shot.getUser().getUsername().equalsIgnoreCase(curAcc.getUsername())) {
                     shotSubmitted = true;
+                } else {
+                    ((ImageView)(card.findViewById(R.id.shotImageView))).setImageDrawable(getResources().getDrawable(R.drawable.checkmark));
                 }
+
                 if(mThisGame.getGameCompleted() || mThisGame.isGameCreator(AccountManager.getInstance())) {
                     shot.downloadImage(new Shot.DownloadListener() {
                         @Override
