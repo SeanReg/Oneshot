@@ -23,6 +23,7 @@ public class Account {
 
     private static final String FIELD_EMAIL        = "email";
     private static final String FIELD_PHONE_NUMBER = "phone";
+    private static final String FIELD_SCORE        = "score";
 
     public interface RegisterResponse {
         public void onRegistered();
@@ -162,6 +163,7 @@ public class Account {
         user.setUsername(email);
         user.setPassword(password);
         user.put(FIELD_PHONE_NUMBER, phone);
+        user.put(FIELD_SCORE, 0);
 
         user.signUpInBackground(mRegisterCallback);
     }

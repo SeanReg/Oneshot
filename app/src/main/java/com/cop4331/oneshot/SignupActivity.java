@@ -72,8 +72,11 @@ public class SignupActivity extends AppCompatActivity {
             if(!password.equals(confirmedPassword)) {
                 sb.append("Passwords do not match.\n");
             }
-            mStatusListener.onRegistrationError(sb.toString());
-            manager.register(username, password, displayName, phoneNumber);
+            if (sb.length() > 0) {
+                mStatusListener.onRegistrationError(sb.toString());
+            } else {
+                manager.register(username, password, displayName, phoneNumber);
+            }
         }
     };
 

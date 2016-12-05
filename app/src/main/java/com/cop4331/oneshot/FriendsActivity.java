@@ -53,7 +53,7 @@ public class FriendsActivity extends Activity {
         @Override
         public void onClick(View view) {
             parentLayout.removeAllViews();
-            String search = mSearchText.getText().toString();
+            String search = mSearchText.getText().toString().toLowerCase();
             for (Relationship rel : mRelationships) {
                 User currUser = rel.getUser();
                 if (currUser.getDisplayName().equalsIgnoreCase(search)
@@ -73,10 +73,7 @@ public class FriendsActivity extends Activity {
         ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
         ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
         if(rel.getStatus() == Relationship.STATUS_ACCEPTED) {
-            Button delete = ((Button)card.findViewById(R.id.deleteButton));
-            delete.setVisibility(View.VISIBLE);
-            delete.setTag(card);
-            delete.setOnClickListener(mDeleteListener);
+            setCardTrash(card);
         } else if (rel.getStatus() == Relationship.STATUS_PENDING) {
             if (rel.isSentByMe()) {
                 ((ImageView) card.findViewById(R.id.pendingView)).setVisibility(View.VISIBLE);
@@ -85,12 +82,19 @@ public class FriendsActivity extends Activity {
                 add.setVisibility(View.VISIBLE);
                 add.setOnClickListener(mAddListener);
                 add.setTag(card);
-                card.setTag(rel.getUser());
+                card.setTag(rel);
             }
         }
 
         parentLayout.addView(card);
         return card;
+    }
+
+    private void setCardTrash(CardView card) {
+        Button delete = ((Button)card.findViewById(R.id.deleteButton));
+        delete.setVisibility(View.VISIBLE);
+        delete.setTag(card);
+        delete.setOnClickListener(mDeleteListener);
     }
 
     public CardView buildCard(User user) {
@@ -105,8 +109,16 @@ public class FriendsActivity extends Activity {
         @Override
         public void onClick(View view) {
             CardView card = (CardView)view.getTag();
-            User user = (User)card.getTag();
-            card.findViewById(R.id.pendingView).setVisibility(View.VISIBLE);
+
+            User user = null;
+            if (card.getTag() instanceof Relationship) {
+                user = ((Relationship) card.getTag()).getUser();
+                setCardTrash(card);
+            } else {
+                user = (User) card.getTag();
+                card.findViewById(R.id.pendingView).setVisibility(View.VISIBLE);
+            }
+
             view.setVisibility(View.GONE);
             curAcc.requestFriendByUsername(user.getUsername());
         }

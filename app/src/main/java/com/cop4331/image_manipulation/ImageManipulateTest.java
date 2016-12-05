@@ -96,7 +96,7 @@ public class ImageManipulateTest extends GameAssociativeActivity {
                             paint.x = (int)(touchPoint.x + (posDiff.x * delta));
                             paint.y = (int)(touchPoint.y + (posDiff.y * delta));
 
-                            mAmendedBitmap.drawPoint(paint, mDrawColor);
+                            mAmendedBitmap.drawPoint(paint, mDrawColor, getResources().getDisplayMetrics().density);
                             ++i;
                         }while(i < distance);
 

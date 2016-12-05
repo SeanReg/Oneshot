@@ -90,11 +90,11 @@ public class AmendedBitmap  {
         mCanvas.drawBitmap(drawText.getDrawingCache(), mBitmap.getWidth() / 2.0f - drawText.getWidth() / 2.0f, mBitmap.getHeight() / 2.0f - drawText.getHeight() / 2.0f, null);
     }
 
-    public void drawPoint(Point cordinates, int color) {
+    public void drawPoint(Point cordinates, int color, float density) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(color);
 
-        mCanvas.drawCircle(cordinates.x, cordinates.y, 20.0f, paint);
+        mCanvas.drawCircle(cordinates.x, cordinates.y, 5.0f * density, paint);
     }
 
     public void recordChanges() {
