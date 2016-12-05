@@ -168,7 +168,7 @@ public class AccountManager {
                             @Override
                             public void run() {
                                 GameWorker w = (GameWorker)Thread.currentThread();
-                                while (!w.getQuerySizesSet() && games.size() != w.getInnerQueryCount() + w.getOuterQueryCount()) {
+                                while (!w.getQuerySizesSet() || games.size() != w.getInnerQueryCount() + w.getOuterQueryCount()) {
 
                                 }
 
@@ -371,10 +371,6 @@ public class AccountManager {
         public void getRelationships(QueryListener listener) {
             mRelationshipManager.getRelationships(mQuerylistener);
         }
-        
-		public void getScore(QueryListener listener) {
-			
-		}
 
         public void requestFriendByNumber(String phonenumber) {
             requestFriend(FIELD_PHONE_NUMBER, phonenumber);

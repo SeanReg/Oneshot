@@ -41,6 +41,10 @@ public class User {
 
     public int getScore() {
         if (mParseUser != null) {
+            //Make sure to get the most recent score occasionally
+            if (AccountManager.getInstance().getCurrentAccount() == this)
+                mParseUser.fetchInBackground();
+
             return mParseUser.getInt("score");
         } else {
             return 0;
