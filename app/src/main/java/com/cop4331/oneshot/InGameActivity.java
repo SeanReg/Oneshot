@@ -133,9 +133,8 @@ public class InGameActivity extends GameAssociativeActivity {
 
                 if(shot.getUser().getUsername().equalsIgnoreCase(curAcc.getUsername())) {
                     shotSubmitted = true;
-                } else {
-                    ((ImageView)(card.findViewById(R.id.shotImageView))).setImageDrawable(getResources().getDrawable(R.drawable.checkmark));
                 }
+                ((ImageView)(card.findViewById(R.id.shotImageView))).setImageDrawable(getResources().getDrawable(R.drawable.checkmark));
 
                 if(mThisGame.getGameCompleted() || mThisGame.isGameCreator(AccountManager.getInstance())) {
                     shot.downloadImage(new Shot.DownloadListener() {
