@@ -101,6 +101,14 @@ public class Game {
         game.put("completed", true);
         game.put("winner", winner.getParseUser());
 
+/*        winner.getParseUser().increment("score", mPlayers.size());
+        winner.getParseUser().saveInBackground();*/
+
+        HashMap<String, String> score = new HashMap<String, String>();
+        score.put("userId", winner.getParseUser().getObjectId());
+        score.put("incSize", Integer.toString(mPlayers.size()));
+        ParseCloud.callFunctionInBackground("AwardScore", score);
+
         game.saveInBackground();
 
         for (User plr : mPlayers) {

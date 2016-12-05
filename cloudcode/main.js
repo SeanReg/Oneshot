@@ -40,6 +40,28 @@ Parse.Cloud.define("PushUser", function(request, response) {
    });
   });
 
+Parse.Cloud.define("AwardScore", function(request, response) {
+  Parse.Cloud.useMasterKey();
+  
+  var query = new Parse.Query(Parse.User);
+  query.equalTo("objectId", request.params.userId);
+
+   query.first({
+   success: function(user){
+          user.increment("score", Number(request.params.incSize));
+          user.save();
+          response.success("Score updated!");
+       },
+
+       error: function(error) {
+           console.error(error);
+           response.error("An error occured while lookup the users objectid");
+       }
+
+   });
+  });
+
+
 Parse.Cloud.define("CompleteGame", function(request, response) {
   var query = new Parse.Query("Games");
   query.equalTo("objectId", request.params.gameId);

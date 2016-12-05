@@ -38,4 +38,12 @@ public class User {
     }
 
     public String getPhoneNumber() { return mPhoneNumber; }
+
+    public int getScore() {
+        if (mParseUser != null) {
+            return mParseUser.getInt("score");
+        } else {
+            return 0;
+        }
+    }
 }
