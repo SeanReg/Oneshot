@@ -40,6 +40,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class HomeScreenActivity extends AppCompatActivity{
@@ -142,6 +144,14 @@ public class HomeScreenActivity extends AppCompatActivity{
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerToggle.syncState();
+
+        new Timer("RefreshTimer").schedule(new TimerTask() {
+            @Override
+            public void run() {
+                AccountManager.Account acc = AccountManager.getInstance().getCurrentAccount();
+                acc.getCurrentGames();
+            }
+        }, 0, 8000);
 
 /*
         AccountManager.getInstance().getCurrentAccount().requestFriendByUsername("jason");

@@ -50,10 +50,10 @@ public class CameraHandle {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
-        ORIENTATIONS.append(Surface.ROTATION_180, 270);
-        ORIENTATIONS.append(Surface.ROTATION_270, 180);
+        ORIENTATIONS.append(Surface.ROTATION_0, 0);
+        ORIENTATIONS.append(Surface.ROTATION_90, 90);
+        ORIENTATIONS.append(Surface.ROTATION_180, 180);
+        ORIENTATIONS.append(Surface.ROTATION_270, 270);
     }
 
     /**
@@ -162,7 +162,7 @@ public class CameraHandle {
      * been registered for the CameraHandle
      * @throws CameraAccessException thrown if there was an error with opening the camera device
      */
-    public void captureImage(boolean useFlash, int rotation) throws IllegalStateException, CameraAccessException {
+    public void captureImage(boolean useFlash) throws IllegalStateException, CameraAccessException {
         if (mCaptureSession == null) throw new IllegalStateException("Camera feed has not been started!");
         if (mCameraStatsListener == null) throw new IllegalStateException("CameraStatusListener has not been registered");
 
@@ -178,11 +178,7 @@ public class CameraHandle {
             } else  {
                 request.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             }
-
-            // Orientation
-            request.set(CaptureRequest.JPEG_ORIENTATION, (ORIENTATIONS.get(rotation) + mCharacterizer.getCameraOrientation() + 270) % 360);
-
-            //request.set(CaptureRequest.JPEG_ORIENTATION, mCharacterizer.getCameraOrientation());
+            request.set(CaptureRequest.JPEG_ORIENTATION, mCharacterizer.getCameraOrientation());
 
             //Stop old preview request and do capture request
             mCaptureSession.stopRepeating();
