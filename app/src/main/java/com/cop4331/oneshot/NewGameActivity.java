@@ -1,6 +1,7 @@
 package com.cop4331.oneshot;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -115,6 +116,12 @@ public class NewGameActivity extends Activity {
 
             Game.Builder builder = new Game.Builder();
             builder.setCompletionStatus(false);
+            if(mSelectedUsers.size() < 2) {
+                TextView error = (TextView)findViewById(R.id.textView);
+                error.setText("Select minimum 2 players.");
+                error.setTextColor(Color.RED);
+                return;
+            }
             builder.addPlayers(mSelectedUsers);
             builder.setPrompt(prompt);
             builder.setTimelimit(duration);
