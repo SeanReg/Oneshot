@@ -171,18 +171,18 @@ public class HomeScreenActivity extends AppCompatActivity{
 
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
-                    if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
+                    if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted() && cLayout != null) {
                         CardView c = inflateGameCard(g, cLayout);
                         c.findViewById(R.id.invitedByText).setVisibility(View.INVISIBLE);
                     }
                     break;
                 case TabFragment.TAB_PARTICIPATING_GAMES:
-                    if (!g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted()) {
+                    if (!g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted() && pLayout != null) {
                         inflateGameCard(g, pLayout);
                     }
                     break;
                 case TabFragment.TAB_HISTORY_GAMES:
-                    if (g.getGameCompleted()) {
+                    if (g.getGameCompleted() && hLayout != null) {
                         inflateGameCard(g, hLayout);
                     }
                     break;
