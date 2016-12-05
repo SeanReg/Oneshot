@@ -1,6 +1,7 @@
 package com.cop4331.oneshot;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,9 @@ import com.parse.ParseCloud;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +93,6 @@ public class HomeScreenActivity extends AppCompatActivity{
         /**
          * Setup click events on the Navigation View Items.
          */
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                  @Override
                  public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -127,7 +130,14 @@ public class HomeScreenActivity extends AppCompatActivity{
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
-        R.string.app_name);
+        R.string.app_name) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                AccountManager.Account currAcc = AccountManager.getInstance().getCurrentAccount();
+                mNavigationView.getMenu().findItem(R.id.nav_item_score).setTitle("My Score " + currAcc.getScore());
+                super.onDrawerOpened(drawerView);
+            }
+        };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -208,6 +218,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             startActivity(camIntent);
         } else {
             AccountManager.Account acc = AccountManager.getInstance().getCurrentAccount();
+            acc.getScore();
             acc.setQuerylistener(mAccountQueryListener);
             acc.getCurrentGames();
         }
@@ -309,6 +320,19 @@ public class HomeScreenActivity extends AppCompatActivity{
         @Override
         public void onGotGames(List<Game> games) {
             mCurrentGames = games;
+            Collections.sort(mCurrentGames, new Comparator<Game>() {
+                @Override
+                public int compare(Game g1, Game g2) {
+                    long g1Created = g1.getExpirationDate().getTime() - g1.getTimeLimit();
+                    long g2Created = g2.getExpirationDate().getTime() - g2.getTimeLimit();
+                    if (g1Created < g2Created) {
+                        return 1;
+                    } else if (g1Created > g2Created) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
             refreshGameList();
         }
 

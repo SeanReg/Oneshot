@@ -95,7 +95,7 @@ public class InGameActivity extends GameAssociativeActivity {
         winner.setVisibility(View.GONE);
         declareWinner(user, card);
         ((TextView)card.findViewById(R.id.nameText)).setText(user.getDisplayName());
-        ((TextView)card.findViewById(R.id.usernameDisplay)).setText(user.getUsername());
+        ((TextView)card.findViewById(R.id.usernameDisplay)).setText(user.getUsername() + " [" + user.getScore() + "]");
         parentLayout.addView(card);
         return card;
     }

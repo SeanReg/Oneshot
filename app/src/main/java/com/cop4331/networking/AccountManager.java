@@ -318,10 +318,6 @@ public class AccountManager {
         public void getRelationships(QueryListener listener) {
             mRelationshipManager.getRelationships(mQuerylistener);
         }
-        
-		public void getScore(QueryListener listener) {
-			
-		}
 
         public void requestFriendByNumber(String phonenumber) {
             requestFriend(FIELD_PHONE_NUMBER, phonenumber);
