@@ -247,7 +247,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             try {
-                CameraHandle.getInstance().captureImage(mFlashButton.isChecked());
+                CameraHandle.getInstance().captureImage(mFlashButton.isChecked(), getWindowManager().getDefaultDisplay().getRotation());
             }catch (CameraAccessException e) {
                 finish();
             }
