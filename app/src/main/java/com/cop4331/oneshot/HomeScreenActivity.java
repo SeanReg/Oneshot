@@ -309,7 +309,13 @@ public class HomeScreenActivity extends AppCompatActivity{
         @Override
         public void onGotGames(List<Game> games) {
             mCurrentGames = games;
-            refreshGameList();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshGameList();
+                }
+            });
         }
 
         @Override

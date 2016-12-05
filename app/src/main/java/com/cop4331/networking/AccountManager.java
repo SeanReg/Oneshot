@@ -1,6 +1,7 @@
 package com.cop4331.networking;
 
 import android.graphics.Bitmap;
+import android.os.Looper;
 import android.util.Log;
 
 import com.cop4331.networking.Relationship;
@@ -162,13 +163,34 @@ public class AccountManager {
                 public void done(final List<ParseObject> objects, ParseException e) {
                     if (e == null) {
                         final ArrayList<Game> games = new ArrayList<Game>();
-                        for (final ParseObject pO : objects) {
-                            try {
-                                List<ParseObject> plrs = pO.getRelation("players").getQuery().find();
-                                games.add(parseToGame(pO, plrs));
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
+
+                        final GameWorker worker = new GameWorker(new Runnable() {
+                            @Override
+                            public void run() {
+                                GameWorker w = (GameWorker)Thread.currentThread();
+                                while (!w.getQuerySizesSet() && games.size() != w.getInnerQueryCount() + w.getOuterQueryCount()) {
+
+                                }
+
+                                if (mQuerylistener != null) {
+                                    mQuerylistener.onGotGames(games);
+                                }
                             }
+                        });
+                        worker.start();
+
+                        worker.setOuterQueryCount(objects.size());
+                        for (final ParseObject pO : objects) {
+                            pO.getRelation("players").getQuery().findInBackground(new FindCallback<ParseObject>() {
+                                @Override
+                                public void done(List<ParseObject> plrs, ParseException e) {
+                                    if (e != null) {
+                                        games.add(null);
+                                        return;
+                                    }
+                                    games.add(parseToGame(pO, plrs));
+                                }
+                            });
                         }
 
                         ParseQuery<ParseObject> qParticipant = ParseQuery.getQuery("Games");
@@ -179,25 +201,56 @@ public class AccountManager {
                             @Override
                             public void done(List<ParseObject> participating, ParseException e) {
                                 if (e == null) {
+                                    worker.setInnerQueryCount(participating.size());
                                     for (final ParseObject pO : participating) {
-                                        try {
-                                            List<ParseObject> plrs = pO.getRelation("players").getQuery().find();
-                                            games.add(parseToGame(pO, plrs));
-                                        } catch (ParseException e1) {
-                                            e1.printStackTrace();
-                                        }
+                                        pO.getRelation("players").getQuery().findInBackground(new FindCallback<ParseObject>() {
+                                            @Override
+                                            public void done(List<ParseObject> plrs, ParseException e) {
+                                                if (e != null) {
+                                                    games.add(null);
+                                                    return;
+                                                }
+                                                games.add(parseToGame(pO, plrs));
+                                            }
+                                        });
                                     }
-
-
-                                    if (mQuerylistener != null) {
-                                        mQuerylistener.onGotGames(games);
-                                    }
+                                } else {
+                                    worker.setInnerQueryCount(0);
                                 }
                             }
                         });
                     }
                 }
             });
+        }
+
+        private class GameWorker extends Thread {
+            private int outerQueryCount = -1;
+            private int innerQueryCount = -1;
+
+            public GameWorker(Runnable run) {
+                super(run);
+            }
+
+            public boolean getQuerySizesSet() {
+                return (outerQueryCount != -1 && innerQueryCount != -1);
+            }
+
+            public void setOuterQueryCount(int count) {
+                outerQueryCount = count;
+            }
+
+            public void setInnerQueryCount(int count) {
+                innerQueryCount = count;
+            }
+
+            public int getOuterQueryCount() {
+                return outerQueryCount;
+            }
+
+            public int getInnerQueryCount() {
+                return innerQueryCount;
+            }
         }
 
         public void setQuerylistener(QueryListener listener) {
