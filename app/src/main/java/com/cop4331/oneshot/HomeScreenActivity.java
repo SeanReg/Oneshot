@@ -251,6 +251,8 @@ public class HomeScreenActivity extends AppCompatActivity{
             SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("CachedShot", Context.MODE_PRIVATE);
             boolean hasSubmitted = sharedPref.getBoolean(AccountManager.getInstance().getCurrentAccount().getUsername() + g.getDatabaseId(), false);
             if (hasSubmitted) {
+                card.setCardBackgroundColor(Color.rgb(255, 255, 255));
+            } else {
                 card.setCardBackgroundColor(Color.rgb(152,189,249));
             }
 

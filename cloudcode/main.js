@@ -105,15 +105,20 @@ function completeGameIfDone(game) {
   var limit = Number(game.get("timelimit"));
   if (Number(game.get("shotCount")) == Number(game.get("playerCount")) || nowDate.getTime() >= dateCreated.getTime() + limit) {//game.createdAt.getTime() + game.get("timelimit") >= (new Date()).getTime()) {
     game.set("completed", true);
-    game.save();
 
+    var pushMsg =  "Your game has ended! Choose a winner";
     var query = new Parse.Query(Parse.Installation);
     query.equalTo("user", game.get("owner"));
+    if (Number(game.get("shotCount")) > 0) {
+      game.save();
+    } else {
+      pushMsg = "Your game has ended! Nobody participated!";
+      game.destroy();
+    }
 
     var payload = {
-      alert: "Your game has ended! Choose a winner"
+      alert: pushMsg
     };
-
 
     Parse.Push.send({
         data: payload,
@@ -126,5 +131,7 @@ function completeGameIfDone(game) {
     });
 
     console.log("Game completed: " + game.id);
+    
+
   }
 }

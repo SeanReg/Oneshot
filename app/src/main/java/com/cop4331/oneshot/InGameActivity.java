@@ -106,6 +106,7 @@ public class InGameActivity extends GameAssociativeActivity {
             if(mThisGame.getWinner().getUsername().equalsIgnoreCase(winner.getUsername())) {
                 winnerBox.setChecked(true);
             }
+            winnerBox.setVisibility(View.VISIBLE);
             winnerBox.setEnabled(false);
         }
     }
