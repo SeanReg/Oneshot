@@ -149,7 +149,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             @Override
             public void run() {
                 AccountManager.Account acc = AccountManager.getInstance().getCurrentAccount();
-                acc.getCurrentGames();
+                if (acc != null) acc.getCurrentGames();
             }
         }, 0, 8000);
 
