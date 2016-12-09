@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The type In game activity.
+ */
 public class InGameActivity extends GameAssociativeActivity {
     private LinearLayout parentLayout = null;
     private List<User> mPlayers = null;
@@ -60,7 +63,7 @@ public class InGameActivity extends GameAssociativeActivity {
         promptText.setText(mThisGame.getPrompt());
 
         Button camButton = (Button)findViewById(R.id.cameraButton);
-        if (mThisGame.isGameCreator(AccountManager.getInstance()) || mThisGame.getGameCompleted()) {
+        if (mThisGame.isGameCreator() || mThisGame.getGameCompleted()) {
             camButton.setVisibility(View.GONE);
         } else {
             camButton.setEnabled(false);
@@ -89,6 +92,12 @@ public class InGameActivity extends GameAssociativeActivity {
         }
     };
 
+    /**
+     * Build card card view.
+     *
+     * @param user the user
+     * @return the card view
+     */
     public CardView buildCard(User user) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.shot_card, parentLayout, false);
         CheckBox winner = (CheckBox)card.findViewById(R.id.winnerStatus);
@@ -136,7 +145,7 @@ public class InGameActivity extends GameAssociativeActivity {
                 }
                 ((ImageView)(card.findViewById(R.id.shotImageView))).setImageDrawable(getResources().getDrawable(R.drawable.checkmark));
 
-                if(mThisGame.getGameCompleted() || mThisGame.isGameCreator(AccountManager.getInstance())) {
+                if(mThisGame.getGameCompleted() || mThisGame.isGameCreator()) {
                     shot.downloadImage(new Shot.DownloadListener() {
                         @Override
                         public void onDownloadCompleted(final Shot shot) {
@@ -152,7 +161,7 @@ public class InGameActivity extends GameAssociativeActivity {
                                     }
                                 });
 
-                                if (mThisGame.isGameCreator(AccountManager.getInstance()) && mThisGame.getGameCompleted()){
+                                if (mThisGame.isGameCreator() && mThisGame.getGameCompleted()){
                                     CheckBox winnerCheck = (CheckBox)plrCard.findViewById(R.id.winnerStatus);
                                     winnerCheck.setVisibility(View.VISIBLE);
                                     winnerCheck.setOnClickListener(mWinnerClicked);
@@ -167,7 +176,7 @@ public class InGameActivity extends GameAssociativeActivity {
                     });
                 }
             }
-            if (!shotSubmitted && !mThisGame.isGameCreator(AccountManager.getInstance())) {
+            if (!shotSubmitted && !mThisGame.isGameCreator()) {
                 Button camButton = (Button)findViewById(R.id.cameraButton);
                 camButton.setEnabled(true);
                 camButton.setAlpha(1.0f);

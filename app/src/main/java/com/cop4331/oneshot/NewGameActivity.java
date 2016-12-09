@@ -27,6 +27,9 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type New game activity.
+ */
 public class NewGameActivity extends Activity {
     private EditText mPrompt    = null;
     private Spinner mSpinner    = null;
@@ -93,7 +96,7 @@ public class NewGameActivity extends Activity {
 
             }
         });
-        curAcc.getRelationships(null);
+        curAcc.getRelationships();
     }
 
     private final CheckBox.OnClickListener mSelectionListener = new CheckBox.OnClickListener() {

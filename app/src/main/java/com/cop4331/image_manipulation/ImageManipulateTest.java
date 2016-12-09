@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * The type Image manipulate test.
+ */
 public class ImageManipulateTest extends GameAssociativeActivity {
 
     private AmendedBitmap mAmendedBitmap = null;

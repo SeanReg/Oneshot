@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * The type Participating fragment.
+ */
 public class ParticipatingFragment extends Fragment {
 
     @Nullable

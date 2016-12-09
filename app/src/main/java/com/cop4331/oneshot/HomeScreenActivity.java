@@ -44,10 +44,25 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The type Home screen activity.
+ */
 public class HomeScreenActivity extends AppCompatActivity{
+    /**
+     * The M drawer layout.
+     */
     DrawerLayout mDrawerLayout;
+    /**
+     * The M navigation view.
+     */
     NavigationView mNavigationView;
+    /**
+     * The M fragment manager.
+     */
     FragmentManager mFragmentManager;
+    /**
+     * The M fragment transaction.
+     */
     FragmentTransaction mFragmentTransaction;
 
     private TabFragment mTabFragment = null;
@@ -159,6 +174,9 @@ public class HomeScreenActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * Refresh game list.
+     */
     public void refreshGameList() {
         if (mCurrentGames == null) return;
 
@@ -193,13 +211,13 @@ public class HomeScreenActivity extends AppCompatActivity{
 
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
-                    if (g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted() && cLayout != null) {
+                    if (g.isGameCreator() && !g.getGameCompleted() && cLayout != null) {
                         CardView c = inflateGameCard(g, cLayout);
                         c.findViewById(R.id.invitedByText).setVisibility(View.INVISIBLE);
                     }
                     break;
                 case TabFragment.TAB_PARTICIPATING_GAMES:
-                    if (!g.isGameCreator(AccountManager.getInstance()) && !g.getGameCompleted() && pLayout != null) {
+                    if (!g.isGameCreator() && !g.getGameCompleted() && pLayout != null) {
                         inflateGameCard(g, pLayout);
                     }
                     break;
@@ -212,6 +230,9 @@ public class HomeScreenActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Inflate game creation.
+     */
     public void inflateGameCreation() {
 
     }
@@ -271,7 +292,7 @@ public class HomeScreenActivity extends AppCompatActivity{
         } else {
             User winner = g.getWinner();
             if(winner == null) {
-                if(g.isGameCreator(AccountManager.getInstance())) {
+                if(g.isGameCreator()) {
                     remainingText.setText("PICK A WINNER");
                     card.setCardBackgroundColor(Color.rgb(246,153,138));
                 } else {
@@ -284,7 +305,7 @@ public class HomeScreenActivity extends AppCompatActivity{
 
         TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
         invitedText.setVisibility(View.VISIBLE);
-        if (!g.isGameCreator(AccountManager.getInstance())) {
+        if (!g.isGameCreator()) {
             invitedText.setText("Created by " + g.getGameCreator().getDisplayName());
         } else {
             invitedText.setText("Created by me");

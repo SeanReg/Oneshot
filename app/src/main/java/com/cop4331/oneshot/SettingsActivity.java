@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.cop4331.networking.AccountManager;
 
+/**
+ * The type Settings activity.
+ */
 public class SettingsActivity extends Activity implements View.OnClickListener {
     
     private Button mSaveButton          = null;
@@ -21,6 +24,9 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
     private EditText mUsername          = null;
     private EditText mDisplayName       = null;
     private EditText mPhoneNumber       = null;
+    /**
+     * The Manager.
+     */
     AccountManager manager = AccountManager.getInstance();
 
     @Override

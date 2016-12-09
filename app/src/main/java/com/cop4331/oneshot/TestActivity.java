@@ -15,6 +15,9 @@ import com.cop4331.com.cop4331.permissions.PermissionRequester;
 import com.parse.Parse;
 
 
+/**
+ * The type Test activity.
+ */
 public class TestActivity extends AppCompatActivity {
 
 

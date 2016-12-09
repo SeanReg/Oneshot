@@ -14,6 +14,9 @@ import com.cop4331.oneshot.R;
 import com.cop4331.oneshot.SignupActivity;
 import com.parse.*;
 
+/**
+ * The type Login activity.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int SIGNUP_RESULTS = 1;

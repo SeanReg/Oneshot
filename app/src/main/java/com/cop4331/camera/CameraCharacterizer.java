@@ -23,11 +23,29 @@ public class CameraCharacterizer {
 
     private final HashMap<Integer, Size[]> supportedRes = new HashMap<>();
 
+    /**
+     * The enum Format.
+     */
     public enum Format {
+        /**
+         * Jpeg format.
+         */
         JPEG        (ImageFormat.JPEG),
+        /**
+         * Rgb 565 format.
+         */
         RGB_565     (ImageFormat.RGB_565),
+        /**
+         * Yuv 420 888 format.
+         */
         YUV_420_888 (ImageFormat.YUV_420_888),
+        /**
+         * Yuv 422 888 format.
+         */
         YUV_422_888 (ImageFormat.YUV_422_888),
+        /**
+         * Yuv 444 888 format.
+         */
         YUV_444_888 (ImageFormat.YUV_444_888);
 
         private int mFormatInt = 0;
@@ -36,13 +54,27 @@ public class CameraCharacterizer {
             mFormatInt = n;
         }
 
+        /**
+         * Gets format.
+         *
+         * @return the format
+         */
         public int getFormat() {
             return mFormatInt;
         }
     }
 
+    /**
+     * The enum Camera type.
+     */
     public enum CameraType {
+        /**
+         * Front camera camera type.
+         */
         FRONT_CAMERA(mFRONT_CAMERA),
+        /**
+         * Back camera camera type.
+         */
         BACK_CAMERA(mBACK_CAMERA);
 
         private int mCamType = 0;
@@ -51,6 +83,11 @@ public class CameraCharacterizer {
             mCamType = type;
         }
 
+        /**
+         * Gets camera type.
+         *
+         * @return the camera type
+         */
         public int getCameraType() {
             return mCamType;
         }
@@ -59,8 +96,9 @@ public class CameraCharacterizer {
     /**
      * Constructs a new CameraCharacterizer object that helps with getting the characteristics
      * for the camera
+     *
      * @param cameraManager the system's CameraManager
-     * @param cameraType the desired type of camera - front facing camera or back camera
+     * @param cameraType    the desired type of camera - front facing camera or back camera
      * @throws IllegalArgumentException thrown if the provided cameraType is an invalid type
      */
     public CameraCharacterizer(CameraManager cameraManager, CameraType cameraType) throws IllegalArgumentException {
@@ -135,9 +173,9 @@ public class CameraCharacterizer {
 
     /**
      * Gets the maximum resolution for the specified image format
+     *
      * @param imageFormat the ImageFormat constant that the resolution will be used for
-     * @return a Size containing the width and height of the maximum resolution supported by the camera
-     * for the specified ImageFormat
+     * @return a Size containing the width and height of the maximum resolution supported by the camera for the specified ImageFormat
      */
     public Size getMaxResolution(Format imageFormat) {
         //if (mCurCameraId == null) throw new IllegalStateException("Current camera has not been set!");
@@ -164,6 +202,7 @@ public class CameraCharacterizer {
 
     /**
      * Gets the minimum resolution that will fit within a resolution contraint
+     *
      * @param resConstraint the minimum required resolution to fit
      * @return the minimum resolution that is greater than resContraint and fits within the same aspect ratio
      */
@@ -193,6 +232,7 @@ public class CameraCharacterizer {
 
     /**
      * Gets a list of resolutions supported for the specified imageFormat
+     *
      * @param imageFormat the imageFormat to get resolutions for
      * @return an array of Size[] that contains the resolutions supported
      */
@@ -218,13 +258,18 @@ public class CameraCharacterizer {
 
     /**
      * Gets the Id of the camera for the camera device that the CameraCharacterizer uses
-     * @return a String containing the camera Id for the camera device type specified in the
-     * CameraCharacterizer constructor
+     *
+     * @return a String containing the camera Id for the camera device type specified in the CameraCharacterizer constructor
      */
     public String getCameraId() {
         return mCurCameraId;
     }
 
+    /**
+     * Gets camera orientation.
+     *
+     * @return the camera orientation
+     */
     public int getCameraOrientation() {
         CameraCharacteristics characteristics = null;
         try {

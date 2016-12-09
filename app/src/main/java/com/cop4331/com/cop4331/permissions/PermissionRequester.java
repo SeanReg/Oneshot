@@ -22,13 +22,25 @@ public class PermissionRequester {
      * Callback interface to notify of the user's choice to deny or allow the permission
      */
     public interface ResultListener {
+        /**
+         * On access granted.
+         *
+         * @param permission the permission
+         */
         public void onAccessGranted(String permission);
+
+        /**
+         * On access denied.
+         *
+         * @param permission the permission
+         */
         public void onAccessDenied(String permission);
     }
 
     /**
      * Constructs a PermissionRequester object that checks current permissions and
      * prompts the user to allow permissions
+     *
      * @param context the Activity context that the user should be prompted in
      */
     public PermissionRequester(@NonNull Activity context) {
@@ -37,6 +49,7 @@ public class PermissionRequester {
 
     /**
      * Checks if the user has allowed the specified permission
+     *
      * @param permission the Manifest.permission to check
      * @return true if the user has granted access to the permission. Otherwise false
      */
@@ -48,7 +61,9 @@ public class PermissionRequester {
 
     /**
      * Requests the specified list of permissions
+     *
      * @param permissions a list of permission to ask the user for
+     * @throws IllegalArgumentException the illegal argument exception
      */
     public void requestPermission(String... permissions) throws IllegalArgumentException {
         if (permissions.length == 0) return;
@@ -71,8 +86,8 @@ public class PermissionRequester {
 
     /**
      * Sets the callback listener that will recieve the permission prompt results
-     * @param resultListener the ResultListener to notify of the permission prompt
-     * result
+     *
+     * @param resultListener the ResultListener to notify of the permission prompt result
      */
     public void setResultListener(ResultListener resultListener) {
         mResultListener = resultListener;
@@ -82,8 +97,9 @@ public class PermissionRequester {
      * The Activity's onPermissionResult should call PermissionRequester.onPermissionResult to handle
      * the permission request results
      * NOTE: NEEDS TO BE RE-THOUGHT
-     * @param requestCode the result Id code
-     * @param permissions the permissions that were asked for
+     *
+     * @param requestCode  the result Id code
+     * @param permissions  the permissions that were asked for
      * @param grantResults the results of the permission prompt
      */
     public void onPermissionResult(int requestCode, String permissions[], int[] grantResults) {

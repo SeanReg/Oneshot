@@ -27,6 +27,12 @@ public class AmendedBitmap  {
     private Bitmap mBitmap = null;
     private Canvas mCanvas = null;
 
+    /**
+     * Create from image amended bitmap.
+     *
+     * @param image the image
+     * @return the amended bitmap
+     */
     public static AmendedBitmap createFromImage(Image image) {
         Bitmap bmp = null;
         if(image.getFormat() == ImageFormat.JPEG)
@@ -75,6 +81,11 @@ public class AmendedBitmap  {
         return new AmendedBitmap(bmp);
     }
 
+    /**
+     * Instantiates a new Amended bitmap.
+     *
+     * @param bitmap the bitmap
+     */
     public AmendedBitmap(Bitmap bitmap) {
         if (!bitmap.isMutable()) {
             bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -85,11 +96,23 @@ public class AmendedBitmap  {
         recordChanges();
     }
 
+    /**
+     * Draw view.
+     *
+     * @param drawText the draw text
+     */
     public void drawView(View drawText) {
         drawText.setDrawingCacheEnabled(true);
         mCanvas.drawBitmap(drawText.getDrawingCache(), mBitmap.getWidth() / 2.0f - drawText.getWidth() / 2.0f, mBitmap.getHeight() / 2.0f - drawText.getHeight() / 2.0f, null);
     }
 
+    /**
+     * Draw point.
+     *
+     * @param cordinates the cordinates
+     * @param color      the color
+     * @param density    the density
+     */
     public void drawPoint(Point cordinates, int color, float density) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(color);
@@ -97,19 +120,35 @@ public class AmendedBitmap  {
         mCanvas.drawCircle(cordinates.x, cordinates.y, 5.0f * density, paint);
     }
 
+    /**
+     * Record changes.
+     */
     public void recordChanges() {
         mCanvas.save();
     }
 
+    /**
+     * Undo changes.
+     */
     public void undoChanges() {
         Log.d("Saves", "" + mCanvas.getSaveCount());
         if (mCanvas.getSaveCount() > 1) mCanvas.restore();
     }
 
+    /**
+     * Gets bitmap.
+     *
+     * @return the bitmap
+     */
     public Bitmap getBitmap() {
         return mBitmap;
     }
 
+    /**
+     * Save to file.
+     *
+     * @param saveFile the save file
+     */
     public void saveToFile(File saveFile) {
         try {
             FileOutputStream out = new FileOutputStream(saveFile);

@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.cop4331.networking.AccountManager;
 import com.parse.ParseException;
 
+/**
+ * The type Signup activity.
+ */
 public class SignupActivity extends AppCompatActivity {
 
 
@@ -21,6 +24,9 @@ public class SignupActivity extends AppCompatActivity {
     private EditText mConfirmedPassword = null;
     private TextView mError             = null;
 
+    /**
+     * The Sb.
+     */
     StringBuilder sb = new StringBuilder();
 
     private StatusListener mStatusListener = new StatusListener();
@@ -106,6 +112,11 @@ public class SignupActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * On registration error.
+         *
+         * @param error the error
+         */
         public void onRegistrationError(String error) {
             mError.setText(error);
         }

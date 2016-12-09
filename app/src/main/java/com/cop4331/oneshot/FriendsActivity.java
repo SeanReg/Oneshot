@@ -26,6 +26,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The type Friends activity.
+ */
 public class FriendsActivity extends Activity {
 
     private EditText mSearchText = null;
@@ -42,7 +45,7 @@ public class FriendsActivity extends Activity {
         parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
         curAcc = AccountManager.getInstance().getCurrentAccount();
         curAcc.setQuerylistener(mQueryListener);
-        curAcc.getRelationships(null);
+        curAcc.getRelationships();
 
         (findViewById(R.id.searchButton)).setOnClickListener(mSearchListener);
         mSearchText = ((EditText)findViewById(R.id.searchText));
@@ -67,6 +70,12 @@ public class FriendsActivity extends Activity {
         }
     };
 
+    /**
+     * Build card card view.
+     *
+     * @param rel the rel
+     * @return the card view
+     */
     public CardView buildCard(Relationship rel) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
         card.setTag(rel);
@@ -97,6 +106,12 @@ public class FriendsActivity extends Activity {
         delete.setOnClickListener(mDeleteListener);
     }
 
+    /**
+     * Build card card view.
+     *
+     * @param user the user
+     * @return the card view
+     */
     public CardView buildCard(User user) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
         ((TextView)card.findViewById(R.id.nameText)).setText(user.getDisplayName());

@@ -37,6 +37,9 @@ public class CameraHandle {
     private CameraDevice          mCameraDevice       = null;
     private CameraCharacterizer   mCharacterizer      = null;
 
+    /**
+     * The M record surfaces.
+     */
     Surface[] mRecordSurfaces = null;
 
     private ImageReader mImageReader = null;
@@ -60,8 +63,21 @@ public class CameraHandle {
      * Interface to get the status of the camera
      */
     public interface CameraStatusCallback {
+        /**
+         * On connected.
+         */
         public void onConnected();
+
+        /**
+         * On ended.
+         */
         public void onEnded();
+
+        /**
+         * On image captured.
+         *
+         * @param capturedImage the captured image
+         */
         public void onImageCaptured(AmendedBitmap capturedImage);
     }
 
@@ -71,6 +87,7 @@ public class CameraHandle {
 
     /**
      * The default instance of the CameraHandle
+     *
      * @return the default instance of the CameraHandle
      */
     public static CameraHandle getInstance() {
@@ -80,10 +97,11 @@ public class CameraHandle {
 
     /**
      * Attempts to open and connect to the system's camera device
-     * @param manager the system's CameraManager
+     *
+     * @param manager    the system's CameraManager
      * @param cameraType a CameraCharacterizer constant denoting the desired type of camera (Front or Back)
      * @throws CameraAccessException thrown if there was an error with opening the camera device
-     * @throws SecurityException user has not granted permissions for the camera
+     * @throws SecurityException     user has not granted permissions for the camera
      */
     public void openCamera(CameraManager manager, CameraCharacterizer.CameraType cameraType) throws CameraAccessException, SecurityException {
         if (mCameraDevice != null) {
@@ -104,6 +122,7 @@ public class CameraHandle {
 
     /**
      * Check if the camera has been opened and is connected
+     *
      * @return true if the camera device is opened otherwise false
      */
     public boolean getCameraConnected() {
@@ -112,10 +131,11 @@ public class CameraHandle {
 
     /**
      * Begins an active camera feed that draws frames to the specified surfaces
+     *
      * @param recordSurfaces a list of surfaces to draw the camera frames to
-     * @throws IllegalStateException if the camera has not yet been opened
-     * @throws CameraAccessException if there was an error when attempting to communicate with the camera device
+     * @throws IllegalStateException    if the camera has not yet been opened
      * @throws IllegalArgumentException if there was an error when accessing the camera device
+     * @throws CameraAccessException    if there was an error when attempting to communicate with the camera device
      */
     public void startFeed(final Surface... recordSurfaces) throws IllegalStateException, IllegalArgumentException, CameraAccessException {
         if (mCameraDevice == null) throw new IllegalStateException("Camera device not opened!");
@@ -145,9 +165,9 @@ public class CameraHandle {
     /**
      * Gets the minmum resolution supported by the camera that is greater
      * than a specified minimum
+     *
      * @param minimumRes the minimum resolution size to be considered
-     * @return the optimal resolution supported by the camera that is >=
-     * the minimumRes
+     * @return the optimal resolution supported by the camera that is >= the minimumRes
      */
     public Size getSupportedResolution(Size minimumRes) {
         if (mCharacterizer == null) return null;
@@ -157,9 +177,9 @@ public class CameraHandle {
 
     /**
      * Begins an  image capture from the current camera feed. The resulting image is returned by the CameraStatusListener
+     *
      * @param useFlash if true then enables flash for the image capture. Otherwise flash is disabled
-     * @throws IllegalStateException thrown when the camera feed has not been started. Also thrown if a CameraStatusListener has not
-     * been registered for the CameraHandle
+     * @throws IllegalStateException thrown when the camera feed has not been started. Also thrown if a CameraStatusListener has not been registered for the CameraHandle
      * @throws CameraAccessException thrown if there was an error with opening the camera device
      */
     public void captureImage(boolean useFlash) throws IllegalStateException, CameraAccessException {
@@ -250,6 +270,7 @@ public class CameraHandle {
 
     /**
      * Registers a callback listner to get the status of the camera
+     *
      * @param cameraStatus a callback listner to get the status of the camera
      */
     public void setCameraStatusListener(CameraStatusCallback cameraStatus) {

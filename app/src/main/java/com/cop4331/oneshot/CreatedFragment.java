@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * The type Created fragment.
+ */
 public class CreatedFragment extends Fragment {
 
     private HomeScreenActivity mHomeScreenActivity = null;
@@ -23,6 +26,11 @@ public class CreatedFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Sets home screen activity.
+     *
+     * @param homeScreenActivity the home screen activity
+     */
     public void setHomeScreenActivity(HomeScreenActivity homeScreenActivity) {
         mHomeScreenActivity = homeScreenActivity;
     }

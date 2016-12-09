@@ -35,6 +35,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * The type Camera activity.
+ */
 public class CameraActivity extends AppCompatActivity {
 
     private PermissionRequester mPermission    = null;

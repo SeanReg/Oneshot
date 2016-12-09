@@ -9,7 +9,6 @@ import android.widget.ImageView;
 /**
  * Created by nadeen on 12/3/16.
  */
-
 public class ShotEnlargedActivity extends Activity {
     private String path = null;
     private Bitmap bitmap = null;

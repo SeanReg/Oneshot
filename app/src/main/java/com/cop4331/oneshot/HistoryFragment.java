@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * The type History fragment.
+ */
 public class HistoryFragment extends Fragment {
 
     @Nullable

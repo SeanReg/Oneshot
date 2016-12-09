@@ -11,21 +11,50 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * The type Tab fragment.
+ */
 public class TabFragment extends Fragment {
 
+    /**
+     * The constant tabLayout.
+     */
     public static TabLayout tabLayout;
+    /**
+     * The constant viewPager.
+     */
     public static ViewPager viewPager;
+    /**
+     * The constant int_items.
+     */
     public static int int_items = 3 ;
 
+    /**
+     * The constant TAB_CREATED_GAMES.
+     */
     public static final int TAB_CREATED_GAMES       = 0;
+    /**
+     * The constant TAB_PARTICIPATING_GAMES.
+     */
     public static final int TAB_PARTICIPATING_GAMES = 1;
+    /**
+     * The constant TAB_HISTORY_GAMES.
+     */
     public static final int TAB_HISTORY_GAMES       = 2;
 
     private HomeScreenActivity mHomeScreenActivity = null;
 
     private TabChangeListener mTabChangeListener = null;
 
+    /**
+     * The interface Tab change listener.
+     */
     public interface TabChangeListener {
+        /**
+         * On tab changed.
+         *
+         * @param curTab the cur tab
+         */
         public void onTabChanged(int curTab);
     }
 
@@ -74,16 +103,34 @@ public class TabFragment extends Fragment {
 
     }
 
+    /**
+     * Gets current tab.
+     *
+     * @return the current tab
+     */
     public int getCurrentTab() {
         return viewPager.getCurrentItem();
     }
 
+    /**
+     * Sets tab changed listener.
+     *
+     * @param listener the listener
+     */
     public void setTabChangedListener(TabChangeListener listener) {
         mTabChangeListener = listener;
     }
 
+    /**
+     * The type Tab adapter.
+     */
     class TabAdapter extends FragmentPagerAdapter{
 
+        /**
+         * Instantiates a new Tab adapter.
+         *
+         * @param fm the fm
+         */
         public TabAdapter(FragmentManager fm) {
             super(fm);
         }
