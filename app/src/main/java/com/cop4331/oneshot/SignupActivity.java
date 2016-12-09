@@ -11,7 +11,7 @@ import com.cop4331.networking.AccountManager;
 import com.parse.ParseException;
 
 /**
- * The type Signup activity.
+ * Signup Activity responsible for user registration
  */
 public class SignupActivity extends AppCompatActivity {
 
@@ -24,9 +24,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText mConfirmedPassword = null;
     private TextView mError             = null;
 
-    /**
-     * The Sb.
-     */
     StringBuilder sb = new StringBuilder();
 
     private StatusListener mStatusListener = new StatusListener();
@@ -46,6 +43,9 @@ public class SignupActivity extends AppCompatActivity {
         mError              = ((TextView)findViewById(R.id.errorText));
     }
 
+    /**
+     * Listener for when Signup button is clicked
+     */
     private final Button.OnClickListener mSignupListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -86,6 +86,9 @@ public class SignupActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Listener for registration status
+     */
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
@@ -94,6 +97,7 @@ public class SignupActivity extends AppCompatActivity {
 
         @Override
         public void onRegistered(AccountManager.Account account) {
+            //Account registered so close the activity
             finish();
         }
 
@@ -104,6 +108,7 @@ public class SignupActivity extends AppCompatActivity {
 
         @Override
         public void onRegistrationError(ParseException e) {
+            //Registration errors
             if(e.getCode() == DUPLICATE_ACCOUNT) {
                 onRegistrationError(sb.append(e.getMessage()).toString());
             }

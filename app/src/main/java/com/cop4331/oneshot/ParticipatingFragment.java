@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * The type Participating fragment.
+ * Participating Fragment to display the Games the user is participating in
  */
 public class ParticipatingFragment extends Fragment {
 

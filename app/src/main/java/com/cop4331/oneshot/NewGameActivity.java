@@ -59,6 +59,10 @@ public class NewGameActivity extends Activity {
 
 
         AccountManager.Account curAcc = AccountManager.getInstance().getCurrentAccount();
+
+        /**
+         * Listener for onGotRelationships
+         */
         curAcc.setQuerylistener(new AccountManager.Account.QueryListener() {
             @Override
             public void onGotScore(long score) {
@@ -68,9 +72,12 @@ public class NewGameActivity extends Activity {
             @Override
             public void onGotRelationships(List<Relationship> relationships) {
                 LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friend_selection_list));
+
+                //Find all friends
                 for (Relationship rel : relationships) {
                     if (rel.getStatus() != Relationship.STATUS_ACCEPTED) continue;
 
+                    //Create a card for each friend
                     CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
                     ((TextView)card.findViewById(R.id.nameText)).setText(rel.getUser().getDisplayName());
                     ((TextView)card.findViewById(R.id.usernameDisplay)).setText(rel.getUser().getUsername());
@@ -99,6 +106,9 @@ public class NewGameActivity extends Activity {
         curAcc.getRelationships();
     }
 
+    /**
+     * Listener for the selection check box
+     */
     private final CheckBox.OnClickListener mSelectionListener = new CheckBox.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -110,6 +120,9 @@ public class NewGameActivity extends Activity {
         }
     };
 
+    /**
+     * Listener for the create game button
+     */
     private final Button.OnClickListener mCreateGameListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -117,17 +130,24 @@ public class NewGameActivity extends Activity {
             String prompt   = mPrompt.getText().toString();
             long duration   = mSpinnerTimes[mSpinner.getSelectedItemPosition()];
 
+            //Begin building game
             Game.Builder builder = new Game.Builder();
             builder.setCompletionStatus(false);
+
+            //Ensure that we have the minimum number of users
             if(mSelectedUsers.size() < 2) {
                 TextView error = (TextView)findViewById(R.id.textView);
                 error.setText("Select minimum 2 players.");
                 error.setTextColor(Color.RED);
                 return;
             }
+
+            //Game settings
             builder.addPlayers(mSelectedUsers);
             builder.setPrompt(prompt);
             builder.setTimelimit(duration);
+
+            //Ask the current Account to start the game
             AccountManager.getInstance().getCurrentAccount().startGame(builder);
 
             finish();

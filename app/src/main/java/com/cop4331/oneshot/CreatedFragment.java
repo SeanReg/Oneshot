@@ -10,12 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * The type Created fragment.
+ * Fragment showing the games created by the current Account
  */
 public class CreatedFragment extends Fragment {
-
-    private HomeScreenActivity mHomeScreenActivity = null;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,15 +24,8 @@ public class CreatedFragment extends Fragment {
     }
 
     /**
-     * Sets home screen activity.
-     *
-     * @param homeScreenActivity the home screen activity
+     * Listener for when the new game button is pressed
      */
-    public void setHomeScreenActivity(HomeScreenActivity homeScreenActivity) {
-        mHomeScreenActivity = homeScreenActivity;
-    }
-
-
     private final Button.OnClickListener mCreateButton = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {

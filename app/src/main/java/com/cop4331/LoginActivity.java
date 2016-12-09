@@ -15,7 +15,7 @@ import com.cop4331.oneshot.SignupActivity;
 import com.parse.*;
 
 /**
- * The type Login activity.
+ * Login Activity to handle Account login
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,23 +40,31 @@ public class LoginActivity extends AppCompatActivity {
         mError          = ((TextView) findViewById(R.id.errorText));
     }
 
-
+    /**
+     * Listener for login button clicked
+     */
     private final Button.OnClickListener mLoginListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             AccountManager manager = AccountManager.getInstance();
 
+            //Get the credentials
             String username = mUsername.getText().toString();
             String password = mPasswordText.getText().toString();
 
+            //Attempt to login
             manager.setAccountStatusListener(mStatusListener);
             manager.login(username, password);
         }
     };
 
+    /**
+     * Signup button pressed
+     */
     private final TextView.OnClickListener mSignupListener = new TextView.OnClickListener() {
         @Override
         public void onClick(View view) {
+            //Open signup activity
             Intent signup = new Intent(getApplicationContext(), SignupActivity.class);
             startActivityForResult(signup, SIGNUP_RESULTS);
         }
@@ -75,9 +83,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Listener for login status
+     */
     private class StatusListener implements AccountManager.onAccountStatus {
         @Override
         public void onLogin(AccountManager.Account account) {
+            //Success so close login window
             finish();
         }
 
@@ -88,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onLoginError(ParseException e) {
+            //Display Login error
             mError.setText(e.getMessage());
         }
 

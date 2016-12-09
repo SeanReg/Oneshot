@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * The type In game activity.
+ * The InGame Activity view
  */
 public class InGameActivity extends GameAssociativeActivity {
     private LinearLayout parentLayout = null;
@@ -78,6 +78,9 @@ public class InGameActivity extends GameAssociativeActivity {
     }
 
 
+    /**
+     * Listener for when the Camera button is clicked
+     */
     private final Button.OnClickListener mCameraListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -93,10 +96,9 @@ public class InGameActivity extends GameAssociativeActivity {
     };
 
     /**
-     * Build card card view.
-     *
-     * @param user the user
-     * @return the card view
+     * Builds a CardView from the specified used
+     * @param user the user to build the view for
+     * @return the newly constructed CardView
      */
     public CardView buildCard(User user) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.shot_card, parentLayout, false);
@@ -109,6 +111,11 @@ public class InGameActivity extends GameAssociativeActivity {
         return card;
     }
 
+    /**
+     * Selects a user as the winner and disables all check boxes and shows the winning box
+     * @param winner the User that won
+     * @param card the CardView of the User that won
+     */
     private void declareWinner(User winner, CardView card) {
         CheckBox winnerBox = (CheckBox)card.findViewById(R.id.winnerStatus);
         if(mThisGame.getWinner() != null) {
@@ -132,10 +139,15 @@ public class InGameActivity extends GameAssociativeActivity {
         }
     }
 
+    /**
+     * Listener to get the Shots from the game
+     */
     private final Game.ShotListener mShotListener = new Game.ShotListener() {
         @Override
         public void onGotShots(List<Shot> shots) {
             boolean shotSubmitted = false;
+
+            //Got a list of shots
             for (Shot shot : shots) {
 
                 CardView card = mPlayerCards.get(shot.getUser().getUsername());
@@ -146,11 +158,13 @@ public class InGameActivity extends GameAssociativeActivity {
                 ((ImageView)(card.findViewById(R.id.shotImageView))).setImageDrawable(getResources().getDrawable(R.drawable.checkmark));
 
                 if(mThisGame.getGameCompleted() || mThisGame.isGameCreator()) {
+                    //Download the images when the Game is completed
                     shot.downloadImage(new Shot.DownloadListener() {
                         @Override
                         public void onDownloadCompleted(final Shot shot) {
                             CardView plrCard = mPlayerCards.get(shot.getUser().getUsername());
                             if (plrCard != null) {
+                                //Show the image on the correct card
                                 ImageView imgView = (ImageView)(plrCard.findViewById(R.id.shotImageView));
                                 imgView.setImageBitmap(BitmapFactory.decodeFile(shot.getImage().getAbsolutePath()));
                                 imgView.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +176,7 @@ public class InGameActivity extends GameAssociativeActivity {
                                 });
 
                                 if (mThisGame.isGameCreator() && mThisGame.getGameCompleted()){
+                                    //If this is the winner show the checkbox
                                     CheckBox winnerCheck = (CheckBox)plrCard.findViewById(R.id.winnerStatus);
                                     winnerCheck.setVisibility(View.VISIBLE);
                                     winnerCheck.setOnClickListener(mWinnerClicked);
@@ -176,6 +191,8 @@ public class InGameActivity extends GameAssociativeActivity {
                     });
                 }
             }
+
+            //Allow the camera button to be clicked if this User hasn't submitted yet
             if (!shotSubmitted && !mThisGame.isGameCreator()) {
                 Button camButton = (Button)findViewById(R.id.cameraButton);
                 camButton.setEnabled(true);
@@ -183,6 +200,9 @@ public class InGameActivity extends GameAssociativeActivity {
             }
         }
 
+        /**
+         * Listener for when a Winner checkbox is clicked
+         */
         private final View.OnClickListener mWinnerClicked = new View.OnClickListener() {
             @Override
             public void onClick(View view) {

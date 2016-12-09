@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * The type History fragment.
+ * History fragment to display all past Games
  */
 public class HistoryFragment extends Fragment {
 

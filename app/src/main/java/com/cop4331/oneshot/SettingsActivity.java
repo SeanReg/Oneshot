@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.cop4331.networking.AccountManager;
 
 /**
- * The type Settings activity.
+ * Setting Activity to allow the current user to view/change their account settings
  */
 public class SettingsActivity extends Activity implements View.OnClickListener {
     
@@ -24,9 +24,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
     private EditText mUsername          = null;
     private EditText mDisplayName       = null;
     private EditText mPhoneNumber       = null;
-    /**
-     * The Manager.
-     */
+
     AccountManager manager = AccountManager.getInstance();
 
     @Override
@@ -40,14 +38,19 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         mDisplayName        = (EditText)findViewById(R.id.displayNameText);
         mPhoneNumber        = (EditText)findViewById(R.id.phoneNumberText);
 
+        //Display current Account properties
         mUsername.setText(manager.getCurrentAccount().getUsername());
         mDisplayName.setText(manager.getCurrentAccount().getDisplayName());
         mPhoneNumber.setText(manager.getCurrentAccount().getPhoneNumber());
         mSaveButton.setOnClickListener(this);
     }
 
+    /**
+     * Listener for when the update button is pressed
+     */
     @Override
     public void onClick(View v) {
+        //Get new settings
         String username             = mUsername.getText().toString();
         String displayName          = mDisplayName.getText().toString();
         String phoneNumber          = mPhoneNumber.getText().toString();
@@ -60,6 +63,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener {
         if(displayName.trim().length() < 1) {
             displayName = username;
         }
+
+        //Update the user's account
         manager.getCurrentAccount().setDisplayName(displayName);
         manager.getCurrentAccount().setPhoneNumber(phoneNumber);
         manager.getCurrentAccount().updateAccount();

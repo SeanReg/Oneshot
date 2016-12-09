@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The type Friends activity.
+ * Activity to show relationships
  */
 public class FriendsActivity extends Activity {
 
@@ -52,11 +52,16 @@ public class FriendsActivity extends Activity {
 
     }
 
+    /**
+     * Listener for the search button clicked
+     */
     private final Button.OnClickListener mSearchListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             parentLayout.removeAllViews();
             String search = mSearchText.getText().toString().toLowerCase();
+
+            //Check if we already have the user
             for (Relationship rel : mRelationships) {
                 User currUser = rel.getUser();
                 if (currUser.getDisplayName().equalsIgnoreCase(search)
@@ -66,15 +71,16 @@ public class FriendsActivity extends Activity {
                     return;
                 }
             }
+
+            //Perform query
             curAcc.searchUser(search);
         }
     };
 
     /**
-     * Build card card view.
-     *
-     * @param rel the rel
-     * @return the card view
+     * Builds a CardView for the provided relationship
+     * @param rel the relationship to build from
+     * @return the newly created CardView
      */
     public CardView buildCard(Relationship rel) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
@@ -99,6 +105,10 @@ public class FriendsActivity extends Activity {
         return card;
     }
 
+    /**
+     * Adds the trash can icon to the provided CardView
+     * @param card the CardView to add the icon to
+     */
     private void setCardTrash(CardView card) {
         Button delete = ((Button)card.findViewById(R.id.deleteButton));
         delete.setVisibility(View.VISIBLE);
@@ -107,10 +117,9 @@ public class FriendsActivity extends Activity {
     }
 
     /**
-     * Build card card view.
-     *
-     * @param user the user
-     * @return the card view
+     * Builds a CardView for the provided User
+     * @param user the User to build from
+     * @return the newly created CardView
      */
     public CardView buildCard(User user) {
         CardView card = (CardView) getLayoutInflater().inflate(R.layout.friends_card, parentLayout, false);
@@ -120,11 +129,15 @@ public class FriendsActivity extends Activity {
         return card;
     }
 
+    /**
+     * Listener from when the Add friend button is clicked
+     */
     private final Button.OnClickListener mAddListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             CardView card = (CardView)view.getTag();
 
+            //Change icon on card
             User user = null;
             if (card.getTag() instanceof Relationship) {
                 user = ((Relationship) card.getTag()).getUser();
@@ -135,10 +148,16 @@ public class FriendsActivity extends Activity {
             }
 
             view.setVisibility(View.GONE);
+
+            //Send request
             curAcc.requestFriendByUsername(user.getUsername());
         }
     };
 
+
+    /**
+     * Listener for deleting a friend
+     */
     private final Button.OnClickListener mDeleteListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -149,6 +168,9 @@ public class FriendsActivity extends Activity {
         }
     };
 
+    /**
+     * Listener used to get the relationships for the Account and search user queries
+     */
     private final AccountManager.Account.QueryListener mQueryListener = new AccountManager.Account.QueryListener() {
         @Override
         public void onGotScore(long score) {
@@ -157,10 +179,14 @@ public class FriendsActivity extends Activity {
 
         @Override
         public void onGotRelationships(List<Relationship> relationships) {
+
+            //Build cards for relationships
             LinearLayout parentLayout = ((LinearLayout) findViewById(R.id.friends_linearlayout));
             for (Relationship rel : relationships) {
                buildCard(rel);
             }
+
+            //Sort by pending and accepted
             Collections.sort(relationships, new Comparator<Relationship>() {
                 @Override
                 public int compare(Relationship one, Relationship two) {
@@ -177,6 +203,8 @@ public class FriendsActivity extends Activity {
         @Override
         public void onSearchUser(List<User> users) {
             if (users.size() == 0) return;
+
+            //Build cards for Users
             for(User user : users) {
                 CardView card = buildCard(user);
                 Button add = ((Button)card.findViewById(R.id.addButton));

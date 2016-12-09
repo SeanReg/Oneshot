@@ -45,24 +45,17 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The type Home screen activity.
+ * The Home Screen Activities which manages the Created, Participating, and History
+ * ACtivities as well as the navigation panel
  */
 public class HomeScreenActivity extends AppCompatActivity{
-    /**
-     * The M drawer layout.
-     */
+
     DrawerLayout mDrawerLayout;
-    /**
-     * The M navigation view.
-     */
+
     NavigationView mNavigationView;
-    /**
-     * The M fragment manager.
-     */
+
     FragmentManager mFragmentManager;
-    /**
-     * The M fragment transaction.
-     */
+
     FragmentTransaction mFragmentTransaction;
 
     private TabFragment mTabFragment = null;
@@ -73,12 +66,15 @@ public class HomeScreenActivity extends AppCompatActivity{
 
     private List<Game> mCurrentGames = null;
 
+    private static final int REFRESH_INTERVAL = 8000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (!mParseInitialized) {
+            //Intialize access to the Parse server
             Parse.initialize(new Parse.Configuration.Builder(this)
                     .applicationId("kyNJHeJgXmP4K4TxmeaFrU09D0faUvwQ2RSBGv5s")
                     .clientKey("uRdkVn6jcjdZF7kMQxKAAK39JpNG98nJFPwfbhwo")
@@ -87,15 +83,15 @@ public class HomeScreenActivity extends AppCompatActivity{
             mParseInitialized = true;
         }
 
+        //Request security permissions
         mPermission = new PermissionRequester(this);
         mPermission.requestPermission(Manifest.permission.CAMERA);
 
         /**
          *Setup the DrawerLayout and NavigationView
          */
-
-             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-             mNavigationView = (NavigationView) findViewById(R.id.navigationview) ;
+         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+         mNavigationView = (NavigationView) findViewById(R.id.navigationview) ;
 
         /**
          * Lets inflate the very first fragment
@@ -111,40 +107,39 @@ public class HomeScreenActivity extends AppCompatActivity{
          * Setup click events on the Navigation View Items.
          */
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                 @Override
-                 public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    mDrawerLayout.closeDrawers();
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
 
-                     if (menuItem.getItemId() == R.id.nav_item_settings) {
-                         Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-                         startActivity(settingsIntent);
-                     }
+                 if (menuItem.getItemId() == R.id.nav_item_settings) {
+                     Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                     startActivity(settingsIntent);
+                 }
 
-                    if (menuItem.getItemId() == R.id.nav_item_home) {
-                        FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                        mTabFragment = new TabFragment();
-                        mTabFragment.setTabChangedListener(mTabChangeListener);
-                        xfragmentTransaction.replace(R.id.containerView, mTabFragment).commit();
-                    }
-
-                     if (menuItem.getItemId() == R.id.nav_item_friends) {
-                         Intent settingsIntent = new Intent(getApplicationContext(), FriendsActivity.class);
-                         startActivity(settingsIntent);
-                     }
-
-                     if (menuItem.getItemId() == R.id.nav_item_logout) {
-                         if (AccountManager.getInstance().isLoggedIn()) AccountManager.getInstance().getCurrentAccount().logout();
-                         onStart();
-                     }
-
-                     return false;
+                if (menuItem.getItemId() == R.id.nav_item_home) {
+                    FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                    mTabFragment = new TabFragment();
+                    mTabFragment.setTabChangedListener(mTabChangeListener);
+                    xfragmentTransaction.replace(R.id.containerView, mTabFragment).commit();
                 }
+
+                 if (menuItem.getItemId() == R.id.nav_item_friends) {
+                     Intent settingsIntent = new Intent(getApplicationContext(), FriendsActivity.class);
+                     startActivity(settingsIntent);
+                 }
+
+                 if (menuItem.getItemId() == R.id.nav_item_logout) {
+                     if (AccountManager.getInstance().isLoggedIn()) AccountManager.getInstance().getCurrentAccount().logout();
+                     onStart();
+                 }
+
+                return false;
+            }
         });
 
         /**
          * Setup Drawer Toggle of the Toolbar
          */
-
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
         R.string.app_name) {
@@ -160,55 +155,34 @@ public class HomeScreenActivity extends AppCompatActivity{
 
         mDrawerToggle.syncState();
 
+        //Timer to refresh the current Games after a set interval
         new Timer("RefreshTimer").schedule(new TimerTask() {
             @Override
             public void run() {
                 AccountManager.Account acc = AccountManager.getInstance().getCurrentAccount();
                 if (acc != null) acc.getCurrentGames();
             }
-        }, 0, 8000);
-
-/*
-        AccountManager.getInstance().getCurrentAccount().requestFriendByUsername("jason");
-*/
-
+        }, 0, REFRESH_INTERVAL);
     }
 
     /**
-     * Refresh game list.
+     * Refreshes the view's list of current Games
      */
     public void refreshGameList() {
         if (mCurrentGames == null) return;
 
+        //Get the three layouts
         LinearLayout cLayout = ((LinearLayout)findViewById(R.id.createdLinearLayout));
         LinearLayout pLayout = ((LinearLayout)findViewById(R.id.participatingLinearLayout));
         LinearLayout hLayout = ((LinearLayout)findViewById(R.id.historyLinearLayout));
 
+        //Clear the layouts
         if (cLayout != null) cLayout.removeAllViews();
         if (pLayout != null) pLayout.removeAllViews();
         if (hLayout != null) hLayout.removeAllViews();
 
+        //Add the games to each layout
         for (Game g : mCurrentGames) {
-/*            g.getShots(new Game.ShotListener() {
-                @Override
-                public void onGotShots(List<Shot> shots) {
-                    if (shots.size() == 0) return;
-
-                    shots.get(0).downloadImage(new Shot.DownloadListener() {
-                        @Override
-                        public void onDownloadCompleted(Shot shot) {
-                            Log.d("Got shots", shot.getImage().getAbsolutePath());
-                        c}
-
-                        @Override
-                        public void onDownloadError(Shot shot) {
-
-                        }
-                    });
-
-                }
-            });*/
-
             switch (mTabFragment.getCurrentTab()) {
                 case TabFragment.TAB_CREATED_GAMES:
                     if (g.isGameCreator() && !g.getGameCompleted() && cLayout != null) {
@@ -230,20 +204,12 @@ public class HomeScreenActivity extends AppCompatActivity{
         }
     }
 
-    /**
-     * Inflate game creation.
-     */
-    public void inflateGameCreation() {
-
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-/*        if (AccountManager.getInstance().getCurrentAccount() != null) {
-            AccountManager.getInstance().getCurrentAccount().logout();
-        }*/
+        //Force user to log in if not already
         if (!AccountManager.getInstance().isLoggedIn()) {
             Intent camIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(camIntent);
@@ -260,15 +226,26 @@ public class HomeScreenActivity extends AppCompatActivity{
         mPermission.onPermissionResult(requestCode, permissions, grantResults);
     }
 
+    /**
+     * Creates a CardView for the specified Game and adds it to the specified parent view
+     * @param g the Game to create a card from
+     * @param parentView the view to add the CardView to
+     * @return the newly constructed CardView
+     */
     private CardView inflateGameCard(final Game g, ViewGroup parentView) {
         final CardView card = (CardView) getLayoutInflater().inflate(R.layout.games_card, parentView, false);
+        //Set prompt text
         ((TextView) card.findViewById(R.id.promptText)).setText(g.getPrompt());
 
+        //Calculate time remaining
         long diff = (g.getExpirationDate().getTime() - (new Date()).getTime());
         String remainingTimeH = Long.toString(diff / (60 * 60 * 1000) % 24) + " hours";
         String remainingTimeM = Long.toString(diff / (60 * 1000) % 60) + " minutes";
         TextView remainingText = ((TextView) card.findViewById(R.id.timeRemainingText));
+
+
         if (!g.getGameCompleted()) {
+            //Game is not completed - see if we have submitted a shot
             SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("CachedShot", Context.MODE_PRIVATE);
             boolean hasSubmitted = sharedPref.getBoolean(AccountManager.getInstance().getCurrentAccount().getUsername() + g.getDatabaseId(), false);
             if (hasSubmitted) {
@@ -277,19 +254,10 @@ public class HomeScreenActivity extends AppCompatActivity{
                 card.setCardBackgroundColor(Color.rgb(152,189,249));
             }
 
-//            g.getShots(new Game.ShotListener() {
-//                @Override
-//                public void onGotShots(List<Shot> shots) {
-//                    for(Shot shot : shots) {
-//                        if(shot.getUser().getUsername().equalsIgnoreCase(AccountManager.getInstance().getCurrentAccount().getUsername())) {
-//                            card.setCardBackgroundColor(Color.rgb(255,255,255));
-//                            return;
-//                        }
-//                    }
-//                }
-//            });
             remainingText.setText(remainingTimeH + " " + remainingTimeM);
         } else {
+            //Game completed - specify the winner
+
             User winner = g.getWinner();
             if(winner == null) {
                 if(g.isGameCreator()) {
@@ -303,6 +271,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             }
         }
 
+        //Show who created the game
         TextView invitedText = (TextView)card.findViewById(R.id.invitedByText);
         invitedText.setVisibility(View.VISIBLE);
         if (!g.isGameCreator()) {
@@ -311,9 +280,13 @@ public class HomeScreenActivity extends AppCompatActivity{
             invitedText.setText("Created by me");
         }
 
+        /**
+         * Listener for when teh Game is CardView is clicked on
+         */
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Open the InGame Activity
                 InGameActivity.setGameActivityOpenedListener(new GameAssociativeActivity.GameActivityOpenedListener() {
                     @Override
                     public Game onGameActivityOpened(GameAssociativeActivity act) {
@@ -331,6 +304,9 @@ public class HomeScreenActivity extends AppCompatActivity{
         return card;
     }
 
+    /**
+     * Called whenever the TabFragment changes to a new tab
+     */
     private TabFragment.TabChangeListener mTabChangeListener = new TabFragment.TabChangeListener() {
         @Override
         public void onTabChanged(int curTab) {
@@ -339,6 +315,9 @@ public class HomeScreenActivity extends AppCompatActivity{
         }
     };
 
+    /**
+     * Listener for onGotGames
+     */
     private AccountManager.Account.QueryListener mAccountQueryListener = new AccountManager.Account.QueryListener() {
         @Override
         public void onGotScore(long score) {
@@ -353,6 +332,8 @@ public class HomeScreenActivity extends AppCompatActivity{
         @Override
         public void onGotGames(List<Game> games) {
             mCurrentGames = games;
+
+            //Sort the games by their creation date
             Collections.sort(mCurrentGames, new Comparator<Game>() {
                 @Override
                 public int compare(Game g1, Game g2) {
@@ -367,6 +348,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                 }
             });
 
+            //Post to UI Thread (Callback called on a worker thread)
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

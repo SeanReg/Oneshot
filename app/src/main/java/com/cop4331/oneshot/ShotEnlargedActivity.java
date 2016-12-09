@@ -19,8 +19,11 @@ public class ShotEnlargedActivity extends Activity {
         setContentView(R.layout.enlarged_shot);
 
         path = getIntent().getStringExtra("Shot");
+
+        //Load the bitmap
         bitmap = BitmapFactory.decodeFile(path);
         if (bitmap != null) {
+            //Display full screen image
             ImageView myImage = (ImageView) findViewById(R.id.imageView);
             myImage.setImageBitmap(bitmap);
         }

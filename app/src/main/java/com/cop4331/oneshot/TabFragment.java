@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * The type Tab fragment.
+ * Tab fragment to control the HomeScreen Activity tabs
  */
 public class TabFragment extends Fragment {
 
@@ -146,7 +146,6 @@ public class TabFragment extends Fragment {
             switch (position){
                 case TAB_CREATED_GAMES:
                     fragment = new CreatedFragment();
-                    ((CreatedFragment)fragment).setHomeScreenActivity(mHomeScreenActivity);
                     break;
                 case TAB_PARTICIPATING_GAMES:
                     fragment = new ParticipatingFragment();

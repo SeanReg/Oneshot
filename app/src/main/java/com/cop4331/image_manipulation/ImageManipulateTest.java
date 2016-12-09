@@ -2,7 +2,6 @@ package com.cop4331.image_manipulation;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
-import com.cop4331.networking.Account;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.oneshot.GameAssociativeActivity;
 import com.cop4331.oneshot.HomeScreenActivity;
