@@ -1,4 +1,4 @@
-package com.cop4331.com.cop4331.permissions;
+package com.cop4331.permissions;
 
 import android.Manifest;
 import android.app.Activity;

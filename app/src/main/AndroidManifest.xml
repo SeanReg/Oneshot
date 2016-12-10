@@ -32,7 +32,7 @@
             android:label="Camera"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.cop4331.image_manipulation.ImageManipulateTest"
+            android:name="com.cop4331.image_manipulation.ImageManipulateActivity"
             android:label="Camera"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.cop4331.LoginActivity" />

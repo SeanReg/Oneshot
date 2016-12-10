@@ -1,7 +1,6 @@
 package com.cop4331.oneshot;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,31 +17,23 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cop4331.LoginActivity;
-import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.permissions.PermissionRequester;
 import com.cop4331.networking.AccountManager;
 import com.cop4331.networking.Game;
 import com.cop4331.networking.Relationship;
-import com.cop4331.networking.Shot;
 import com.cop4331.networking.User;
 import com.parse.Parse;
-import com.parse.ParseCloud;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Home Screen Activities which manages the Created, Participating, and History

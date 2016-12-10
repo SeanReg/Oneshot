@@ -2,9 +2,7 @@ package com.cop4331.oneshot;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-import com.cop4331.image_manipulation.ImageManipulateTest;
 import com.cop4331.networking.Game;
 
 /**

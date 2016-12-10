@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
@@ -17,18 +16,12 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ToggleButton;
 
-import com.android.colorpicker.ColorPickerDialog;
-import com.android.colorpicker.ColorPickerPalette;
-import com.cop4331.com.cop4331.permissions.PermissionRequester;
+import com.cop4331.permissions.PermissionRequester;
 import com.cop4331.image_manipulation.AmendedBitmap;
-import com.cop4331.image_manipulation.ImageManipulateTest;
-import com.cop4331.networking.Game;
-import com.cop4331.oneshot.InGameActivity;
+import com.cop4331.image_manipulation.ImageManipulateActivity;
 import com.cop4331.oneshot.R;
 
 import java.io.File;
@@ -188,7 +181,7 @@ public class CameraActivity extends AppCompatActivity {
                 capturedImage.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, fStream);
                 fStream.close();
 
-                Intent imgEditIntent = new Intent(getApplicationContext(), ImageManipulateTest.class);
+                Intent imgEditIntent = new Intent(getApplicationContext(), ImageManipulateActivity.class);
                 imgEditIntent.putExtra("Bitmap", filePath.getAbsoluteFile());
                 imgEditIntent.putExtra("gameId", mSubmitTo);
                 startActivityForResult(imgEditIntent, SHOT_SENT);

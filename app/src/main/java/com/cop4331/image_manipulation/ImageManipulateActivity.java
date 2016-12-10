@@ -31,7 +31,7 @@ import java.io.IOException;
 /**
  * The type Image manipulate test.
  */
-public class ImageManipulateTest extends GameAssociativeActivity {
+public class ImageManipulateActivity extends GameAssociativeActivity {
 
     private AmendedBitmap mAmendedBitmap = null;
     private Point lastDraw = new Point(0, 0);

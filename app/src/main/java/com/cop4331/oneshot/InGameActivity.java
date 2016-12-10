@@ -1,11 +1,9 @@
 package com.cop4331.oneshot;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewParent;
@@ -16,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.cop4331.camera.CameraActivity;
 import com.cop4331.networking.AccountManager;
-import com.cop4331.image_manipulation.ImageManipulateTest;
+import com.cop4331.image_manipulation.ImageManipulateActivity;
 import com.cop4331.networking.Game;
 import com.cop4331.networking.Shot;
 import com.cop4331.networking.User;
@@ -85,7 +83,7 @@ public class InGameActivity extends GameAssociativeActivity {
         @Override
         public void onClick(View view) {
             Intent myIntent = new Intent(InGameActivity.this, CameraActivity.class);
-            ImageManipulateTest.setGameActivityOpenedListener(new GameActivityOpenedListener() {
+            ImageManipulateActivity.setGameActivityOpenedListener(new GameActivityOpenedListener() {
                 @Override
                 public Game onGameActivityOpened(GameAssociativeActivity act) {
                     return mThisGame;
